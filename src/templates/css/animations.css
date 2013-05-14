@@ -10,11 +10,6 @@
   opacity:1;
 }
 
-.nav-list li {
-  height:20px;
-  overflow:hidden;
-}
-
 .slide-reveal-setup {
   -webkit-transition:0.5s linear all;
   -moz-transition:0.5s linear all;
@@ -38,13 +33,12 @@
   transition:0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) all;
 
   opacity:0;
-  line-height:0;
-  height:0!important;
+  max-height:0;
+  overflow:hidden;
 }
 .expand-enter-setup.expand-enter-start {
   opacity:1;
-  line-height:20px;
-  height:20px!important;
+  max-height:40px;
 }
 
 .expand-leave-setup {
@@ -54,11 +48,12 @@
   transition:0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) all;
 
   opacity:1;
-  height:20px;
+  max-height:40px;
+  overflow:hidden;
 }
 .expand-leave-setup.expand-leave-start {
   opacity:0;
-  height:0;
+  max-height:0;
 }
 
 .example-animate-container {

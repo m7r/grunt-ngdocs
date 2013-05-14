@@ -46,6 +46,14 @@ img.AngularJS-small {
   color: black;
 }
 
+.form-search > ul.nav {
+  padding: 0;
+}
+
+.form-search > ul.nav > li > a {
+  margin: 0;
+}
+
 .form-search > ul.nav > li.module {
   background-color: #d3d3d3;
 }
@@ -73,9 +81,8 @@ img.AngularJS-small {
 
 .form-search .well .nav-header {
   text-transform: none;
-  margin-top: 0;
-  margin-left: -15px;
-  margin-right: -15px;
+  padding: 3px 1px;
+  margin: 0;
 }
 
 .form-search .well .nav-header a {
