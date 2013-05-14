@@ -18,8 +18,8 @@ docsApp.directive.focused = function($timeout) {
         scope.$eval(attrs.focused + '=false');
       });
     });
-    scope.$eval(attrs.focused + '=true')
-  }
+    scope.$eval(attrs.focused + '=true');
+  };
 };
 
 
@@ -72,64 +72,6 @@ docsApp.directive.sourceEdit = function(getEmbeddedTemplate) {
 };
 
 
-docsApp.directive.docTutorialNav = function(templateMerge) {
-  var pages = [
-    '',
-    'step_00', 'step_01', 'step_02', 'step_03', 'step_04',
-    'step_05', 'step_06', 'step_07', 'step_08', 'step_09',
-    'step_10', 'step_11', 'the_end'
-  ];
-  return {
-    compile: function(element, attrs) {
-      var seq = 1 * attrs.docTutorialNav,
-          props = {
-            seq: seq,
-            prev: pages[seq],
-            next: pages[2 + seq],
-            diffLo: seq ? (seq - 1): '0~1',
-            diffHi: seq
-          };
-
-      element.addClass('btn-group');
-      element.addClass('tutorial-nav');
-      element.append(templateMerge(
-        '<li class="btn btn-primary"><a href="tutorial/{{prev}}"><i class="icon-step-backward"></i> Previous</a></li>\n' +
-        '<li class="btn btn-primary"><a href="http://angular.github.com/angular-phonecat/step-{{seq}}/app"><i class="icon-play"></i> Live Demo</a></li>\n' +
-        '<li class="btn btn-primary"><a href="https://github.com/angular/angular-phonecat/compare/step-{{diffLo}}...step-{{diffHi}}"><i class="icon-search"></i> Code Diff</a></li>\n' +
-        '<li class="btn btn-primary"><a href="tutorial/{{next}}">Next <i class="icon-step-forward"></i></a></li>', props));
-    }
-  };
-};
-
-
-docsApp.directive.docTutorialReset = function() {
-  function tab(name, command, id, step) {
-    return '' +
-      '  <div class=\'tab-pane well\' title="' + name + '" value="' + id + '">\n' +
-      '    <ol>\n' +
-      '      <li><p>Reset the workspace to step ' + step + '.</p>' +
-      '        <pre>' + command + '</pre></li>\n' +
-      '      <li><p>Refresh your browser or check the app out on <a href="http://angular.github.com/angular-phonecat/step-' + step + '/app">Angular\'s server</a>.</p></li>\n' +
-      '    </ol>\n' +
-      '  </div>\n';
-  }
-
-  return {
-    compile: function(element, attrs) {
-      var step = attrs.docTutorialReset;
-      element.html(
-        '<div ng-hide="show">' +
-          '<p><a href="" ng-click="show=true;$event.stopPropagation()">Workspace Reset Instructions  ➤</a></p>' +
-        '</div>\n' +
-        '<div class="tabbable" ng-show="show" ng-model="$cookies.platformPreference">\n' +
-          tab('Git on Mac/Linux', 'git checkout -f step-' + step, 'gitUnix', step) +
-          tab('Git on Windows', 'git checkout -f step-' + step, 'gitWin', step) +
-        '</div>\n');
-    }
-  };
-}
-
-
 docsApp.serviceFactory.angularUrls = function($document) {
   var urls = {};
 
@@ -141,7 +83,7 @@ docsApp.serviceFactory.angularUrls = function($document) {
   });
 
   return urls;
-}
+};
 
 
 docsApp.serviceFactory.formPostData = function($document) {
@@ -264,14 +206,14 @@ docsApp.serviceFactory.sections = function sections() {
     }
   };
 
-  angular.forEach(NG_PAGES, function(page) {
+  angular.forEach(NG_DOCS.pages, function(page) {
     page.url = page.section + '/' +  page.id;
     if (page.id == 'angular.Module') {
       page.partialUrl = 'partials/api/angular.IModule.html';
     } else {
       page.partialUrl = 'partials/' + page.url + '.html';
     }
-
+    if (!sections[page.section]) { sections[page.section] = []; }
     sections[page.section].push(page);
   });
 
@@ -279,10 +221,8 @@ docsApp.serviceFactory.sections = function sections() {
 };
 
 
-docsApp.controller.DocsController = function($scope, $location, $window, $cookies, sections) {
-  var OFFLINE_COOKIE_NAME = 'ng-offline',
-      DOCS_PATH = /^\/(api)|(guide)|(cookbook)|(misc)|(tutorial)/,
-      INDEX_PATH = /^(\/|\/index[^\.]*.html)$/,
+docsApp.controller.DocsController = function($scope, $location, $window, sections) {
+  var INDEX_PATH = /^(\/|\/index[^\.]*.html)$/,
       GLOBALS = /^angular\.([^\.]+)$/,
       MODULE = /^((?:(?!^angular\.)[^\.])+)$/,
       MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
@@ -292,12 +232,12 @@ docsApp.controller.DocsController = function($scope, $location, $window, $cookie
       MODULE_SERVICE = /^((?:(?!^angular\.)[^\.])+)\.([^\.]+?)(Provider)?$/,
       MODULE_TYPE = /^((?:(?!^angular\.)[^\.])+)\..+\.([A-Z][^\.]+)$/,
       URL = {
-        module: 'guide/module',
-        directive: 'guide/directive',
-        input: 'api/ng.directive:input',
-        filter: 'guide/dev_guide.templates.filters',
-        service: 'guide/dev_guide.services',
-        type: 'guide/types'
+        module: 'http://docs.angularjs.org/guide/module',
+        directive: 'http://docs.angularjs.org/guide/directive',
+        input: 'http://docs.angularjs.org/api/ng.directive:input',
+        filter: 'http://docs.angularjs.org/guide/dev_guide.templates.filters',
+        service: 'http://docs.angularjs.org/guide/dev_guide.services',
+        type: 'http://docs.angularjs.org/guide/types'
       };
 
 
@@ -310,7 +250,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, $cookie
       last: this.$last,
       active: page1 && this.currentPage == page1 || page2 && this.currentPage == page2
     };
-  }
+  };
 
   $scope.submitForm = function() {
     $scope.bestMatch && $location.path($scope.bestMatch.page.url);
@@ -319,90 +259,67 @@ docsApp.controller.DocsController = function($scope, $location, $window, $cookie
   $scope.afterPartialLoaded = function() {
     var currentPageId = $location.path();
     $scope.partialTitle = $scope.currentPage.shortName;
-    $window._gaq.push(['_trackPageview', currentPageId]);
+    $window._gaq && $window._gaq.push(['_trackPageview', currentPageId]);
     loadDisqus(currentPageId);
   };
-
-  /** stores a cookie that is used by apache to decide which manifest ot send */
-  $scope.enableOffline = function() {
-    //The cookie will be good for one year!
-    var date = new Date();
-    date.setTime(date.getTime()+(365*24*60*60*1000));
-    var expires = "; expires="+date.toGMTString();
-    var value = angular.version.full;
-    document.cookie = OFFLINE_COOKIE_NAME + "="+value+expires+"; path=" + $location.path;
-
-    //force the page to reload so server can serve new manifest file
-    window.location.reload(true);
-  };
-
 
 
   /**********************************
    Watches
    ***********************************/
 
-  var SECTION_NAME = {
-    api: 'API Reference',
-    guide: 'Developer Guide',
-    misc: 'Miscellaneous',
-    tutorial: 'Tutorial',
-    cookbook: 'Examples'
-  };
+  $scope.sections = NG_DOCS.sections;
   $scope.$watch(function docsPathWatch() {return $location.path(); }, function docsPathWatchAction(path) {
-    // ignore non-doc links which are used in examples
-    if (DOCS_PATH.test(path)) {
-      var parts = path.split('/'),
-        sectionId = parts[1],
-        partialId = parts[2],
-        sectionName = SECTION_NAME[sectionId] || sectionId,
-        page = sections.getPage(sectionId, partialId);
+    var parts = path.split('/'),
+      sectionId = parts[1],
+      partialId = parts[2],
+      sectionName = $scope.sections[sectionId] || sectionId,
+      page = sections.getPage(sectionId, partialId);
 
-      $scope.currentPage = sections.getPage(sectionId, partialId);
+    $scope.currentPage = sections.getPage(sectionId, partialId);
 
-      if (!$scope.currentPage) {
-        $scope.partialTitle = 'Error: Page Not Found!';
-      }
+    if (!$scope.currentPage) {
+      $scope.partialTitle = 'Error: Page Not Found!';
+    }
 
-      updateSearch();
+    updateSearch();
 
 
-      // Update breadcrumbs
-      var breadcrumb = $scope.breadcrumb = [],
-        match;
+    // Update breadcrumbs
+    var breadcrumb = $scope.breadcrumb = [],
+      match;
 
-      if (partialId) {
-        breadcrumb.push({ name: sectionName, url: sectionId });
-        if (partialId == 'angular.Module') {
-          breadcrumb.push({ name: 'angular.Module' });
-        } else if (match = partialId.match(GLOBALS)) {
-          breadcrumb.push({ name: partialId });
-        } else if (match = partialId.match(MODULE)) {
-          breadcrumb.push({ name: match[1] });
-        } else if (match = partialId.match(MODULE_FILTER)) {
-          breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
-          breadcrumb.push({ name: match[2] });
-        } else if (match = partialId.match(MODULE_DIRECTIVE)) {
-          breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
-          breadcrumb.push({ name: match[2] });
-        } else if (match = partialId.match(MODULE_DIRECTIVE_INPUT)) {
-          breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
-          breadcrumb.push({ name: 'input', url: URL.input });
-          breadcrumb.push({ name: match[2] });
-        } else if (match = partialId.match(MODULE_TYPE)) {
-          breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
-          breadcrumb.push({ name: match[2] });
-        }  else if (match = partialId.match(MODULE_SERVICE)) {
-          breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
-          breadcrumb.push({ name: match[2] + (match[3] || '') });
-        } else if (match = partialId.match(MODULE_MOCK)) {
-          breadcrumb.push({ name: 'angular.mock.' + match[1] });
-        } else {
-          breadcrumb.push({ name: page.shortName });
-        }
+    if (partialId) {
+      breadcrumb.push({ name: sectionName, url: sectionId });
+      if (partialId == 'angular.Module') {
+        breadcrumb.push({ name: 'angular.Module' });
+      } else if (match = partialId.match(GLOBALS)) {
+        breadcrumb.push({ name: partialId });
+      } else if (match = partialId.match(MODULE)) {
+        breadcrumb.push({ name: match[1] });
+      } else if (match = partialId.match(MODULE_FILTER)) {
+        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[2] });
+      } else if (match = partialId.match(MODULE_DIRECTIVE)) {
+        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[2] });
+      } else if (match = partialId.match(MODULE_DIRECTIVE_INPUT)) {
+        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: 'input', url: URL.input });
+        breadcrumb.push({ name: match[2] });
+      } else if (match = partialId.match(MODULE_TYPE)) {
+        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[2] });
+      }  else if (match = partialId.match(MODULE_SERVICE)) {
+        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[2] + (match[3] || '') });
+      } else if (match = partialId.match(MODULE_MOCK)) {
+        breadcrumb.push({ name: 'angular.mock.' + match[1] });
       } else {
-        breadcrumb.push({ name: sectionName });
+        breadcrumb.push({ name: page.shortName });
       }
+    } else {
+      breadcrumb.push({ name: sectionName });
     }
   });
 
@@ -417,13 +334,10 @@ docsApp.controller.DocsController = function($scope, $location, $window, $cookie
   $scope.versionNumber = angular.version.full;
   $scope.version = angular.version.full + "  " + angular.version.codeName;
   $scope.subpage = false;
-  $scope.offlineEnabled = ($cookies[OFFLINE_COOKIE_NAME] == angular.version.full);
   $scope.futurePartialTitle = null;
   $scope.loading = 0;
   $scope.URL = URL;
-  $scope.$cookies = $cookies;
 
-  $cookies.platformPreference = $cookies.platformPreference || 'gitUnix';
 
   if (!$location.path() || INDEX_PATH.test($location.path())) {
     $location.path('/api').replace();
@@ -509,7 +423,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, $cookie
           },
           types: [],
           filters: []
-        }
+        };
         modules.push(module);
       }
       return module;
@@ -540,15 +454,12 @@ docsApp.controller.DocsController = function($scope, $location, $window, $cookie
 
 
   function loadDisqus(currentPageId) {
+    if (!NG_DOCS.discussions) { return; }
     // http://docs.disqus.com/help/2/
-    window.disqus_shortname = 'angularjs-next';
+    window.disqus_shortname = NG_DOCS.discussions.shortName;
     window.disqus_identifier = currentPageId;
-    window.disqus_url = 'http://docs.angularjs.org' + currentPageId;
-
-    if ($location.host() == 'localhost') {
-      return; // don't display disqus on localhost, comment this out if needed
-      //window.disqus_developer = 1;
-    }
+    window.disqus_url = NG_DOCS.discussions.url + currentPageId;
+    window.disqus_developer = NG_DOCS.discussions.dev;
 
     // http://docs.disqus.com/developers/universal/
     (function() {
@@ -560,10 +471,9 @@ docsApp.controller.DocsController = function($scope, $location, $window, $cookie
 
     angular.element(document.getElementById('disqus_thread')).html('');
   }
-}
+};
 
-
-angular.module('docsApp', ['ngResource', 'ngCookies', 'ngSanitize', 'bootstrap', 'bootstrapPrettify']).
+angular.module('docsApp', ['bootstrap', 'bootstrapPrettify']).
   config(function($locationProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
   }).

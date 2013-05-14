@@ -1,0 +1,25 @@
+{
+  "name": "grunt-ngdocs",
+  "version": "0.1.0",
+  "description": "grunt plugin for angularjs documentation",
+  "main": "tasks",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m7r/grunt-ngdocs.git"
+  },
+  "keywords": [
+    "gruntplugin",
+    "angular",
+    "grunt",
+    "ngdocs",
+    "documention"
+  ],
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "showdown": "0.3.1"
+  },
+  "peerDependencies": {
+    "grunt": "0.4.x"
+  }
+}

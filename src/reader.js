@@ -1,63 +1,22 @@
 /**
- * All reading related code here. This is so that we can separate the async code from sync code
- * for testability
+ * All reading related code here.
  */
 
-exports.collect = collect;
+exports.docs = [];
+exports.process = process;
 
 var ngdoc = require('./ngdoc.js'),
-    Q = require('qq'),
-    qfs = require('q-fs'),
-    PATH = require('path');
+    NEW_LINE = /\n\r?/;
 
-var NEW_LINE = /\n\r?/;
-
-function collect() {
-  var allDocs = [];
-
-  //collect docs in JS Files
-  var path = 'src';
-  var promiseA = Q.when(qfs.listTree(path), function(files) {
-    var done;
-    //read all files in parallel.
-    files.forEach(function(file) {
-      var work;
-      if(/\.js$/.test(file)) {
-        work = Q.when(qfs.read(file, 'b'), function(content) {
-          processJsFile(content, file).forEach (function(doc) {
-            allDocs.push(doc);
-          });
-        });
-      }
-      done = Q.when(done, function() {
-        return work;
-      });
+function process(content, file, section) {
+  if (/\.js$/.test(file)) {
+    processJsFile(content, file).forEach(function(doc) {
+      exports.docs.push(doc);
     });
-    return done;
-  });
-
-   //collect all ng Docs in Content Folder
-   var path2 = 'docs/content';
-   var promiseB = Q.when(qfs.listTree(path2), function(files){
-     var done2;
-     files.forEach(function(file) {
-       var work2;
-       if (file.match(/\.ngdoc$/)) {
-         work2 = Q.when(qfs.read(file, 'b'), function(content){
-            var section = '@section ' + file.split(PATH.sep)[2] + '\n';
-            allDocs.push(new ngdoc.Doc(section + content.toString(),file, 1).parse());
-          });
-       }
-       done2 = Q.when(done2, function() {
-         return work2;
-       });
-     });
-     return done2;
-   });
-
-  return Q.join(promiseA, promiseB, function() {
-    return allDocs;
-  });
+  } else if (file.match(/\.ngdoc$/)) {
+    var header = '@section ' + section + '\n';
+    exports.docs.push(new ngdoc.Doc(header + content.toString(),file, 1).parse());
+  }
 }
 
 function processJsFile(content, file) {
