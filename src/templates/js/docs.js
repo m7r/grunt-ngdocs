@@ -4,6 +4,54 @@ var docsApp = {
   serviceFactory: {}
 };
 
+docsApp.directive.ngHtmlWrapLoaded = function(reindentCode, templateMerge, loadedUrls) {
+  function escape(text) {
+    return text.
+      replace(/\&/g, '&amp;').
+      replace(/\</g, '&lt;').
+      replace(/\>/g, '&gt;').
+      replace(/"/g, '&quot;');
+  }
+
+  function setHtmlIe8SafeWay(element, html) {
+    var newElement = angular.element('<pre>' + html + '</pre>');
+
+    element.html('');
+    element.append(newElement.contents());
+    return element;
+  }
+
+  return {
+    compile: function(element, attr) {
+      var properties = {
+            head: '',
+            module: '',
+            body: element.text()
+          },
+        html = "<!doctype html>\n<html ng-app{{module}}>\n  <head>\n{{head:4}}  </head>\n  <body>\n{{body:4}}  </body>\n</html>";
+
+      angular.forEach(loadedUrls.base, function(dep) {
+        properties.head += '<script src="' + dep + '"></script>\n';
+      });
+
+      angular.forEach((attr.ngHtmlWrapLoaded || '').split(' '), function(dep) {
+        if (!dep) return;
+        var ext = dep.split(/\./).pop();
+
+        if (ext == 'css') {
+          properties.head += '<link rel="stylesheet" href="' + dep + '" type="text/css">\n';
+        } else if(ext == 'js' && dep !== 'angular.js') {
+          properties.head += '<script src="' + (loadedUrls[dep] || dep) + '"></script>\n';
+        } else if (dep !== 'angular.js') {
+          properties.module = '="' + dep + '"';
+        }
+      });
+
+      setHtmlIe8SafeWay(element, escape(templateMerge(html, properties)));
+    }
+  };
+};
+
 
 docsApp.directive.focused = function($timeout) {
   return function(scope, element, attrs) {
@@ -32,7 +80,7 @@ docsApp.directive.sourceEdit = function(getEmbeddedTemplate) {
   return {
     template: '<div class="btn-group pull-right">' +
         '<a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href>' +
-        '  <i class="icon-pencil icon-white"></i> Edit<span class="caret"></span>' +
+        '  <i class="icon-pencil icon-white"></i> Edit <span class="caret"></span>' +
         '</a>' +
         '<ul class="dropdown-menu">' +
         '  <li><a ng-click="plunkr($event)" href="">In Plunkr</a></li>' +
@@ -59,7 +107,7 @@ docsApp.directive.sourceEdit = function(getEmbeddedTemplate) {
         openPlunkr(sources);
       };
     }
-  }
+  };
 
   function read(text) {
     var files = [];
@@ -72,13 +120,21 @@ docsApp.directive.sourceEdit = function(getEmbeddedTemplate) {
 };
 
 
-docsApp.serviceFactory.angularUrls = function($document) {
+docsApp.serviceFactory.loadedUrls = function($document) {
   var urls = {};
 
   angular.forEach($document.find('script'), function(script) {
-    var match = script.src.match(/^.*\/(angular[^\/]*\.js)$/);
+    var match = script.src.match(/^.*\/([^\/]*\.js)$/);
     if (match) {
       urls[match[1].replace(/(\-\d.*)?(\.min)?\.js$/, '.js')] = match[0];
+    }
+  });
+
+  urls.base = [];
+  angular.forEach(NG_DOCS.scripts, function(script) {
+    var match = urls[script.replace(/(\-\d.*)?(\.min)?\.js$/, '.js')];
+    if (match) {
+      urls.base.push(match);
     }
   });
 
@@ -100,30 +156,36 @@ docsApp.serviceFactory.formPostData = function($document) {
   };
 };
 
-docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angularUrls) {
+docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, loadedUrls) {
   return function(content) {
     var allFiles = [].concat(content.js, content.css, content.html);
     var indexHtmlContent = '<!doctype html>\n' +
-        '<html ng-app>\n' +
+        '<html ng-app="{{module}}">\n' +
         '  <head>\n' +
-        '    <script src="{{angularJSUrl}}"></script>\n' +
-        '{{scriptDeps}}\n' +
+        '{{scriptDeps}}' +
         '  </head>\n' +
         '  <body>\n\n' +
-        '{{indexContents}}' +
-        '\n\n  </body>\n' +
+        '{{indexContents}}\n\n' +
+        '  </body>\n' +
         '</html>\n';
     var scriptDeps = '';
-    angular.forEach(content.deps, function(file) {
-      if (file.name !== 'angular.js') {
-        scriptDeps += '    <script src="' + file.name + '"></script>\n'
+    angular.forEach(loadedUrls.base, function(url) {
+        scriptDeps += '    <script src="' + url + '"></script>\n';
+    });
+    angular.forEach(allFiles, function(file) {
+      var ext = file.name.split(/\./).pop();
+        if (ext == 'css') {
+          scriptDeps += '    <link rel="stylesheet" href="' + file.name + '" type="text/css">\n';
+        } else if (ext == 'js' && file.name !== 'angular.js') {
+        scriptDeps += '    <script src="' + file.name + '"></script>\n';
       }
     });
     indexProp = {
-      angularJSUrl: angularUrls['angular.js'],
+      module: content.module,
       scriptDeps: scriptDeps,
       indexContents: content.html[0].content
     };
+
     var postData = {};
     angular.forEach(allFiles, function(file, index) {
       if (file.content && file.name != 'index.html') {
@@ -133,7 +195,7 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
 
     postData['files[index.html]'] = templateMerge(indexHtmlContent, indexProp);
     postData['tags[]'] = "angularjs";
-    
+
     postData.private = true;
     postData.description = 'AngularJS Example Plunkr';
 
@@ -141,12 +203,9 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
   };
 };
 
-docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angularUrls) {
+docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, loadedUrls) {
 
   var HTML = '<div ng-app=\"{{module}}\">\n{{html:2}}</div>',
-      CSS = '</style> <!-- Ugly Hack due to jsFiddle issue: http://goo.gl/BUfGZ --> \n' +
-        '{{head:0}}<style>\n​.ng-invalid { border: 1px solid red; }​\n{{css}}',
-      SCRIPT = '{{script}}',
       SCRIPT_CACHE = '\n\n<!-- {{name}} -->\n<script type="text/ng-template" id="{{name}}">\n{{content:2}}</script>';
 
   return function(content) {
@@ -156,8 +215,6 @@ docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angu
           css: '',
           script: ''
         };
-
-    prop.head = templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular.js']});
 
     angular.forEach(content.html, function(file, index) {
       if (index) {
@@ -175,23 +232,20 @@ docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angu
       prop.css += file.content;
     });
 
-    formPostData("http://jsfiddle.net/api/post/library/pure/", {
+    formPostData("http://jsfiddle.net/api/post/library/pure/dependencies/more/", {
       title: 'AngularJS Example',
       html: templateMerge(HTML, prop),
-      js: templateMerge(SCRIPT, prop),
-      css: templateMerge(CSS, prop)
+      js: prop.script,
+      css: prop.css,
+      resources: loadedUrls.base.join(','),
+      wrap: 'b'
     });
   };
 };
 
 
-docsApp.serviceFactory.sections = function sections() {
+docsApp.serviceFactory.sections = function serviceFactory() {
   var sections = {
-    guide: [],
-    api: [],
-    tutorial: [],
-    misc: [],
-    cookbook: [],
     getPage: function(sectionId, partialId) {
       var pages = sections[sectionId];
 

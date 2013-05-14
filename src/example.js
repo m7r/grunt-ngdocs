@@ -114,7 +114,7 @@ exports.Example.prototype.toHtmlTabs = function() {
           name = source.name;
 
       if (name === 'index.html') {
-        wrap = ' ng-html-wrap="' + self.module + ' ' + self.deps.join(' ') + '"';
+        wrap = ' ng-html-wrap-loaded="' + self.module + ' ' + self.deps.join(' ') + '"';
       }
       if (name == 'scenario.js') name = 'End to end test';
 
