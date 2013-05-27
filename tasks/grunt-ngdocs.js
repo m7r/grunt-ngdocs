@@ -20,10 +20,25 @@ module.exports = function(grunt) {
         done = this.async(),
         options = this.options({
           dest: 'docs/',
-          scripts: ['js/angular.min.js']
+          scripts: ['docs/js/angular.min.js'],
+          html5Mode: true
         }),
         section = this.target === 'all' ? 'api' : this.target,
-        setup = prepareSetup(section, options);
+        setup;
+
+    //Copy the scripts into their own folder in docs
+    var gruntScriptsFolder = 'grunt-scripts';
+    options.scripts = _.map(options.scripts, function(file) {
+      var filename = file.split('/').pop();
+      //Use path.join here because we aren't sure if options.dest has / or not
+      grunt.file.copy(file, path.join(options.dest, gruntScriptsFolder, filename));
+
+      //Return the script path: doesn't have options.dest in it, it's relative
+      //to the docs folder itself
+      return gruntScriptsFolder + '/' + filename;
+    });
+
+    setup = prepareSetup(section, options);
 
     grunt.log.writeln('Generating Documentation...');
 
@@ -32,7 +47,7 @@ module.exports = function(grunt) {
       setup.sections[section] = f.title || 'API Documentation';
       f.src.filter(exists).forEach(function(filepath) {
         var content = grunt.file.read(filepath);
-        reader.process(content, filepath, section);
+        reader.process(content, filepath, section, options);
       });
     });
 
@@ -61,6 +76,7 @@ module.exports = function(grunt) {
       data = grunt.file.read(file),
       vm.runInNewContext(data, context, file);
       setup = context.NG_DOCS;
+      setup.html5Mode = options.html5Mode;
       // keep only pages from other build tasks
       setup.pages = _.filter(setup.pages, function(p) {return p.section !== section;});
     } else {

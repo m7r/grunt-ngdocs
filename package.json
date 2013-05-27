@@ -21,5 +21,9 @@
   },
   "peerDependencies": {
     "grunt": "0.4.x"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-watch": "~0.4.3"
   }
 }

@@ -261,12 +261,13 @@ docsApp.serviceFactory.sections = function serviceFactory() {
   };
 
   angular.forEach(NG_DOCS.pages, function(page) {
-    page.url = page.section + '/' +  page.id;
+    var url = page.section + '/' +  page.id;
     if (page.id == 'angular.Module') {
       page.partialUrl = 'partials/api/angular.IModule.html';
     } else {
-      page.partialUrl = 'partials/' + page.url + '.html';
+      page.partialUrl = 'partials/' + url + '.html';
     }
+    page.url = (NG_DOCS.html5Mode ? '' : '#/') + url;
     if (!sections[page.section]) { sections[page.section] = []; }
     sections[page.section].push(page);
   });
@@ -322,7 +323,10 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
    Watches
    ***********************************/
 
-  $scope.sections = NG_DOCS.sections;
+  $scope.sections = {};
+  angular.forEach(NG_DOCS.sections, function(section, url) {
+    $scope.sections[(NG_DOCS.html5Mode ? '' : '#/') + url] = section;
+  });
   $scope.$watch(function docsPathWatch() {return $location.path(); }, function docsPathWatchAction(path) {
     var parts = path.split('/'),
       sectionId = parts[1],
@@ -462,7 +466,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       if (!module) {
         module = cache[name] = {
           name: name,
-          url: 'api/' + name,
+          url: (NG_DOCS.html5Mode ? '' : '#/') + 'api/' + name,
           globals: [],
           directives: [],
           services: [],
@@ -529,7 +533,9 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
 
 angular.module('docsApp', ['bootstrap', 'bootstrapPrettify']).
   config(function($locationProvider) {
-    $locationProvider.html5Mode(true).hashPrefix('!');
+    if (NG_DOCS.html5Mode) {
+      $locationProvider.html5Mode(true).hashPrefix('!');
+    }
   }).
   factory(docsApp.serviceFactory).
   directive(docsApp.directive).

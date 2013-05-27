@@ -23,7 +23,7 @@ var BOOLEAN_ATTR = {};
 });
 
 //////////////////////////////////////////////////////////
-function Doc(text, file, line) {
+function Doc(text, file, line, options) {
   if (typeof text == 'object') {
     for ( var key in text) {
       this[key] = text[key];
@@ -33,6 +33,7 @@ function Doc(text, file, line) {
     this.file = file;
     this.line = line;
   }
+  this.options = options || {};
   this.scenarios = this.scenarios || [];
   this.requires = this.requires || [];
   this.param = this.param || [];
@@ -93,9 +94,10 @@ Doc.prototype = {
    * @returns {string} Absolute url
    */
   convertUrlToAbsolute: function(url) {
+    var prefix = this.options.html5Mode ? '' : '#/';
     if (url.substr(-1) == '/') return url + 'index';
     if (url.match(/\//)) return url;
-    return this.section + '/' + url;
+    return prefix + this.section + '/' + url;
   },
 
   markdown: function(text) {
