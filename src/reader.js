@@ -8,14 +8,14 @@ exports.process = process;
 var ngdoc = require('./ngdoc.js'),
     NEW_LINE = /\n\r?/;
 
-function process(content, file, section) {
+function process(content, file, section, options) {
   if (/\.js$/.test(file)) {
     processJsFile(content, file).forEach(function(doc) {
       exports.docs.push(doc);
     });
   } else if (file.match(/\.ngdoc$/)) {
     var header = '@section ' + section + '\n';
-    exports.docs.push(new ngdoc.Doc(header + content.toString(),file, 1).parse());
+    exports.docs.push(new ngdoc.Doc(header + content.toString(),file, 1, options).parse());
   }
 }
 
