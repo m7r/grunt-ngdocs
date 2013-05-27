@@ -31,6 +31,7 @@ ngdocs: {
     dest: 'docs'
     scripts: ['../app.min.js'],
     html5Mode: true,
+    title: "My Awesome Docs",
     analytics: {
           account: 'UA-08150815-0',
           domainName: 'my-domain.com'
@@ -68,9 +69,30 @@ Optional include Google Analytics in the documentation app.
 ####discussions
 Optional include [discussions](http://http://disqus.com) in the documentation app.
 
+####title
+[default] "name" or "title" field in `pkg`
+Title to put on the navbar and the page's `title` attribute.  By default, tries to
+find the title in the `pkg`. If it can't find it, it will go to an empty string.
+
 ####html5Mode
 [default] 'true'
 Whether or not to enable `html5Mode` in the docs application.  If true, then links will be absolute.  If false, they will be prefixed by `#/`.  
+
+####navTemplate
+[default] null
+Path to a template of a nav HTML template to include.  The css for it 
+should be that of listitems inside a bootstrap navbar:
+```html
+<header class="header">
+  <div class="navbar">
+    <ul class="nav">
+      {{links to all the docs pages}}
+    </ul>
+    {{YOUR_NAV_TEMPLATE_GOES_HERE}}
+  </div>
+</header>
+```
+Example: 'templates/my-nav.html'
 
 ###Targets
 Each grunt target creates a section in the documentation app.

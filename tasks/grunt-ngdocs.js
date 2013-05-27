@@ -21,6 +21,10 @@ module.exports = function(grunt) {
         options = this.options({
           dest: 'docs/',
           scripts: ['docs/js/angular.min.js'],
+          styles: [],
+          title: grunt.config('pkg') ?
+            (grunt.config('pkg').title || grunt.config('pkg').name) : 
+            '',
           html5Mode: true
         }),
         section = this.target === 'all' ? 'api' : this.target,
@@ -36,6 +40,12 @@ module.exports = function(grunt) {
       //Return the script path: doesn't have options.dest in it, it's relative
       //to the docs folder itself
       return gruntScriptsFolder + '/' + filename;
+    });
+
+    options.styles = _.map(options.styles, function(file) {
+      var filename = file.split('/').pop();
+      grunt.file.copy(file, path.join(options.dest, 'css', filename));
+      return 'css/' + filename;
     });
 
     setup = prepareSetup(section, options);
@@ -61,6 +71,12 @@ module.exports = function(grunt) {
     });
 
     setup.pages = _.union(setup.pages, ngdoc.metadata(reader.docs));
+
+    if (options.navTemplate) {
+      options.navContent = grunt.file.read(options.navTemplate);
+    } else {
+      options.navContent = '';
+    }
 
     writeSetup(setup);
 
@@ -93,9 +109,12 @@ module.exports = function(grunt) {
     var options = setup.__options,
         content, data = {
           scripts: options.scripts,
+          styles: options.styles,
           sections: _.keys(setup.sections).join('|'),
           discussions: options.discussions,
-          analytics: options.analytics
+          analytics: options.analytics,
+          navContent: options.navContent,
+          title: options.title
         };
 
     // create index.html
