@@ -30,6 +30,7 @@ ngdocs: {
   options: {
     dest: 'docs'
     scripts: ['../app.min.js'],
+    html5Mode: true,
     analytics: {
           account: 'UA-08150815-0',
           domainName: 'my-domain.com'
@@ -66,6 +67,10 @@ Optional include Google Analytics in the documentation app.
 
 ####discussions
 Optional include [discussions](http://http://disqus.com) in the documentation app.
+
+####html5Mode
+[default] 'true'
+Whether or not to enable `html5Mode` in the docs application.  If true, then links will be absolute.  If false, they will be prefixed by `#/`.  
 
 ###Targets
 Each grunt target creates a section in the documentation app.
