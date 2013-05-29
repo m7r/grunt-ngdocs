@@ -307,6 +307,13 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
     };
   };
 
+  $scope.isActivePath = function(url) {
+    if (url.charAt(0) == '#') {
+      url = url.substring(1, url.length);
+    }
+    return $location.path().indexOf(url) > -1;
+  };
+
   $scope.submitForm = function() {
     $scope.bestMatch && $location.path($scope.bestMatch.page.url);
   };
