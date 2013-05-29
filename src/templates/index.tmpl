@@ -11,7 +11,7 @@
                  Declarative templates with data-binding, MVC, dependency injection and great
                  testability story all implemented with pure client-side JavaScript!">
   <meta name="fragment" content="!">
-  <title ng-bind-template="Doc: {{partialTitle}}">Docs</title>
+  <title ng-bind-template="<%= title || 'Doc' %>: {{partialTitle}}">Docs</title>
   <script type="text/javascript">
     // dynamically add base tag as well as css and javascript files.
     // we can't add css/js the usual way, because some browsers (FF) eagerly prefetch resources
@@ -27,9 +27,13 @@
       addTag('link', {rel: 'stylesheet', href: 'css/bootstrap.min.css', type: 'text/css'});
       addTag('link', {rel: 'stylesheet', href: 'css/font-awesome.css', type: 'text/css'});
       addTag('link', {rel: 'stylesheet', href: 'css/docs.css', type: 'text/css'});
-      addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});<%
-      _.forEach(scripts, function(url) { %>
-      addTag('script', {src: '<%= url %>'}, sync);<% }); %>
+      addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});
+      <% _.forEach(styles, function(url) { %>
+         addTag('link', {rel: 'stylesheet', href: '<%= url %>', type: 'text/css'}, sync);
+      <% }); %>
+      <% _.forEach(scripts, function(url) { %>
+        addTag('script', {src: '<%= url %>'}, sync);
+      <% }); %>
       addTag('script', {src: 'js/angular-bootstrap.min.js'}, sync);
       addTag('script', {src: 'js/angular-bootstrap-prettify.min.js'}, sync);
       addTag('script', {src: 'js/docs-setup.js'}, sync);
@@ -78,23 +82,13 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
+          <% if (title) { %>
+            <a class="brand"><%= title %></a>
+          <% } %>
           <ul class="nav">
             <li ng-repeat="(url, name) in sections"><a ng-href="{{url}}"><i class="icon-book icon-white"></i> {{name}}</a></li>
-            <!--
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-bookmark icon-white"></i> AngularJS <b class="caret"></b>
-e             </a>
-              <ul class="dropdown-menu">
-                <li class="disabled"><a href="http://angularjs.org/">Why AngularJS?</a></li>
-                 <li><a href="http://docs.angularjs.org/tutorial">Tutorial</a></li>
-                <li><a href="http://docs.angularjs.org/api/">API Reference</a></li>
-                <li><a href="http://docs.angularjs.org/guide/">Developer Guide</a></li>
-              </ul>
-              
-            </li>
-            -->
           </ul>
+          <%= navContent %>
         </div>
       </div>
     </div>
@@ -142,7 +136,7 @@ e             </a>
 
           <ul class="nav nav-list" ng-hide="page">
             <li ng-repeat="page in pages" ng-class="navClass(page)" class="api-list-item">
-              <a href="#/{{page.url}}" tabindex="2">{{page.shortName}}</a>
+              <a href="{{page.url}}" tabindex="2">{{page.shortName}}</a>
             </li>
           </ul>
 
