@@ -86,7 +86,9 @@
             <a class="brand"><%= title %></a>
           <% } %>
           <ul class="nav">
-            <li ng-repeat="(url, name) in sections"><a ng-href="{{url}}"><i class="icon-book icon-white"></i> {{name}}</a></li>
+            <li ng-repeat="(url, name) in sections" ng-class="{active: isActivePath(url)}">
+              <a ng-href="{{url}}"><i class="icon-book icon-white"></i> {{name}}</a>
+            </li>
           </ul>
           <%= navContent %>
         </div>
