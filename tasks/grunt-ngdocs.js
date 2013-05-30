@@ -33,7 +33,8 @@ module.exports = function(grunt) {
     //Copy the scripts into their own folder in docs, unless they are remote
     var gruntScriptsFolder = 'grunt-scripts';
     options.scripts = _.map(options.scripts, function(file) {
-      if (file.match(/[https:\/\/|http:\/\/|\/\/|\.\.\/]/)) {
+      var match = file.match(/^[https:\/\/|http:\/\/|\/\/|\.\.\/]/);
+      if (match) {
         return file;
       } else {
         var filename = file.split('/').pop();
