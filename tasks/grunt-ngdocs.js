@@ -30,16 +30,20 @@ module.exports = function(grunt) {
         section = this.target === 'all' ? 'api' : this.target,
         setup;
 
-    //Copy the scripts into their own folder in docs
+    //Copy the scripts into their own folder in docs, unless they are remote
     var gruntScriptsFolder = 'grunt-scripts';
     options.scripts = _.map(options.scripts, function(file) {
-      var filename = file.split('/').pop();
-      //Use path.join here because we aren't sure if options.dest has / or not
-      grunt.file.copy(file, path.join(options.dest, gruntScriptsFolder, filename));
+      if (file.match(/[https:\/\/|http:\/\/|\/\/|\.\.\/]/)) {
+        return file;
+      } else {
+        var filename = file.split('/').pop();
+        //Use path.join here because we aren't sure if options.dest has / or not
+        grunt.file.copy(file, path.join(options.dest, gruntScriptsFolder, filename));
 
-      //Return the script path: doesn't have options.dest in it, it's relative
-      //to the docs folder itself
-      return gruntScriptsFolder + '/' + filename;
+        //Return the script path: doesn't have options.dest in it, it's relative
+        //to the docs folder itself
+        return gruntScriptsFolder + '/' + filename;
+      }
     });
 
     options.styles = _.map(options.styles, function(file) {
