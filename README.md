@@ -60,8 +60,8 @@ ngdocs: {
 Folder relative to your Gruntfile were the documentation should be build.
 
 ####scripts
-[default] ['js/angular.min.js']
-Set which angular.js file or addional custom js files are loaded to the app. This allows the live examles to use custom directives, services etc. The documentation app works with angular.js 1.0.6 and 1.1.5.
+[default] ['docs/js/angular.min.js']
+Set which angular.js file or addional custom js files are loaded to the app. This allows the live examles to use custom directives, services etc. The documentation app works with angular.js 1.0.6 and 1.1.5.  Any files you reference in scripts will be copied into the docs, into a `grunt-scripts` folder.  If you reference remote files (eg from a CDN), it will work as well.
 
 ####analytics
 Optional include Google Analytics in the documentation app.
