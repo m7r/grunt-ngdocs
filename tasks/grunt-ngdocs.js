@@ -23,7 +23,7 @@ module.exports = function(grunt) {
           scripts: ['docs/js/angular.min.js'],
           styles: [],
           title: grunt.config('pkg') ?
-            (grunt.config('pkg').title || grunt.config('pkg').name) : 
+            (grunt.config('pkg').title || grunt.config('pkg').name) :
             '',
           html5Mode: true
         }),
@@ -33,7 +33,7 @@ module.exports = function(grunt) {
     //Copy the scripts into their own folder in docs, unless they are remote
     var gruntScriptsFolder = 'grunt-scripts';
     options.scripts = _.map(options.scripts, function(file) {
-      if (file.match(/[https:\/\/|http:\/\/|\/\/|\.\.\/]/)) {
+      if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
         return file;
       } else {
         var filename = file.split('/').pop();
