@@ -279,13 +279,13 @@ docsApp.serviceFactory.sections = function serviceFactory() {
 docsApp.controller.DocsController = function($scope, $location, $window, sections) {
   var INDEX_PATH = /^(\/|\/index[^\.]*.html)$/,
       GLOBALS = /^angular\.([^\.]+)$/,
-      MODULE = /^((?:(?!^angular\.)[^\.])+)$/,
+      MODULE = /^([^\.]+)$/,
       MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
-      MODULE_DIRECTIVE = /^((?:(?!^angular\.)[^\.])+)\.directive:([^\.]+)$/,
-      MODULE_DIRECTIVE_INPUT = /^((?:(?!^angular\.)[^\.])+)\.directive:input\.([^\.]+)$/,
-      MODULE_FILTER = /^((?:(?!^angular\.)[^\.])+)\.filter:([^\.]+)$/,
-      MODULE_SERVICE = /^((?:(?!^angular\.)[^\.])+)\.([^\.]+?)(Provider)?$/,
-      MODULE_TYPE = /^((?:(?!^angular\.)[^\.])+)\..+\.([A-Z][^\.]+)$/;
+      MODULE_DIRECTIVE = /^(.+)\.directive:([^\.]+)$/,
+      MODULE_DIRECTIVE_INPUT = /^(.+)\.directive:input\.([^\.]+)$/,
+      MODULE_FILTER = /^(.+)\.filter:([^\.]+)$/,
+      MODULE_SERVICE = /^(.+)\.([^\.]+?)(Provider)?$/,
+      MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
 
 
   /**********************************
@@ -444,10 +444,11 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         module(match[1]).directives.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE_INPUT)) {
         module(match[1]).directives.push(page);
-      } else if (match = id.match(MODULE_SERVICE)) {
-        module(match[1]).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
       } else if (match = id.match(MODULE_TYPE)) {
         module(match[1]).types.push(page);
+      } else if (match = id.match(MODULE_SERVICE)) {
+        console.log(match);
+        module(match[1]).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
       } else if (match = id.match(MODULE_MOCK)) {
         module('ngMock').globals.push(page);
       }

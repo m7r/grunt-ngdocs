@@ -742,13 +742,13 @@ Doc.prototype = {
 
 //////////////////////////////////////////////////////////
 var GLOBALS = /^angular\.([^\.]+)$/,
-    MODULE = /^((?:(?!^angular\.)[^\.])+)$/,
+    MODULE = /^([^\.]+)$/,
     MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
-    MODULE_DIRECTIVE = /^((?:(?!^angular\.)[^\.])+)\.directive:([^\.]+)$/,
-    MODULE_DIRECTIVE_INPUT = /^((?:(?!^angular\.)[^\.])+)\.directive:input\.([^\.]+)$/,
-    MODULE_FILTER = /^((?:(?!^angular\.)[^\.])+)\.filter:([^\.]+)$/,
-    MODULE_SERVICE = /^((?:(?!^angular\.)[^\.])+)\.([^\.]+?)(Provider)?$/,
-    MODULE_TYPE = /^((?:(?!^angular\.)[^\.])+)\..+\.([A-Z][^\.]+)$/;
+    MODULE_DIRECTIVE = /^(.+)\.directive:([^\.]+)$/,
+    MODULE_DIRECTIVE_INPUT = /^(.+)\.directive:input\.([^\.]+)$/,
+    MODULE_FILTER = /^(.+)\.filter:([^\.]+)$/,
+    MODULE_SERVICE = /^(.+)\.([^\.]+?)(Provider)?$/,
+    MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
 
 
 function title(text) {
@@ -784,14 +784,14 @@ function title(text) {
     module = match[1];
     name = match[2];
     type = 'filter';
-  } else if (match = text.match(MODULE_SERVICE)) {
-    module = match[1];
-    name = match[2] + (match[3] || '');
-    type = 'service';
   } else if (match = text.match(MODULE_TYPE)) {
     module = match[1];
     name = match[2];
     type = 'type';
+  } else if (match = text.match(MODULE_SERVICE)) {
+    module = match[1];
+    name = match[2] + (match[3] || '');
+    type = 'service';
   } else {
     return text;
   }
