@@ -96,7 +96,6 @@ module.exports = function(grunt) {
       data = grunt.file.read(file),
       vm.runInNewContext(data, context, file);
       setup = context.NG_DOCS;
-      setup.html5Mode = options.html5Mode;
       // keep only pages from other build tasks
       setup.pages = _.filter(setup.pages, function(p) {return p.section !== section;});
     } else {
@@ -127,6 +126,7 @@ module.exports = function(grunt) {
     grunt.file.write(path.resolve(options.dest, 'index.html'), content);
 
     // create setup file
+    setup.html5Mode = options.html5Mode;
     setup.discussions = options.discussions;
     setup.scripts = _.map(options.scripts, function(url) { return path.basename(url); });
     grunt.file.write(setup.__file, 'NG_DOCS=' + JSON.stringify(setup, replacer, 2) + ';');
