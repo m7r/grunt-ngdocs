@@ -447,7 +447,6 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       } else if (match = id.match(MODULE_TYPE)) {
         module(match[1]).types.push(page);
       } else if (match = id.match(MODULE_SERVICE)) {
-        console.log(match);
         module(match[1]).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
       } else if (match = id.match(MODULE_MOCK)) {
         module('ngMock').globals.push(page);
