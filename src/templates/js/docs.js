@@ -352,10 +352,10 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
 
     // Update breadcrumbs
     var breadcrumb = $scope.breadcrumb = [],
-      match;
+      match, sectionPath = (NG_DOCS.html5Mode ? '' : '#/') +  sectionId;
 
     if (partialId) {
-      breadcrumb.push({ name: sectionName, url: sectionId });
+      breadcrumb.push({ name: sectionName, url: sectionPath });
       if (partialId == 'angular.Module') {
         breadcrumb.push({ name: 'angular.Module' });
       } else if (match = partialId.match(GLOBALS)) {
@@ -363,20 +363,20 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       } else if (match = partialId.match(MODULE)) {
         breadcrumb.push({ name: match[1] });
       } else if (match = partialId.match(MODULE_FILTER)) {
-        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
       } else if (match = partialId.match(MODULE_DIRECTIVE)) {
-        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
       } else if (match = partialId.match(MODULE_DIRECTIVE_INPUT)) {
-        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: 'input', url: URL.input });
         breadcrumb.push({ name: match[2] });
       } else if (match = partialId.match(MODULE_TYPE)) {
-        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
       }  else if (match = partialId.match(MODULE_SERVICE)) {
-        breadcrumb.push({ name: match[1], url: sectionId + '/' + match[1] });
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] + (match[3] || '') });
       } else if (match = partialId.match(MODULE_MOCK)) {
         breadcrumb.push({ name: 'angular.mock.' + match[1] });
