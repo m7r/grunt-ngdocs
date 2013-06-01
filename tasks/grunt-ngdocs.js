@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         done = this.async(),
         options = this.options({
           dest: 'docs/',
-          scripts: ['docs/js/angular.min.js'],
+          scripts: ['angular.js'],
           styles: [],
           title: grunt.config('pkg') ?
             (grunt.config('pkg').title || grunt.config('pkg').name) :
@@ -30,10 +30,12 @@ module.exports = function(grunt) {
         section = this.target === 'all' ? 'api' : this.target,
         setup;
 
-    //Copy the scripts into their own folder in docs, unless they are remote
+    //Copy the scripts into their own folder in docs, unless they are remote or default angular.js
     var gruntScriptsFolder = 'grunt-scripts';
     options.scripts = _.map(options.scripts, function(file) {
-      if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
+      if (file === 'angular.js') {
+        return 'js/angular.min.js';
+      } else if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
         return file;
       } else {
         var filename = file.split('/').pop();
