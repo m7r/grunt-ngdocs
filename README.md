@@ -56,11 +56,11 @@ ngdocs: {
 ###Options
 
 ####dest
-[default] 'docs'
+[default] 'docs'  
 Folder relative to your Gruntfile were the documentation should be build.
 
 ####scripts
-[default] ['angular.js']
+[default] ['angular.js']  
 Set which angular.js file or addional custom js files are loaded to the app. This allows the live examles to use custom directives, services etc. The documentation app works with angular.js 1.0.+ and 1.1.+.
 
 Possible values:
@@ -69,7 +69,10 @@ Possible values:
   - ['path/to/file.js'] file will be copied into the docs, into a `grunt-scripts` folder
   - ['http://example.com/file.js', 'https://example.com/file.js', '//example.com/file.js'] reference remote files (eg from a CDN)
   - ['../app.js'] reference file relative to the dest folder
-  
+
+####styles
+[default] []  
+Copy additional css files to the documentation app
 
 ####analytics
 Optional include Google Analytics in the documentation app.
@@ -78,12 +81,12 @@ Optional include Google Analytics in the documentation app.
 Optional include [discussions](http://http://disqus.com) in the documentation app.
 
 ####title
-[default] "name" or "title" field in `pkg`
+[default] "name" or "title" field in `pkg` 
 Title to put on the navbar and the page's `title` attribute.  By default, tries to
 find the title in the `pkg`. If it can't find it, it will go to an empty string.
 
 ####html5Mode
-[default] 'true'
+[default] 'true'  
 Whether or not to enable `html5Mode` in the docs application.  If true, then links will be absolute.  If false, they will be prefixed by `#/`.  
 
 ####animation
@@ -91,7 +94,7 @@ Whether or not to enable `html5Mode` in the docs application.  If true, then lin
 Set to 'true' to enable animations in the sidebar.
 
 ####navTemplate
-[default] null
+[default] null  
 Path to a template of a nav HTML template to include.  The css for it 
 should be that of listitems inside a bootstrap navbar:
 ```html
@@ -113,7 +116,7 @@ Each grunt target creates a section in the documentation app.
 [required] List of files to parse for documentation comments.
 
 ####title
-[default] 'API Documentation'
+[default] 'API Documentation'  
 Set the name for the section in the documentation app.
 
 
