@@ -25,7 +25,8 @@ module.exports = function(grunt) {
           title: grunt.config('pkg') ?
             (grunt.config('pkg').title || grunt.config('pkg').name) :
             '',
-          html5Mode: true
+          html5Mode: true,
+          animation: false
         }),
         section = this.target === 'all' ? 'api' : this.target,
         setup;
@@ -34,8 +35,17 @@ module.exports = function(grunt) {
     var gruntScriptsFolder = 'grunt-scripts';
     options.scripts = _.map(options.scripts, function(file) {
       if (file === 'angular.js') {
+        options.animation = true;
         return 'js/angular.min.js';
-      } else if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
+      }
+
+      if (!options.animation) {
+        //force animation in new angular versions from CDN or copied from a folder like angular-1.x.x/
+        var match = file.match(/1\.(\d\.\d+)\/angular\./);
+        if (match && parseInt(match[1], 10) > 1.4) { options.animation = true; }
+      }
+
+      if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
         return file;
       } else {
         var filename = file.split('/').pop();
@@ -119,7 +129,10 @@ module.exports = function(grunt) {
           discussions: options.discussions,
           analytics: options.analytics,
           navContent: options.navContent,
-          title: options.title
+          title: options.title,
+          trackBy: function(id, animation) {
+            return options.animation ? ' track by ' + id + (animation ? '" ng-animate="' + animation : '') : '';
+          }
         };
 
     // create index.html

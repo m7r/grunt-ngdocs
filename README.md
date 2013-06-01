@@ -86,6 +86,10 @@ find the title in the `pkg`. If it can't find it, it will go to an empty string.
 [default] 'true'
 Whether or not to enable `html5Mode` in the docs application.  If true, then links will be absolute.  If false, they will be prefixed by `#/`.  
 
+####animation
+[default] 'false' or 'true' for the included angularjs, angularjs 1.1.5+ from CDN or a folder like /vendor/angular-1.1.5/angular.js.  
+Set to 'true' to enable animations in the sidebar.
+
 ####navTemplate
 [default] null
 Path to a template of a nav HTML template to include.  The css for it 
