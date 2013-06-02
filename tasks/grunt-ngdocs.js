@@ -59,9 +59,13 @@ module.exports = function(grunt) {
     });
 
     options.styles = _.map(options.styles, function(file) {
-      var filename = file.split('/').pop();
-      grunt.file.copy(file, path.join(options.dest, 'css', filename));
-      return 'css/' + filename;
+      if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
+        return file;
+      } else {
+        var filename = file.split('/').pop();
+        grunt.file.copy(file, path.join(options.dest, 'css', filename));
+        return 'css/' + filename;
+      }
     });
 
     setup = prepareSetup(section, options);
