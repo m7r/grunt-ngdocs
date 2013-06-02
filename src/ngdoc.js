@@ -315,7 +315,7 @@ Doc.prototype = {
     var dom = new DOM(),
       self = this;
 
-    dom.h(title(this.name), function() {
+    dom.h(title(this.name, this.ngdoc == 'overview'), function() {
 
       notice('deprecated', 'Deprecated API', self.deprecated);
       if (self.ngdoc != 'overview') {
@@ -751,7 +751,7 @@ var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
 
 
-function title(text) {
+function title(text, overview) {
   if (!text) return text;
   var match,
     module,
@@ -789,9 +789,14 @@ function title(text) {
     name = match[2];
     type = 'type';
   } else if (match = text.match(MODULE_SERVICE)) {
-    module = match[1];
-    name = match[2] + (match[3] || '');
-    type = 'service';
+    if (overview) {
+      // module name with dots looks like a service
+      module = text;
+    } else {
+      module = match[1];
+      name = match[2] + (match[3] || '');
+      type = 'service';
+    }
   } else {
     return text;
   }

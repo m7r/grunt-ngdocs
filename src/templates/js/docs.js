@@ -368,8 +368,13 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
       }  else if (match = partialId.match(MODULE_SERVICE)) {
-        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
-        breadcrumb.push({ name: match[2] + (match[3] || '') });
+        if ( page.type === 'overview') {
+          // module name with dots looks like a service
+          breadcrumb.push({ name: partialId });
+        } else {
+          breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
+          breadcrumb.push({ name: match[2] + (match[3] || '') });
+        }
       } else if (match = partialId.match(MODULE_MOCK)) {
         breadcrumb.push({ name: 'angular.mock.' + match[1] });
       } else {
@@ -447,7 +452,11 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       } else if (match = id.match(MODULE_TYPE)) {
         module(match[1]).types.push(page);
       } else if (match = id.match(MODULE_SERVICE)) {
-        module(match[1]).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
+        if (page.type === 'overview') {
+          module(id);
+        } else {
+          module(match[1]).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
+        }
       } else if (match = id.match(MODULE_MOCK)) {
         module('ngMock').globals.push(page);
       }
