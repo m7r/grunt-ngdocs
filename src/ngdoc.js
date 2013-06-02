@@ -768,6 +768,7 @@ function title(text, overview) {
     type = 'API';
   } else if (match = text.match(MODULE)) {
     module = match[1];
+    if (!overview) { name = match[1]; }
   } else if (match = text.match(MODULE_MOCK)) {
     module = 'ng';
     name = 'angular.mock.' + match[1];
