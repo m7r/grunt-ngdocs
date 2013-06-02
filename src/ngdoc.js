@@ -442,13 +442,13 @@ Doc.prototype = {
     dom.h('Usage', function() {
       var restrict = self.restrict || 'AC';
 
-      if (restrict.match(/E/)) {
+      /*if (restrict.match(/E/)) {
         dom.html('<p>');
         dom.text('This directive can be used as custom element, but be aware of ');
-        dom.tag('a', {href:'guide/ie'}, 'IE restrictions');
+        dom.tag('a', {href:'http://docs.angularjs.org/guide/ie'}, 'IE restrictions');
         dom.text('.');
         dom.html('</p>');
-      }
+      }*/
 
       if (self.usage) {
         dom.tag('pre', function() {
