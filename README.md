@@ -31,6 +31,7 @@ ngdocs: {
     dest: 'docs'
     scripts: ['../app.min.js'],
     html5Mode: true,
+    startPage: '/api',
     title: "My Awesome Docs",
     analytics: {
           account: 'UA-08150815-0',
@@ -84,6 +85,10 @@ Optional include [discussions](http://http://disqus.com) in the documentation ap
 [default] "name" or "title" field in `pkg` 
 Title to put on the navbar and the page's `title` attribute.  By default, tries to
 find the title in the `pkg`. If it can't find it, it will go to an empty string.
+
+####startPage
+[default] '/api'
+Set first page to open. 
 
 ####html5Mode
 [default] 'true'  

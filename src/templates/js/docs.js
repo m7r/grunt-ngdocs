@@ -400,7 +400,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
   $scope.loading = 0;
 
   if (!$location.path() || INDEX_PATH.test($location.path())) {
-    $location.path('/api').replace();
+    $location.path(NG_DOCS.startPage).replace();
   }
   // bind escape to hash reset callback
   angular.element(window).bind('keydown', function(e) {

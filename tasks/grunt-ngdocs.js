@@ -20,6 +20,7 @@ module.exports = function(grunt) {
         done = this.async(),
         options = this.options({
           dest: 'docs/',
+          startPage: '/api',
           scripts: ['angular.js'],
           styles: [],
           title: grunt.config('pkg') ?
@@ -147,6 +148,7 @@ module.exports = function(grunt) {
 
     // create setup file
     setup.html5Mode = options.html5Mode;
+    setup.startPage = options.startPage;
     setup.discussions = options.discussions;
     setup.scripts = _.map(options.scripts, function(url) { return path.basename(url); });
     grunt.file.write(setup.__file, 'NG_DOCS=' + JSON.stringify(setup, replacer, 2) + ';');
