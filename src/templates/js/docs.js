@@ -265,7 +265,7 @@ docsApp.serviceFactory.sections = function serviceFactory() {
     if (page.id == 'angular.Module') {
       page.partialUrl = 'partials/api/angular.IModule.html';
     } else {
-      page.partialUrl = 'partials/' + url + '.html';
+      page.partialUrl = 'partials/' + url.replace(':', '.') + '.html';
     }
     page.url = (NG_DOCS.html5Mode ? '' : '#/') + url;
     if (!sections[page.section]) { sections[page.section] = []; }
