@@ -425,7 +425,8 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
 
     angular.forEach(pages, function(page) {
       var match,
-        id = page.id;
+        id = page.id,
+        section = page.section;
 
       if (!(match = rank(page, search))) return;
 
@@ -435,30 +436,30 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
 
       if (page.id == 'index') {
         //skip
-      } else if (page.section != 'api') {
+      } else if (!NG_DOCS.apis[section]) {
         otherPages.push(page);
       } else if (id == 'angular.Module') {
-        module('ng').types.push(page);
+        module('ng', section).types.push(page);
       } else if (match = id.match(GLOBALS)) {
-        module('ng').globals.push(page);
+        module('ng', section).globals.push(page);
       } else if (match = id.match(MODULE)) {
-        module(match[1]);
+        module(match[1], section);
       } else if (match = id.match(MODULE_FILTER)) {
-        module(match[1]).filters.push(page);
+        module(match[1], section).filters.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE)) {
-        module(match[1]).directives.push(page);
+        module(match[1], section).directives.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE_INPUT)) {
-        module(match[1]).directives.push(page);
+        module(match[1], section).directives.push(page);
       } else if (match = id.match(MODULE_TYPE)) {
-        module(match[1]).types.push(page);
+        module(match[1], section).types.push(page);
       } else if (match = id.match(MODULE_SERVICE)) {
         if (page.type === 'overview') {
-          module(id);
+          module(id, section);
         } else {
-          module(match[1]).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
+          module(match[1], section).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
         }
       } else if (match = id.match(MODULE_MOCK)) {
-        module('ngMock').globals.push(page);
+        module('ngMock', section).globals.push(page);
       }
 
     });
@@ -467,12 +468,12 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
 
     /*************/
 
-    function module(name) {
+    function module(name, section) {
       var module = cache[name];
       if (!module) {
         module = cache[name] = {
           name: name,
-          url: (NG_DOCS.html5Mode ? '' : '#/') + 'api/' + name,
+          url: (NG_DOCS.html5Mode ? '' : '#/') + section + '/' + name,
           globals: [],
           directives: [],
           services: [],

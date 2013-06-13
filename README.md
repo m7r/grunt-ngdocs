@@ -119,6 +119,10 @@ Each grunt target creates a section in the documentation app.
 [default] 'API Documentation'  
 Set the name for the section in the documentation app.
 
+####api
+[default] true for target api  
+Set the sidebar to advanced mode with sections for modules, services etc.
+
 
 ##How it works
 The task parses the specified files for doc commets and extract these in partial html files for the documentation app.

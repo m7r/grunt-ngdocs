@@ -75,6 +75,7 @@ module.exports = function(grunt) {
     reader.docs = [];
     this.files.forEach(function(f) {
       setup.sections[section] = f.title || 'API Documentation';
+      setup.apis[section] = f.api || section == 'api';
       f.src.filter(exists).forEach(function(filepath) {
         var content = grunt.file.read(filepath);
         reader.process(content, filepath, section, options);
@@ -116,7 +117,7 @@ module.exports = function(grunt) {
       setup.pages = _.filter(setup.pages, function(p) {return p.section !== section;});
     } else {
       // build clean dest
-      setup = {sections: {}, pages: []};
+      setup = {sections: {}, pages: [], apis: {}};
       copyTemplates(options.dest);
     }
     setup.__file = file;
