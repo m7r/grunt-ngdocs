@@ -307,7 +307,10 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
   };
 
   $scope.submitForm = function() {
-    $scope.bestMatch && $location.path($scope.bestMatch.page.url);
+    if ($scope.bestMatch) {
+      var url =  $scope.bestMatch.page.url;
+      $location.path(NG_DOCS.html5Mode ? url : url.substring(1));
+    }
   };
 
   $scope.afterPartialLoaded = function() {
