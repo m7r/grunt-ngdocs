@@ -103,6 +103,10 @@ img.AngularJS-small {
   color: gray;
 }
 
+.form-search .module .guide {
+  line-height: 21px;
+}
+
 /* =============================== */
 /*            Content              */
 /* =============================== */
@@ -112,7 +116,7 @@ img.AngularJS-small {
 }
 
 .hint {
-  font-size: .7em;
+  font-size: .6em;
   color: #c0c0c0;
 }
 
