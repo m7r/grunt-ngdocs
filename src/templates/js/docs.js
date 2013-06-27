@@ -284,6 +284,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       MODULE_DIRECTIVE = /^(.+)\.directive:([^\.]+)$/,
       MODULE_DIRECTIVE_INPUT = /^(.+)\.directive:input\.([^\.]+)$/,
       MODULE_FILTER = /^(.+)\.filter:([^\.]+)$/,
+      MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
       MODULE_SERVICE = /^(.+)\.([^\.]+?)(Provider)?$/,
       MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
 
@@ -367,6 +368,9 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: 'input' });
         breadcrumb.push({ name: match[2] });
+      } else if (match = partialId.match(MODULE_CUSTOM)) {
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
+        breadcrumb.push({ name: match[3] });
       } else if (match = partialId.match(MODULE_TYPE)) {
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
@@ -453,6 +457,8 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         module(match[1], section).directives.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE_INPUT)) {
         module(match[1], section).directives.push(page);
+      } else if (match = id.match(MODULE_CUSTOM)) {
+        module(match[1], section).others.push(page);
       } else if (match = id.match(MODULE_TYPE)) {
         module(match[1], section).types.push(page);
       } else if (match = id.match(MODULE_SERVICE)) {
@@ -480,6 +486,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
           globals: [],
           directives: [],
           services: [],
+          others: [],
           service: function(name) {
             var service =  cache[this.name + ':' + name];
             if (!service) {

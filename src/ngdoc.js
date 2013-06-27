@@ -409,11 +409,11 @@ Doc.prototype = {
 
   html_usage_function: function(dom){
     var self = this;
-    var name = self.name.match(/^angular(\.mock)?\.(\w+)$/) ? self.name : self.name.split(/\./).pop()
+    var name = self.name.match(/^angular(\.mock)?\.(\w+)$/) ? self.name : self.name.split(/\./).pop();
 
     dom.h('Usage', function() {
       dom.code(function() {
-        dom.text(name);
+        dom.text(name.split(':').pop());
         dom.text('(');
         self.parameters(dom, ', ');
         dom.text(');');
@@ -746,7 +746,7 @@ var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
     MODULE_DIRECTIVE = /^(.+)\.directive:([^\.]+)$/,
     MODULE_DIRECTIVE_INPUT = /^(.+)\.directive:input\.([^\.]+)$/,
-    MODULE_FILTER = /^(.+)\.filter:([^\.]+)$/,
+    MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
     MODULE_SERVICE = /^(.+)\.([^\.]+?)(Provider)?$/,
     MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
 
@@ -781,10 +781,10 @@ function title(text, overview) {
     module = match[1];
     name = 'input [' + match[2] + ']';
     type = 'directive';
-  } else if (match = text.match(MODULE_FILTER)) {
+  } else if (match = text.match(MODULE_CUSTOM)) {
     module = match[1];
-    name = match[2];
-    type = 'filter';
+    name = match[3];
+    type = match[2];
   } else if (match = text.match(MODULE_TYPE)) {
     module = match[1];
     name = match[2];
