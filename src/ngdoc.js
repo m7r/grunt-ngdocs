@@ -272,6 +272,13 @@ Doc.prototype = {
             optional: optional,
             'default':match[5]
           };
+          
+          //if param name is a part of an object passed to a method
+          //mark it, so it's not included in the rendering later
+          if(param.name.indexOf(".") > 0){
+              param.isProperty = true;
+          }
+          
           self.param.push(param);
         } else if (atName == 'returns' || atName == 'return') {
           match = text.match(/^\{([^}]+)\}\s+(.*)/);
@@ -671,7 +678,9 @@ Doc.prototype = {
     if (self.methods.length) {
       dom.div({class:'member method'}, function(){
         dom.h('Methods', self.methods, function(method){
-          var signature = (method.param || []).map(property('name'));
+          //filters out .IsProperty parameters from the method signature
+          var signature = (method.param || []).filter(function(e) { return e.isProperty !== true}).map(property('name'));
+          
           dom.h(method.shortName + '(' + signature.join(', ') + ')', method, function() {
             dom.html(method.description);
             method.html_usage_parameters(dom);
