@@ -1013,7 +1013,7 @@ function merge(docs){
     var parentName = doc[name + 'Of'];
     if (!parentName) return false;
 
-    var parent = byFullId['api/' + parentName];
+    var parent = byFullId[doc.section + '/' + parentName];
     if (!parent)
       throw new Error("No parent named '" + parentName + "' for '" +
         doc.name + "' in @" + name + "Of.");
