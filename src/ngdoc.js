@@ -96,7 +96,7 @@ Doc.prototype = {
   convertUrlToAbsolute: function(url) {
     var prefix = this.options.html5Mode ? '' : '#/';
     if (url.substr(-1) == '/') return url + 'index';
-    if (url.match(/\//)) return url;
+    if (url.match(/\//)) return prefix + url;
     return prefix + this.section + '/' + url;
   },
 
@@ -323,7 +323,9 @@ Doc.prototype = {
       }
       dom.h('Dependencies', self.requires, function(require){
         dom.tag('code', function() {
-          dom.tag('a', {href: 'api/ng.' + require.name}, require.name);
+          var id = /[\.\/]/.test(require.name) ? require.name : 'ng.' + require.name,
+              name = require.name.split(/[\.:#\/]/).pop();
+          dom.tag('a', {href: self.convertUrlToAbsolute(id)}, name);
         });
         dom.html(require.text);
       });
