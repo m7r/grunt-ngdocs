@@ -1,3 +1,35 @@
+# 0.1.3 (2013-07-19)
+
+## Features
+### ngdocs
+
+* `@param` support for object properties ([5e3c402c](https://github.com/m7r/grunt-ngdocs/commit/5e3c402c))
+
+  @param {Object} param Some obj  
+  @param {String} param.name some name on the obj 
+   
+  Object properties are not included in the method signature
+
+* support custom items with `@requires` ([d0f488c2](https://github.com/m7r/grunt-ngdocs/commit/d0f488c2))
+
+  `@requires $cookie` => `$cookie` href = currentsection/ng.$cookie  
+  `@requires module.directive:tabs` => `tabs` href = currentsection/module.directive:tabs  
+  `@requires /section2/module.directive:tabs` => `tabs` href = section2/module.directive:tabs
+
+
+
+## Bug fixes
+### ngdocs
+
+* make `@methodOf` work in all sections #21 ([468904ab](https://github.com/m7r/grunt-ngdocs/commit/468904ab))
+
+### task
+
+* make backward compatible to 0.1.1 ([64f656ff](https://github.com/m7r/grunt-ngdocs/commit/64f656ff))
+
+
+
+
 # 0.1.2 (2013-06-27)
 
 ## Features
