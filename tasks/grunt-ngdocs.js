@@ -114,6 +114,7 @@ module.exports = function(grunt) {
       data = grunt.file.read(file),
       vm.runInNewContext(data, context, file);
       setup = context.NG_DOCS;
+      setup.apis = setup.apis || {}; // make backward compatible to 0.1.1, remove in 0.2.0
       // keep only pages from other build tasks
       setup.pages = _.filter(setup.pages, function(p) {return p.section !== section;});
     } else {
