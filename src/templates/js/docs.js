@@ -278,6 +278,7 @@ docsApp.serviceFactory.sections = function serviceFactory() {
 
 docsApp.controller.DocsController = function($scope, $location, $window, sections) {
   var INDEX_PATH = /^(\/|\/index[^\.]*.html)$/,
+      DOCS_PATH = /^\/(api)|(guide)|(cookbook)|(misc)|(tutorial)/,
       GLOBALS = /^angular\.([^\.]+)$/,
       MODULE = /^([^\.]+)$/,
       MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
@@ -331,6 +332,9 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
     $scope.sections[(NG_DOCS.html5Mode ? '' : '#/') + url] = section;
   });
   $scope.$watch(function docsPathWatch() {return $location.path(); }, function docsPathWatchAction(path) {
+    if (!DOCS_PATH.test(path)) {
+      return;
+    }
     var parts = path.split('/'),
       sectionId = parts[1],
       partialId = parts[2],
