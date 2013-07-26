@@ -334,10 +334,11 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
     var parts = path.split('/'),
       sectionId = parts[1],
       partialId = parts[2],
-      sectionName = $scope.sections[sectionId] || sectionId,
-      page = sections.getPage(sectionId, partialId);
+      page, sectionName = $scope.sections[sectionId];
 
-    $scope.currentPage = sections.getPage(sectionId, partialId);
+    if (!sectionName) { return; }
+
+    $scope.currentPage = page = sections.getPage(sectionId, partialId);
 
     if (!$scope.currentPage) {
       $scope.partialTitle = 'Error: Page Not Found!';
