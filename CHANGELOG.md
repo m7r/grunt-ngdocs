@@ -1,3 +1,13 @@
+# 0.1.4 (2013-07-29)
+
+## Features
+### docs
+
+* allow custom routes in examples #23 ([2836e465](https://github.com/m7r/grunt-ngdocs/commit/2836e465))
+
+
+
+
 # 0.1.3 (2013-07-19)
 
 ## Features
