@@ -334,7 +334,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
     var parts = path.split('/'),
       sectionId = parts[1],
       partialId = parts[2],
-      page, sectionName = $scope.sections[sectionId];
+      page, sectionName = $scope.sections[(NG_DOCS.html5Mode ? '' : '#/') + sectionId];
 
     if (!sectionName) { return; }
 
