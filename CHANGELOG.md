@@ -1,3 +1,12 @@
+# 0.1.5 (2013-07-30)
+
+## Bug fixes
+### docs
+
+* display pages in none html5 mode ([f61fd5a2](https://github.com/m7r/grunt-ngdocs/commit/f61fd5a2))
+
+
+
 # 0.1.4 (2013-07-29)
 
 ## Features
