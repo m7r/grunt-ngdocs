@@ -1,9 +1,29 @@
+# 0.1.6 (2013-08-01)
+
+## Features
+### docs
+
+* optimize sidebar & breadcrum style ([6947ed47](https://github.com/m7r/grunt-ngdocs/commit/6947ed47))
+
+* smaller font size for headings ([a1a8eb5b](https://github.com/m7r/grunt-ngdocs/commit/a1a8eb5b))
+
+
+
+## Bug fixes
+### docs
+
+* show section in breadcrum ([4c1dd72f](https://github.com/m7r/grunt-ngdocs/commit/4c1dd72f))
+
+
+
+
 # 0.1.5 (2013-07-30)
 
 ## Bug fixes
 ### docs
 
 * display pages in none html5 mode ([f61fd5a2](https://github.com/m7r/grunt-ngdocs/commit/f61fd5a2))
+
 
 
 
