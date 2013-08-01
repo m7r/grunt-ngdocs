@@ -352,7 +352,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       match, sectionPath = (NG_DOCS.html5Mode ? '' : '#/') +  sectionId;
 
     if (partialId) {
-      breadcrumb.push({ name: NG_DOCS.sections[sectionName], url: sectionPath });
+      breadcrumb.push({ name: sectionName, url: sectionPath });
       if (partialId == 'angular.Module') {
         breadcrumb.push({ name: 'angular.Module' });
       } else if (match = partialId.match(GLOBALS)) {
@@ -389,7 +389,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         breadcrumb.push({ name: page.shortName });
       }
     } else {
-      breadcrumb.push({ name: NG_DOCS.sections[sectionName] });
+      breadcrumb.push({ name: sectionName });
     }
   });
 
