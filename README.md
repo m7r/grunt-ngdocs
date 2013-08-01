@@ -139,6 +139,8 @@ After that only index.html, js/docs-setup.js and the partials will be overwritte
 
 No longer needed partials will not be deleted. Use for example the grunt-contrib-clean task to clean the docs folder before creating a distribution build.
 
+After an update of grunt-ngdocs you should clean the docs folder too.
+
 A doc commet looks like this:
 ```js
 /**
@@ -166,6 +168,10 @@ angular.module('rfx', []).directive('rAutogrow', function() {
 ```
 
 See the [AngularJS source code](https://github.com/angular/angular.js/tree/master/src/ng) for more examples.
+
+##Batarang
+If your examples are empty you maybe have batarang enabled for the docs site.
+This is the same issue as on http://docs.angular.js and the batarang team is informed about it #68.
 
 ##License
 MIT License
