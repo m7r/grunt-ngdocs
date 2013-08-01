@@ -295,6 +295,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
 
   $scope.navClass = function(page1, page2) {
     return {
+      first: this.$first,
       last: this.$last,
       active: page1 && this.currentPage == page1 || page2 && this.currentPage == page2
     };

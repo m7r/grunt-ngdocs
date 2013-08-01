@@ -10,7 +10,9 @@ img.AngularJS-small {
 }
 
 .breadcrumb {
-  padding-bottom:2px;
+  padding-top: 6px;
+  padding-bottom: 0;
+  line-height: 18px
 }
 
 .clear-navbar {
@@ -35,6 +37,14 @@ img.AngularJS-small {
 
 /* =============================== */
 
+.form-search {
+  margin-right: 20px;
+}
+
+.form-search .search-query {
+  width: 170px;
+}
+
 .form-search .dropdown-menu {
   margin-left: 10px;
 }
@@ -44,10 +54,6 @@ img.AngularJS-small {
   font-weight: bold;
   font-size: 13px;
   color: black;
-}
-
-.form-search > ul.nav {
-  padding: 0;
 }
 
 .form-search > ul.nav > li > a {
@@ -63,19 +69,22 @@ img.AngularJS-small {
   min-height: 14px;
 }
 
+.form-search > ul.nav > li.first {
+  padding-top: 6px;
+}
+
 .form-search > ul.nav > li.last {
-  padding-bottom: 1em;
+  padding-bottom: 6px;
 }
 
 .form-search > ul.nav > li.last + li.api-list-item {
-  margin-top:-1em;
-  padding-bottom: 1em;
+  margin-top: -6px;
+  padding-bottom: 6px;
 }
 
 .form-search .well {
   border-color: #d3d3d3;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding: 0;
   margin-bottom: 15px;
 }
 
@@ -104,7 +113,7 @@ img.AngularJS-small {
 }
 
 .form-search .module .guide {
-  line-height: 21px;
+  line-height: 20px;
 }
 
 /* =============================== */

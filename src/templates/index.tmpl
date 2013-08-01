@@ -122,11 +122,11 @@
 
     <div class="row">
       <div class="span3">
-        <form class="well form-search" ng-submit="submitForm()">
+        <form class="form-search" ng-submit="submitForm()">
           <div class="dropdown search"
                ng-class="{open: focused && bestMatch.rank > 0 && bestMatch.page != currentPage}">
             <input type="text" ng-model="search" placeholder="search the docs"
-                   tabindex="1" accesskey="s" class="input-medium search-query" focused="focused">
+                   tabindex="1" accesskey="s" class="search-query" focused="focused">
             <ul class="dropdown-menu">
               <li>
                 <a href="{{bestMatch.page.url}}">{{bestMatch.page.shortName}}</a>
@@ -136,8 +136,8 @@
 
           <div class="spacer"></div>
 
-          <ul class="nav nav-list" ng-hide="page">
-            <li ng-repeat="page in pages<%= trackBy('page.url') %>" ng-class="navClass(page)" class="api-list-item">
+          <ul class="nav nav-list well" ng-show="pages">
+            <li ng-repeat="page in pages<%= trackBy('page.url', "'expand'") %>" ng-class="navClass(page)" class="api-list-item">
               <a href="{{page.url}}" tabindex="2">{{page.shortName}}</a>
             </li>
           </ul>
