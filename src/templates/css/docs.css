@@ -142,7 +142,26 @@ img.AngularJS-small {
 .content h3,
 .content h4,
 .content h5 {
-  margin-top: 1em;
+  margin: 1em 0 5px;
+}
+
+.content h1 {
+  font-size: 30px;
+  line-height: 36px;
+}
+
+.content h2 {
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.content h3 {
+  line-height: 27px;
+  font-size: 18px;
+}
+
+.content h4 {
+  font-size: 15px;
 }
 
 ul.parameters > li > p,
