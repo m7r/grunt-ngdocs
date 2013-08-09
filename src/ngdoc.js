@@ -737,6 +737,7 @@ Doc.prototype = {
     var sep = prefix ? separator : '';
     (this.param||[]).forEach(function(param, i){
       if (!(skipFirst && i==0)) {
+      	if (param.isProperty) { return; }
         if (param.optional) {
           dom.text('[' + sep + param.name + ']');
         } else {
