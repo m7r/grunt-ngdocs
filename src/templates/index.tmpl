@@ -82,8 +82,17 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <% if (title) { %>
-            <a class="brand"><%= title %></a>
+          <% if (image) { %>
+            <% if (imageLink) { %>
+              <a href="<%= imageLink %>">
+            <% } %>
+              <img class="pull-left" src="<%= image %>">
+            <% if (imageLink) { %>
+              </a>
+            <% } %>
+          <% } %>
+          <% if (title) {%>
+            <a <% if (titleLink) { %> href="<%= titleLink %>" <% } %> class="brand"><%= title %></a>
           <% } %>
           <ul class="nav">
             <li ng-repeat="(url, name) in sections" ng-class="{active: isActivePath(url)}">

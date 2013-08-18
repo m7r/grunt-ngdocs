@@ -59,6 +59,13 @@ module.exports = function(grunt) {
       }
     });
 
+    if (options.image) {
+      if (!/^((https?:)?\/\/|\.\.\/)/.test(options.image)) {
+        grunt.file.copy(options.image, path.join(options.dest, 'img', options.image));
+        options.image = "img/" + options.image;
+      }
+    }
+
     options.styles = _.map(options.styles, function(file) {
       if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
         return file;
@@ -137,6 +144,9 @@ module.exports = function(grunt) {
           analytics: options.analytics,
           navContent: options.navContent,
           title: options.title,
+          image: options.image,
+          titleLink: options.titleLink,
+          imageLink: options.imageLink,
           trackBy: function(id, animation) {
             return options.animation ? ' track by ' + id + (animation ? '" ng-animate="' + animation : '') : '';
           }
