@@ -297,7 +297,10 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
     return {
       first: this.$first,
       last: this.$last,
-      active: page1 && this.currentPage == page1 || page2 && this.currentPage == page2
+      active: page1 && this.currentPage == page1 || page2 && this.currentPage == page2,
+      match: this.focused && this.currentPage != page1 &&
+             this.bestMatch.rank > 0 && this.bestMatch.page == page1
+             
     };
   };
 

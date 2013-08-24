@@ -116,6 +116,10 @@ img.AngularJS-small {
   line-height: 14px;
 }
 
+.form-search .well li a:focus {
+	outline: none;
+}
+
 .form-search .well .guide {
   float: right;
   padding-top: 0;
@@ -124,6 +128,10 @@ img.AngularJS-small {
 
 .form-search .module .guide {
   line-height: 20px;
+}
+
+.match > a, .nav > .match > a:hover {
+	background-color: #dbeaf4;
 }
 
 /* =============================== */
