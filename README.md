@@ -35,6 +35,9 @@ ngdocs: {
     html5Mode: true,
     startPage: '/api',
     title: "My Awesome Docs",
+    image: "path/to/my/image.png",
+    imageLink: "http://my-domain.com",
+    titleLink: "/api",
     analytics: {
           account: 'UA-08150815-0',
           domainName: 'my-domain.com'
@@ -95,6 +98,17 @@ Set first page to open.
 ####html5Mode
 [default] 'true'  
 Whether or not to enable `html5Mode` in the docs application.  If true, then links will be absolute.  If false, they will be prefixed by `#/`.  
+
+####image
+A URL or relative path to an image file to use in the top navbar.
+
+####titleLink
+[default] no anchor tag is used
+Wraps the title text in an anchor tag with the provided URL.
+
+####imageLink
+[default] no anchor tag is used
+Wraps the navbar image in an anchor tag with the provided URL.
 
 ####animation
 [default] 'false' or 'true' for the included angularjs, angularjs 1.1.5+ from CDN or a folder like /vendor/angular-1.1.5/angular.js.  
