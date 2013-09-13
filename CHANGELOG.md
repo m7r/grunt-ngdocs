@@ -1,3 +1,28 @@
+# 0.1.7 (2013-09-13)
+
+## Features
+### ngdocs
+
+* hide param.property in all usage examples ([3ba0464b](https://github.com/m7r/grunt-ngdocs/commit/3ba0464b))
+
+* adds image option to the navbar for custom image ([1e2a8f7e](https://github.com/m7r/grunt-ngdocs/commit/1e2a8f7e))
+
+### docs
+
+* highlight search best match ([3f8d8512](https://github.com/m7r/grunt-ngdocs/commit/3f8d8512))
+
+* make search pulldown optional ([e774db97](https://github.com/m7r/grunt-ngdocs/commit/e774db97))
+
+
+
+## Bug fixes
+### docs
+
+* adjust search field width in ie8 ([173d8f3d](https://github.com/m7r/grunt-ngdocs/commit/173d8f3d))
+
+
+
+
 # 0.1.6 (2013-08-01)
 
 ## Features
@@ -26,7 +51,6 @@
 
 
 
-
 # 0.1.4 (2013-07-29)
 
 ## Features
@@ -44,15 +68,15 @@
 
 * `@param` support for object properties ([5e3c402c](https://github.com/m7r/grunt-ngdocs/commit/5e3c402c))
 
-  @param {Object} param Some obj  
+  @param {Object} param Some obj
   @param {String} param.name some name on the obj 
    
   Object properties are not included in the method signature
 
 * support custom items with `@requires` ([d0f488c2](https://github.com/m7r/grunt-ngdocs/commit/d0f488c2))
 
-  `@requires $cookie` => `$cookie` href = currentsection/ng.$cookie  
-  `@requires module.directive:tabs` => `tabs` href = currentsection/module.directive:tabs  
+  `@requires $cookie` => `$cookie` href = currentsection/ng.$cookie
+  `@requires module.directive:tabs` => `tabs` href = currentsection/module.directive:tabs
   `@requires /section2/module.directive:tabs` => `tabs` href = section2/module.directive:tabs
 
 
