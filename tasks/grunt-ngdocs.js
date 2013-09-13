@@ -147,6 +147,7 @@ module.exports = function(grunt) {
           image: options.image,
           titleLink: options.titleLink,
           imageLink: options.imageLink,
+          bestMatch: options.bestMatch,
           trackBy: function(id, animation) {
             return options.animation ? ' track by ' + id + (animation ? '" ng-animate="' + animation : '') : '';
           }

@@ -38,6 +38,7 @@ ngdocs: {
     image: "path/to/my/image.png",
     imageLink: "http://my-domain.com",
     titleLink: "/api",
+    bestMatch: true,
     analytics: {
           account: 'UA-08150815-0',
           domainName: 'my-domain.com'
@@ -109,6 +110,11 @@ Wraps the title text in an anchor tag with the provided URL.
 ####imageLink
 [default] no anchor tag is used
 Wraps the navbar image in an anchor tag with the provided URL.
+
+####bestMatch
+[default] false
+The best matching page for a search query is highlighted and get selected on return.
+If this option is set to true the best match is shown below the search field in an dropdown menu. Use this for long lists where the highlight is often not visible.
 
 ####animation
 [default] 'false' or 'true' for the included angularjs, angularjs 1.1.5+ from CDN or a folder like /vendor/angular-1.1.5/angular.js.  
