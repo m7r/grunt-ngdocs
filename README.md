@@ -63,11 +63,11 @@ ngdocs: {
 
 ####dest
 [default] 'docs'  
-Folder relative to your Gruntfile were the documentation should be build.
+Folder relative to your Gruntfile where the documentation should be build.
 
 ####scripts
 [default] ['angular.js']  
-Set which angular.js file or addional custom js files are loaded to the app. This allows the live examles to use custom directives, services etc. The documentation app works with angular.js 1.0.+ and 1.1.+.
+Set which angular.js file or addional custom js files are loaded to the app. This allows the live examples to use custom directives, services, etc. The documentation app works with angular.js 1.0.+ and 1.1.+.
 
 Possible values:
 
@@ -142,20 +142,20 @@ Set the name for the section in the documentation app.
 
 ####api
 [default] true for target api  
-Set the sidebar to advanced mode with sections for modules, services etc.
+Set the sidebar to advanced mode, with sections for modules, services, etc.
 
 
 ##How it works
-The task parses the specified files for doc commets and extract these in partial html files for the documentation app.
+The task parses the specified files for doc comments and extracts them into partial html files for the documentation app.
 
-At first run all necessary files will be copied to the destination folder.
-After that only index.html, js/docs-setup.js and the partials will be overwritten.
+At first run, all necessary files will be copied to the destination folder.
+After that, only index.html, js/docs-setup.js, and the partials will be overwritten.
 
-No longer needed partials will not be deleted. Use for example the grunt-contrib-clean task to clean the docs folder before creating a distribution build.
+Partials that are no longer needed will not be deleted. Use, for example, the grunt-contrib-clean task to clean the docs folder before creating a distribution build.
 
 After an update of grunt-ngdocs you should clean the docs folder too.
 
-A doc commet looks like this:
+A doc comment looks like this:
 ```js
 /**
  * @ngdoc directive
