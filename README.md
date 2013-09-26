@@ -136,6 +136,8 @@ should be that of listitems inside a bootstrap navbar:
 ```
 Example: 'templates/my-nav.html'
 
+The template, if specified, is pre-processed using [grunt.template](https://github.com/gruntjs/grunt/wiki/grunt.template#grunttemplateprocess).
+
 ###Targets
 Each grunt target creates a section in the documentation app.
 
