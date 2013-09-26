@@ -102,7 +102,7 @@ module.exports = function(grunt) {
     setup.pages = _.union(setup.pages, ngdoc.metadata(reader.docs));
 
     if (options.navTemplate) {
-      options.navContent = grunt.file.read(options.navTemplate);
+      options.navContent = grunt.template.process(grunt.file.read(options.navTemplate));
     } else {
       options.navContent = '';
     }
