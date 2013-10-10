@@ -39,7 +39,7 @@ ngdocs: {
     imageLink: "http://my-domain.com",
     titleLink: "/api",
     bestMatch: true,
-    require: true,
+    requirejs: true,
     analytics: {
           account: 'UA-08150815-0',
           domainName: 'my-domain.com'
