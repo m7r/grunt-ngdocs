@@ -54,7 +54,7 @@
             <% _.forEach(scripts, function(url) { %>
                window.dependencies.push('<%= url %>');
             <% }); %>
-           addTag('script', {src: 'js/require.js', 'data-main': 'js/main.js'}, sync);
+           addTag('script', {src: 'js/require.min.js', 'data-main': 'js/main.js'}, sync);
       <% } %>
 
       function addTag(name, attributes, sync) {
