@@ -357,6 +357,12 @@ Doc.prototype = {
     }
 
   },
+  
+  html_usage_controller: function(dom){
+    var self = this;
+    self.html_usage_parameters(dom);
+    self.html_usage_this(dom);
+  },
 
   html_usage_parameters: function(dom) {
     dom.h('Parameters', this.param, function(param){
