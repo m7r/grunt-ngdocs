@@ -41,20 +41,19 @@
       <% }); %>
 
       <% if (!require) { %>
-            console.log('toto');
-          <% _.forEach(scripts, function(url) { %>
-            addTag('script', {src: '<%= url %>'}, sync);
-          <% }); %>
-          addTag('script', {src: 'js/angular-bootstrap.min.js'}, sync);
-          addTag('script', {src: 'js/angular-bootstrap-prettify.min.js'}, sync);
-          addTag('script', {src: 'js/docs-setup.js'}, sync);
-          addTag('script', {src: 'js/docs.js'}, sync);
-      <% } else { %>
-             window.dependencies = [];
             <% _.forEach(scripts, function(url) { %>
-               window.dependencies.push('<%= url %>');
+                addTag('script', {src: '<%= url %>'}, sync);
             <% }); %>
-           addTag('script', {src: 'js/require.min.js', 'data-main': 'js/main.js'}, sync);
+            addTag('script', {src: 'js/angular-bootstrap.min.js'}, sync);
+            addTag('script', {src: 'js/angular-bootstrap-prettify.min.js'}, sync);
+            addTag('script', {src: 'js/docs-setup.js'}, sync);
+            addTag('script', {src: 'js/docs.js'}, sync);
+      <% } else { %>
+            window.dependencies = [];
+            <% _.forEach(scripts, function(url) { %>
+                window.dependencies.push('<%= url %>');
+            <% }); %>
+            addTag('script', {src: 'js/require.min.js', 'data-main': 'js/main.js'}, sync);
       <% } %>
 
       function addTag(name, attributes, sync) {

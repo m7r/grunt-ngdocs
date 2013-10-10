@@ -117,9 +117,9 @@ Wraps the navbar image in an anchor tag with the provided URL.
 The best matching page for a search query is highlighted and get selected on return.
 If this option is set to true the best match is shown below the search field in an dropdown menu. Use this for long lists where the highlight is often not visible.
 
-####require
+####requirejs
 [default] false
-If you are using require.js in your project set require to true. You can now use the example system with your application.
+If you are using require.js in your project set requirejs to true. You can now use the example system with your application.
 
 ####animation
 [default] 'false' or 'true' for the included angularjs, angularjs 1.1.5+ from CDN or a folder like /vendor/angular-1.1.5/angular.js.  

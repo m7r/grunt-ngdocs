@@ -28,7 +28,7 @@ module.exports = function(grunt) {
             '',
           html5Mode: true,
           animation: false,
-          require: false
+          requirejs: false
         }),
         section = this.target === 'all' ? 'api' : this.target,
         setup;
@@ -149,7 +149,7 @@ module.exports = function(grunt) {
           titleLink: options.titleLink,
           imageLink: options.imageLink,
           bestMatch: options.bestMatch,
-          require: options.require,
+          requirejs: options.requirejs,
           trackBy: function(id, animation) {
             return options.animation ? ' track by ' + id + (animation ? '" ng-animate="' + animation : '') : '';
           }
