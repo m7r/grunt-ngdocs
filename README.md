@@ -13,7 +13,7 @@ Once that's done, add this line to your project's Gruntfile:
 grunt.loadNpmTasks('grunt-ngdocs');
 ```
 
-A full working example can be found at [https://github.com/m7r/grunt-ngdocs-example]()
+A full working example can be found at [https://github.com/m7r/grunt-ngdocs-example](https://github.com/m7r/grunt-ngdocs-example)
 
 ##Config
 Inside your `Gruntfile.js` file, add a section named *ngdocs*.
