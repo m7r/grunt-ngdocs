@@ -300,7 +300,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       active: page1 && this.currentPage == page1 || page2 && this.currentPage == page2,
       match: this.focused && this.currentPage != page1 &&
              this.bestMatch.rank > 0 && this.bestMatch.page == page1
-             
+
     };
   };
 
@@ -544,7 +544,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
     // http://docs.disqus.com/developers/universal/
     (function() {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://angularjs.disqus.com/embed.js';
+      dsq.src = '//angularjs.disqus.com/embed.js';
       (document.getElementsByTagName('head')[0] ||
         document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
