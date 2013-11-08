@@ -1,8 +1,15 @@
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js ng-app: docsApp;" lang="en" ng-controller="DocsController"> <!--<![endif]-->
+<% if (!require) { %>
+    <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
+    <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js lt-ie9 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js ng-app: docsApp;" lang="en" ng-controller="DocsController"> <!--<![endif]-->
+<% } else { %>
+    <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en" ng-controller="DocsController"> <![endif]-->
+    <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en" ng-controller="DocsController"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en" ng-controller="DocsController"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js" lang="en" ng-controller="DocsController"> <!--<![endif]-->
+<% } %>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -16,6 +23,7 @@
     // dynamically add base tag as well as css and javascript files.
     // we can't add css/js the usual way, because some browsers (FF) eagerly prefetch resources
     // before the base attribute is added, causing 404 and terribly slow loading of the docs app.
+
     (function() {
       var indexFile = (location.pathname.match(/\/(index[^\.]*\.html)/) || ['', ''])[1],
           rUrl = /(#!\/|<%= sections %>|index[^\.]*\.html).*$/,
@@ -31,13 +39,22 @@
       <% _.forEach(styles, function(url) { %>
          addTag('link', {rel: 'stylesheet', href: '<%= url %>', type: 'text/css'}, sync);
       <% }); %>
-      <% _.forEach(scripts, function(url) { %>
-        addTag('script', {src: '<%= url %>'}, sync);
-      <% }); %>
-      addTag('script', {src: 'js/angular-bootstrap.min.js'}, sync);
-      addTag('script', {src: 'js/angular-bootstrap-prettify.min.js'}, sync);
-      addTag('script', {src: 'js/docs-setup.js'}, sync);
-      addTag('script', {src: 'js/docs.js'}, sync);
+
+      <% if (!require) { %>
+            <% _.forEach(scripts, function(url) { %>
+                addTag('script', {src: '<%= url %>'}, sync);
+            <% }); %>
+            addTag('script', {src: 'js/angular-bootstrap.min.js'}, sync);
+            addTag('script', {src: 'js/angular-bootstrap-prettify.min.js'}, sync);
+            addTag('script', {src: 'js/docs-setup.js'}, sync);
+            addTag('script', {src: 'js/docs.js'}, sync);
+      <% } else { %>
+            window.dependencies = [];
+            <% _.forEach(scripts, function(url) { %>
+                window.dependencies.push('<%= url %>');
+            <% }); %>
+            addTag('script', {src: 'js/require.min.js', 'data-main': 'js/main.js'}, sync);
+      <% } %>
 
       function addTag(name, attributes, sync) {
         var el = document.createElement(name),
@@ -62,6 +79,9 @@
             })(node);
       }
     })();
+
+
+
 <% if (analytics) { %>
     // GA asynchronous tracker
     var _gaq = _gaq || [];

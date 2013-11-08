@@ -27,7 +27,8 @@ module.exports = function(grunt) {
             (grunt.config('pkg').title || grunt.config('pkg').name) :
             '',
           html5Mode: true,
-          animation: false
+          animation: false,
+          requirejs: false
         }),
         section = this.target === 'all' ? 'api' : this.target,
         setup;
@@ -148,6 +149,7 @@ module.exports = function(grunt) {
           titleLink: options.titleLink,
           imageLink: options.imageLink,
           bestMatch: options.bestMatch,
+          requirejs: options.requirejs,
           trackBy: function(id, animation) {
             return options.animation ? ' track by ' + id + (animation ? '" ng-animate="' + animation : '') : '';
           }
