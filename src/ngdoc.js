@@ -257,7 +257,12 @@ Doc.prototype = {
     function flush() {
       if (atName) {
         var text = trim(atText.join('\n')), match;
-        if (atName == 'param') {
+        if (atName == 'module') {
+          match = text.match(/^\s*(\S+)\s*$/);
+          if (match) {
+            self.moduleName = match[1];
+          }
+        } else if (atName == 'param') {
           match = text.match(/^\{([^}]+)\}\s+(([^\s=]+)|\[(\S+)=([^\]]+)\])\s+(.*)/);
                              //  1      1    23       3   4   4 5      5  2   6  6
           if (!match) {
@@ -322,7 +327,7 @@ Doc.prototype = {
     var dom = new DOM(),
       self = this;
 
-    dom.h(title(this.name, this.ngdoc == 'overview'), function() {
+    dom.h(title(this.moduleName, this.name, this.ngdoc == 'overview'), function() {
 
       notice('deprecated', 'Deprecated API', self.deprecated);
       if (self.ngdoc != 'overview') {
@@ -763,7 +768,7 @@ var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
 
 
-function title(text, overview) {
+function title(module, text, overview) {
   if (!text) return text;
   var match,
     module,
@@ -798,7 +803,7 @@ function title(text, overview) {
     name = match[3];
     type = match[2];
   } else if (match = text.match(MODULE_TYPE)) {
-    module = match[1];
+    module = module || match[1];
     name = match[2];
     type = 'type';
   } else if (match = text.match(MODULE_SERVICE)) {
@@ -806,7 +811,7 @@ function title(text, overview) {
       // module name with dots looks like a service
       module = text;
     } else {
-      module = match[1];
+      module = module || match[1];
       name = match[2] + (match[3] || '');
       type = 'service';
     }
@@ -879,7 +884,8 @@ function metadata(docs){
     pages.push({
       section: doc.section,
       id: doc.id,
-      name: title(doc.name),
+      name: title(doc.moduleName, doc.name),
+      moduleName: doc.moduleName,
       shortName: shortName,
       type: doc.ngdoc,
       keywords:doc.keywords()

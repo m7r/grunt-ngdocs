@@ -362,8 +362,10 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       } else if (match = partialId.match(GLOBALS)) {
         breadcrumb.push({ name: partialId });
       } else if (match = partialId.match(MODULE)) {
+        match[1] = page.moduleName || match[1];
         breadcrumb.push({ name: match[1] });
       } else if (match = partialId.match(MODULE_FILTER)) {
+        match[1] = page.moduleName || match[1];
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
       } else if (match = partialId.match(MODULE_DIRECTIVE)) {
@@ -374,9 +376,11 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         breadcrumb.push({ name: 'input' });
         breadcrumb.push({ name: match[2] });
       } else if (match = partialId.match(MODULE_CUSTOM)) {
+        match[1] = page.moduleName || match[1];
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[3] });
       } else if (match = partialId.match(MODULE_TYPE)) {
+        match[1] = page.moduleName || match[1];
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
       }  else if (match = partialId.match(MODULE_SERVICE)) {
@@ -384,6 +388,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
           // module name with dots looks like a service
           breadcrumb.push({ name: partialId });
         } else {
+          match[1] = page.moduleName || match[1];
           breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
           breadcrumb.push({ name: match[2] + (match[3] || '') });
         }
@@ -455,22 +460,22 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       } else if (match = id.match(GLOBALS)) {
         module('ng', section).globals.push(page);
       } else if (match = id.match(MODULE)) {
-        module(match[1], section);
+        module(page.moduleName || match[1], section);
       } else if (match = id.match(MODULE_FILTER)) {
-        module(match[1], section).filters.push(page);
+        module(page.moduleName || match[1], section).filters.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE)) {
-        module(match[1], section).directives.push(page);
+        module(page.moduleName || match[1], section).directives.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE_INPUT)) {
-        module(match[1], section).directives.push(page);
+        module(page.moduleName || match[1], section).directives.push(page);
       } else if (match = id.match(MODULE_CUSTOM)) {
-        module(match[1], section).others.push(page);
+        module(page.moduleName || match[1], section).others.push(page);
       } else if (match = id.match(MODULE_TYPE)) {
-        module(match[1], section).types.push(page);
+        module(page.moduleName || match[1], section).types.push(page);
       } else if (match = id.match(MODULE_SERVICE)) {
         if (page.type === 'overview') {
           module(id, section);
         } else {
-          module(match[1], section).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
+          module(page.moduleName || match[1], section).service(match[2])[match[3] ? 'provider' : 'instance'] = page;
         }
       } else if (match = id.match(MODULE_MOCK)) {
         module('ngMock', section).globals.push(page);
