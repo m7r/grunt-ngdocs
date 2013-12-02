@@ -765,7 +765,7 @@ var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE_DIRECTIVE_INPUT = /^(.+)\.directive:input\.([^\.]+)$/,
     MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
     MODULE_SERVICE = /^(.+)\.([^\.]+?)(Provider)?$/,
-    MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
+    MODULE_TYPE = /^([^\.]+\..+)\.([A-Z][^\.]+)$/;
 
 
 function title(module, text, overview) {

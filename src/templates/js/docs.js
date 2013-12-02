@@ -286,7 +286,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       MODULE_FILTER = /^(.+)\.filter:([^\.]+)$/,
       MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
       MODULE_SERVICE = /^(.+)\.([^\.]+?)(Provider)?$/,
-      MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
+      MODULE_TYPE = /^([^\.]+\..+)\.([A-Z][^\.]+)$/;
 
 
   /**********************************
