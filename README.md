@@ -189,7 +189,8 @@ angular.module('rfx', []).directive('rAutogrow', function() {
 });
 ```
 
-See the [AngularJS source code](https://github.com/angular/angular.js/tree/master/src/ng) for more examples.
+Check out the [Writing AngularJS documentation wiki article](https://github.com/angular/angular.js/wiki/Writing-AngularJS-Documentation) to see what's possible,
+or take a look at the [AngularJS source code](https://github.com/angular/angular.js/tree/master/src/ng) for more examples.
 
 ##Batarang
 If your examples are empty you maybe have batarang enabled for the docs site.
