@@ -189,7 +189,7 @@ angular.module('rfx', []).directive('rAutogrow', function() {
 });
 ```
 
-Check out the [Writing AngularJS documentation wiki article](https://github.com/PascalPrecht/grunt-ngdocs) to see what's possible,
+Check out the [Writing AngularJS documentation wiki article](https://github.com/angular/angular.js/wiki/Writing-AngularJS-Documentation) to see what's possible,
 or take a look at the [AngularJS source code](https://github.com/angular/angular.js/tree/master/src/ng) for more examples.
 
 ##Batarang
