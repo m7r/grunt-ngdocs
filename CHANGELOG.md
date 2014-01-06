@@ -1,3 +1,28 @@
+# 0.1.8 (2014-01-06)
+
+## Features
+### docs
+
+* remove angularjs favicon ([8ca93964](https://github.com/m7r/grunt-ngdocs/commit/8ca93964))
+* Preprocess navTemplate via grunt.template ([8840d036](https://github.com/m7r/grunt-ngdocs/commit/8840d036))
+
+### ngdocs
+
+* override module name parsing ([3a92ae93](https://github.com/m7r/grunt-ngdocs/commit/3a92ae93))
+
+
+## Bug fixes
+### docs
+
+* load disqus over https ([2a8de1c0](https://github.com/m7r/grunt-ngdocs/commit/2a8de1c0))
+
+### readme
+
+* fixes link ([4345513d](https://github.com/m7r/grunt-ngdocs/commit/4345513d))
+
+
+
+
 # 0.1.7 (2013-09-13)
 
 ## Features
