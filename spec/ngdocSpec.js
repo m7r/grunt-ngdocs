@@ -98,6 +98,26 @@ describe('ngdoc', function() {
         });
 
         it('should not change absolute url', function() {
+          expect(doc.convertUrlToAbsolute('guide/index')).toEqual('#/guide/index');
+        });
+
+        it('should prepend current section to relative url', function() {
+          expect(doc.convertUrlToAbsolute('angular.widget')).toEqual('#/section/angular.widget');
+        });
+
+        it('should change id to index if not specified', function() {
+          expect(doc.convertUrlToAbsolute('guide/')).toEqual('#/guide/index');
+        });
+      });
+
+      describe('convertUrlToAbsolute HTML5 mode', function() {
+        var doc;
+
+        beforeEach(function() {
+          doc = new Doc({section: 'section'}, 'a', 1, {html5Mode: true});
+        });
+
+        it('should not change absolute url', function() {
           expect(doc.convertUrlToAbsolute('guide/index')).toEqual('guide/index');
         });
 
@@ -316,7 +336,8 @@ describe('ngdoc', function() {
 
     describe('@requires', function() {
       it('should parse more @requires tag into array', function() {
-        var doc = new Doc('@name a\n@requires $service for \n`A`\n@requires $another for `B`');
+        var doc = new Doc('@section api\n@name a\n@requires $service for \n`A`\n@requires $another for `B`',
+                          'a', 1, {html5Mode:true});
         doc.ngdoc = 'service';
         doc.parse();
         expect(doc.requires).toEqual([
@@ -452,7 +473,7 @@ describe('ngdoc', function() {
             'dad{@link angular.foo}\n\n' +
             'external{@link http://angularjs.org}\n\n' +
             'external{@link ./static.html}\n\n' +
-            '{@link angular.directive.ng-foo ng:foo}');
+            '{@link angular.directive.ng-foo ng:foo}', 'a', 1, {html5Mode:true});
 
         doc.section = 'api';
         doc.parse();
@@ -473,7 +494,7 @@ describe('ngdoc', function() {
 
       it('should support line breaks in @link', function() {
         var doc = new Doc("@name a\n@description " +
-            '{@link\napi/angular.foo\na\nb}');
+            '{@link\napi/angular.foo\na\nb}', 'a', 1, {html5Mode:true});
         doc.parse();
         expect(doc.description).
           toContain('<a href="api/angular.foo"><code>a b</code></a>');

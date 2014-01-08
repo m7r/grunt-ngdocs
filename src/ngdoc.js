@@ -43,7 +43,7 @@ var BOOLEAN_ATTR = {};
 });
 
 //////////////////////////////////////////////////////////
-function Doc(text, file, line) {
+function Doc(text, file, line, options) {
   if (typeof text == 'object') {
     for ( var key in text) {
       this[key] = text[key];
@@ -53,6 +53,7 @@ function Doc(text, file, line) {
     this.file = file;
     this.line = line;
   }
+  this.options = options || {};
   this.scenarios = this.scenarios || [];
   this.requires = this.requires || [];
   this.param = this.param || [];
@@ -143,6 +144,7 @@ Doc.prototype = {
    * @returns {string} Absolute url
    */
   convertUrlToAbsolute: function(url) {
+    var prefix = this.options.html5Mode ? '' : '#/';
     var hashIdx = url.indexOf('#');
 
     // Lowercase hash parts of the links,
@@ -151,9 +153,9 @@ Doc.prototype = {
       url = url.substr(0, hashIdx) + url.substr(hashIdx).toLowerCase();
     }
 
-    if (url.substr(-1) == '/') return url + 'index';
-    if (url.match(/\//)) return url;
-    return this.section + '/' + url;
+    if (url.substr(-1) == '/') return prefix + url + 'index';
+    if (url.match(/\//)) return prefix + url;
+    return prefix + this.section + '/' + url;
   },
 
   markdown: function(text) {
@@ -489,7 +491,9 @@ Doc.prototype = {
       }
       dom.h('Dependencies', self.requires, function(require){
         dom.tag('code', function() {
-          dom.tag('a', {href: 'api/ng.' + require.name}, require.name);
+          var id = /[\.\/]/.test(require.name) ? require.name : 'ng.' + require.name,
+              name = require.name.split(/[\.:#\/]/).pop();
+          dom.tag('a', {href: self.convertUrlToAbsolute(id)}, name);
         });
         dom.html(require.text);
       });
