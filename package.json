@@ -17,7 +17,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "showdown": "0.3.1"
+    "marked": "0.2.9"
   },
   "peerDependencies": {
     "grunt": "0.4.x"

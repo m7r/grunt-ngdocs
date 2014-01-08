@@ -20,6 +20,7 @@ exports.Example = function(scenarios) {
   this.html = [];
   this.css = [];
   this.js = [];
+  this.json = [];
   this.unit = [];
   this.scenario = [];
   this.scenarios = scenarios;
@@ -88,6 +89,7 @@ exports.Example.prototype.toHtmlEdit = function() {
   out.push(' source-edit-html="' + ids(this.html) + '"');
   out.push(' source-edit-css="' + ids(this.css) + '"');
   out.push(' source-edit-js="' + ids(this.js) + '"');
+  out.push(' source-edit-json="' + ids(this.json) + '"');
   out.push(' source-edit-unit="' + ids(this.unit) + '"');
   out.push(' source-edit-scenario="' + ids(this.scenario) + '"');
   out.push('></div>\n');
@@ -102,6 +104,7 @@ exports.Example.prototype.toHtmlTabs = function() {
   htmlTabs(this.html);
   htmlTabs(this.css);
   htmlTabs(this.js);
+  htmlTabs(this.json);
   htmlTabs(this.unit);
   htmlTabs(this.scenario);
   out.push('</div>');
@@ -114,7 +117,7 @@ exports.Example.prototype.toHtmlTabs = function() {
           name = source.name;
 
       if (name === 'index.html') {
-        wrap = ' ng-html-wrap-loaded="' + self.module + ' ' + self.deps.join(' ') + '"';
+        wrap = ' ng-html-wrap="' + self.module + ' ' + self.deps.join(' ') + '"';
       }
       if (name == 'scenario.js') name = 'End to end test';
 
@@ -131,7 +134,7 @@ exports.Example.prototype.toHtmlTabs = function() {
 
 exports.Example.prototype.toHtmlEmbed = function() {
   var out = [];
-  out.push('<div class="well doc-example-live animator-container"');
+  out.push('<div class="well doc-example-live animate-container"');
   if(this.animations) {
     out.push(" ng-class=\"{'animations-off':animationsOff == true}\"");
   }
