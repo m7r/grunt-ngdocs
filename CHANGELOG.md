@@ -1,3 +1,18 @@
+# 0.1.9 (2014-01-09)
+
+## Features
+### ngdocs
+
+* update parser to angularjs 1.2.7 code ([7261eade](https://github.com/m7r/grunt-ngdocs/commit/7261eade))
+
+  markdown parser has switched from showdown to marked.
+
+* import parser unit tests from angularjs 1.2.7 ([fdeaddc1](https://github.com/m7r/grunt-ngdocs/commit/fdeaddc1))
+
+* check broken links ([6d22869b](https://github.com/m7r/grunt-ngdocs/commit/6d22869b))
+
+
+
 # 0.1.8 (2014-01-06)
 
 ## Features
