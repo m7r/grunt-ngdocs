@@ -1252,18 +1252,21 @@ function merge(docs){
 //////////////////////////////////////////////////////////
 
 
-function checkBrokenLinks(docs) {
+function checkBrokenLinks(docs, apis, options) {
   var byFullId = Object.create(null);
 
   docs.forEach(function(doc) {
     byFullId[doc.section + '/' + doc.id] = doc;
-    if (doc.section === 'api') {
+    if (apis[doc.section]) {
       doc.anchors.push('directive', 'service', 'filter', 'function');
     }
   });
 
   docs.forEach(function(doc) {
     doc.links.forEach(function(link) {
+      if (options && !options.html5mode) {
+        link = link.substring(2);
+      }
       // convert #id to path#id
       if (link[0] == '#') {
         link = doc.section + '/' + doc.id.split('#').shift() + link;

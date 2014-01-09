@@ -91,6 +91,7 @@ module.exports = function(grunt) {
     });
 
     ngdoc.merge(reader.docs);
+    ngdoc.checkBrokenLinks(reader.docs, setup.apis, options);
 
     reader.docs.forEach(function(doc){
       // this hack is here because on OSX angular.module and angular.Module map to the same file.

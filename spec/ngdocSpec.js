@@ -293,7 +293,7 @@ describe('ngdoc', function() {
 
 
   describe('checkBrokenLinks', function() {
-    var docs;
+    var docs, apis = {'api': true};
 
     beforeEach(function() {
       spyOn(console, 'log');
@@ -304,7 +304,7 @@ describe('ngdoc', function() {
 
     it('should log warning when a linked page does not exist', function() {
       docs.push(new Doc({section: 'api', id: 'with-broken.link', links: ['non-existing-link']}))
-      ngdoc.checkBrokenLinks(docs);
+      ngdoc.checkBrokenLinks(docs, apis);
       expect(console.log).toHaveBeenCalled();
       var warningMsg = console.log.argsForCall[0][0]
       expect(warningMsg).toContain('WARNING:');
@@ -314,7 +314,7 @@ describe('ngdoc', function() {
 
     it('should log warning when a linked anchor does not exist', function() {
       docs.push(new Doc({section: 'api', id: 'with-broken.link', links: ['api/fake.id1#non-existing']}))
-      ngdoc.checkBrokenLinks(docs);
+      ngdoc.checkBrokenLinks(docs, apis);
       expect(console.log).toHaveBeenCalled();
       var warningMsg = console.log.argsForCall[0][0]
       expect(warningMsg).toContain('WARNING:');
