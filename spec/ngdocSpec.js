@@ -335,7 +335,7 @@ describe('ngdoc', function() {
           name : 'number',
           optional: false,
           'default' : undefined,
-          description : '<div class="a-page"><p>Number \nto format.</p>\n</div>' }]);
+          description : '<div class="a-page"><p>Number\nto format.</p>\n</div>' }]);
       });
 
       it('should parse with default and optional', function() {
@@ -357,11 +357,11 @@ describe('ngdoc', function() {
         doc.ngdoc = 'service';
         doc.parse();
         expect(doc.requires).toEqual([
-          {name:'$service', text:'<div class="a-page"><p>for \n<code>A</code></p>\n</div>'},
+          {name:'$service', text:'<div class="a-page"><p>for\n<code>A</code></p>\n</div>'},
           {name:'$another', text:'<div class="a-page"><p>for <code>B</code></p>\n</div>'}]);
         expect(doc.html()).toContain('<a href="api/ng.$service">$service</a>');
         expect(doc.html()).toContain('<a href="api/ng.$another">$another</a>');
-        expect(doc.html()).toContain('<p>for \n<code>A</code></p>');
+        expect(doc.html()).toContain('<p>for\n<code>A</code></p>');
         expect(doc.html()).toContain('<p>for <code>B</code></p>');
       });
     });
@@ -476,7 +476,7 @@ describe('ngdoc', function() {
         var doc = new Doc("@name a\n@description foo \n<pre>abc</pre>\n#bah\nfoo \n<pre>cba</pre>");
         doc.parse();
         expect(doc.description).
-          toBe('<div class="a-page"><p>foo \n' +
+          toBe('<div class="a-page"><p>foo\n' +
                '<pre class="prettyprint linenums">abc</pre>\n' +
                '<h1>bah</h1>\n' +
                '<p>foo \n' +

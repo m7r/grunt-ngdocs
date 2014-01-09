@@ -359,7 +359,7 @@ Doc.prototype = {
         flush();
         atName = match[1];
         atText = [];
-        if(match[3]) atText.push(match[3]);
+        if(match[3]) atText.push(match[3].trimRight());
       } else {
         if (atName) {
           atText.push(line);
