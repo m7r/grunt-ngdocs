@@ -39,6 +39,22 @@ describe('ngdoc', function() {
         expect(ngdoc.metadata([d3])[0].shortName).toEqual('more text');
       });
 
+      it('should support module names with dots', function() {
+        var d1 = new Doc('@name a.b.c').parse();
+        var d2 = new Doc('@name a.b.ng-c').parse();
+        var d3 = new Doc('@name some.more.text: more text').parse();
+        expect(ngdoc.metadata([d1])[0].moduleName).toEqual('a.b');
+        expect(ngdoc.metadata([d2])[0].moduleName).toEqual('a.b');
+        expect(ngdoc.metadata([d3])[0].moduleName).toEqual('some.more');
+      });
+
+      it('should allow to overwrite module name', function() {
+        var d1 = new Doc('@name a.b.c').parse();
+        var d2 = new Doc('@name a.b.c\n@module d.e.f').parse();
+        expect(ngdoc.metadata([d1])[0].moduleName).toEqual('a.b');
+        expect(ngdoc.metadata([d2])[0].shortName).toEqual('a.b.c');
+        expect(ngdoc.metadata([d2])[0].moduleName).toEqual('d.e.f');
+      });
     });
 
     describe('parse', function() {
@@ -567,7 +583,7 @@ describe('ngdoc', function() {
       it('should format', function() {
         var doc = new Doc({
           ngdoc:'function',
-          name:'some.name',
+          name:'some.function:name',
           param: [
             {name:'a', type: 'string', optional: true},
             {name:'b', type: 'someType', optional: true, 'default': '"xxx"'},
@@ -609,6 +625,22 @@ describe('ngdoc', function() {
         });
         doc.html_usage_property(dom);
         expect(dom).toContain('myProp');
+        expect(dom).toContain('type');
+        expect(dom).toContain('description');
+      });
+    });
+
+    describe('custom', function() {
+      it('should format', function() {
+        var doc = new Doc({
+          ngdoc:'object',
+          name:'app.common.object:myObject',
+          type:'string',
+          returns:{type: 'type', description: 'description'}
+        });
+        doc.html_usage_property(dom);
+        expect(dom).not.toContain('object:myObject');
+        expect(dom).toContain('myObject');
         expect(dom).toContain('type');
         expect(dom).toContain('description');
       });

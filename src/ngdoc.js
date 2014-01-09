@@ -372,24 +372,20 @@ Doc.prototype = {
       (this.ngdoc === 'error' ? this.name : '') ||
       (((this.file||'').match(/.*(\/|\\)([^(\/|\\)]*)\.ngdoc/)||{})[2]) || // try to extract it from file name
       this.name; // default to name
-    this.moduleName = parseModuleName(this.id);
     this.description = this.markdown(this.description);
     this.example = this.markdown(this.example);
     this['this'] = this.markdown(this['this']);
     return this;
 
-    function parseModuleName(id) {
-      var module = id.split('.')[0];
-      if(module == 'angular') {
-        module = 'ng';
-      }
-      return module;
-    }
-
     function flush() {
       if (atName) {
         var text = trim(atText.join('\n')), match;
-        if (atName == 'param') {
+        if (atName == 'module') {
+          match = text.match(/^\s*(\S+)\s*$/);
+          if (match) {
+            self.moduleName = match[1];
+          }
+        } else if (atName == 'param') {
           match = text.match(/^\{([^}]+)\}\s+(([^\s=]+)|\[(\S+)=([^\]]+)\])\s+(.*)/);
                              //  1      1    23       3   4   4 5      5  2   6  6
           if (!match) {
@@ -631,7 +627,7 @@ Doc.prototype = {
 
     dom.h('Usage', function() {
       dom.code(function() {
-        dom.text(name);
+        dom.text(name.split(':').pop());
         dom.text('(');
         self.parameters(dom, ', ');
         dom.text(');');
@@ -648,7 +644,7 @@ Doc.prototype = {
     var self = this;
     dom.h('Usage', function() {
       dom.code(function() {
-        dom.text(self.name);
+        dom.text(self.name.split(':').pop());
       });
 
       self.html_usage_returns(dom);
@@ -822,7 +818,7 @@ Doc.prototype = {
     if (this.param.length) {
       dom.h('Usage', function() {
         dom.code(function() {
-          dom.text(self.name.split('.').pop());
+          dom.text(self.name.split('.').pop().split(':').pop());
           dom.text('(');
           self.parameters(dom, ', ');
           dom.text(');');
@@ -922,21 +918,30 @@ Doc.prototype = {
 
 //////////////////////////////////////////////////////////
 var GLOBALS = /^angular\.([^\.]+)$/,
-    MODULE = /^((?:(?!^angular\.)[^\.])+)$/,
+    MODULE = /^([^\.]+)$/,
     MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
-    MODULE_DIRECTIVE = /^((?:(?!^angular\.)[^\.])+)\.directive:([^\.]+)$/,
-    MODULE_DIRECTIVE_INPUT = /^((?:(?!^angular\.)[^\.])+)\.directive:input\.([^\.]+)$/,
-    MODULE_FILTER = /^((?:(?!^angular\.)[^\.])+)\.filter:([^\.]+)$/,
-    MODULE_SERVICE = /^((?:(?!^angular\.)[^\.])+)\.([^\.]+?)(Provider)?$/,
-    MODULE_TYPE = /^((?:(?!^angular\.)[^\.])+)\..+\.([A-Z][^\.]+)$/;
+    MODULE_DIRECTIVE = /^(.+)\.directive:([^\.]+)$/,
+    MODULE_DIRECTIVE_INPUT = /^(.+)\.directive:input\.([^\.]+)$/,
+    MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
+    MODULE_SERVICE = /^(.+)\.([^\.]+?)(Provider)?$/,
+    MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
 
 
 function title(doc) {
   if (!doc.name) return doc.name;
   var match,
-    text = doc.name;
+      module = doc.moduleName,
+      overview = doc.ngdoc == 'overview',
+      text = doc.name;
 
   var makeTitle = function (name, type, componentType, component) {
+    if (!module) {
+      module = component;
+      if (module == 'angular') {
+          module = 'ng';
+      }
+      doc.moduleName = module;
+    }
     // Makes title markup.
     // makeTitle('Foo', 'directive', 'module', 'ng') ->
     //    Foo is a directive in module ng
@@ -960,19 +965,23 @@ function title(doc) {
   } else if (match = text.match(GLOBALS)) {
     return makeTitle('angular.' + match[1], 'API', 'module', 'ng');
   } else if (match = text.match(MODULE)) {
-    return makeTitle('', '', 'module', match[1]);
+    return makeTitle(overview ? '' : match[1], '', 'module', match[1]);
   } else if (match = text.match(MODULE_MOCK)) {
     return makeTitle('angular.mock.' + match[1], 'API', 'module', 'ng');
   } else if (match = text.match(MODULE_DIRECTIVE)) {
     return makeTitle(match[2], 'directive', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE_INPUT)) {
     return makeTitle('input [' + match[2] + ']', 'directive', 'module', match[1]);
-  } else if (match = text.match(MODULE_FILTER)) {
-    return makeTitle(match[2], 'filter', 'module', match[1]);
-  } else if (match = text.match(MODULE_SERVICE)) {
-    return makeTitle(match[2] + (match[3] || ''), 'service', 'module', match[1]);
+  } else if (match = text.match(MODULE_CUSTOM)) {
+    return makeTitle(match[3], match[2], 'module', match[1]);
   } else if (match = text.match(MODULE_TYPE)) {
-    return makeTitle(match[2], 'type', 'module', match[1]);
+    return makeTitle(match[2], 'type', 'module', module || match[1]);
+  } else if (match = text.match(MODULE_SERVICE)) {
+    if (overview) {
+      // module name with dots looks like a service
+      return makeTitle('', '', 'module', text);
+    }
+    return makeTitle(match[2] + (match[3] || ''), 'service', 'module', module || match[1]);
   }
   return text;
 }
