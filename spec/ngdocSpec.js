@@ -275,12 +275,12 @@ describe('ngdoc', function() {
   describe('merge', function() {
     it('should merge child with parent', function() {
       var parent = new Doc({id: 'ng.abc', name: 'ng.abc', section: 'api'});
-      var methodA = new Doc({name: 'methodA', methodOf: 'ng.abc'});
-      var methodB = new Doc({name: 'methodB', methodOf: 'ng.abc'});
-      var propA = new Doc({name: 'propA', propertyOf: 'ng.abc'});
-      var propB = new Doc({name: 'propB', propertyOf: 'ng.abc'});
-      var eventA = new Doc({name: 'eventA', eventOf: 'ng.abc'});
-      var eventB = new Doc({name: 'eventB', eventOf: 'ng.abc'});
+      var methodA = new Doc({name: 'methodA', methodOf: 'ng.abc', section: 'api'});
+      var methodB = new Doc({name: 'methodB', methodOf: 'ng.abc', section: 'api'});
+      var propA = new Doc({name: 'propA', propertyOf: 'ng.abc', section: 'api'});
+      var propB = new Doc({name: 'propB', propertyOf: 'ng.abc', section: 'api'});
+      var eventA = new Doc({name: 'eventA', eventOf: 'ng.abc', section: 'api'});
+      var eventB = new Doc({name: 'eventB', eventOf: 'ng.abc', section: 'api'});
       var docs = [methodB, methodA, eventB, eventA, propA, propB, parent]; // keep wrong order;
       ngdoc.merge(docs);
       expect(docs.length).toEqual(1);
