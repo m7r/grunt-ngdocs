@@ -542,7 +542,7 @@ Doc.prototype = {
         });
         dom.html('</ul>');
       });
-      dom.html('<a href="api/ngAnimate.$animate">Click here</a> to learn more about the steps involved in the animation.');
+      // dom.html('<a href="api/ngAnimate.$animate">Click here</a> to learn more about the steps involved in the animation.');
     }
     if(params.length > 0) {
       dom.html('<h2>Parameters</h2>');
@@ -661,6 +661,7 @@ Doc.prototype = {
     dom.h('Usage', function() {
       var restrict = self.restrict || 'A';
 
+      /*
       if (restrict.match(/E/)) {
         dom.html('<p>');
         dom.text('This directive can be used as custom element, but be aware of ');
@@ -668,6 +669,7 @@ Doc.prototype = {
         dom.text('.');
         dom.html('</p>');
       }
+      */
 
       if (self.usage) {
         dom.tag('pre', function() {
