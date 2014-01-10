@@ -1,3 +1,13 @@
+# 0.1.11 (2014-01-10)
+
+## Bug fixes
+### 
+
+* show loaded scripts in example source ([9a2fb67c](https://github.com/m7r/grunt-ngdocs/commit/9a2fb67c))
+
+
+
+
 # 0.1.10 (2014-01-10)
 
 ## Features
