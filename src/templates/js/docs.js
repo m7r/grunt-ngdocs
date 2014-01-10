@@ -346,6 +346,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
 
     if (!$scope.currentPage) {
       $scope.partialTitle = 'Error: Page Not Found!';
+      page = {};
     }
 
     updateSearch();
@@ -412,21 +413,12 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
 
   $scope.versionNumber = angular.version.full;
   $scope.version = angular.version.full + "  " + angular.version.codeName;
-  $scope.subpage = false;
   $scope.futurePartialTitle = null;
   $scope.loading = 0;
 
   if (!$location.path() || INDEX_PATH.test($location.path())) {
     $location.path(NG_DOCS.startPage).replace();
   }
-  // bind escape to hash reset callback
-  angular.element(window).bind('keydown', function(e) {
-    if (e.keyCode === 27) {
-      $scope.$apply(function() {
-        $scope.subpage = false;
-      });
-    }
-  });
 
   /**********************************
    Private methods
