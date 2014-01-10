@@ -34,8 +34,8 @@
       <% _.forEach(scripts, function(url) { %>
         addTag('script', {src: '<%= url %>'}, sync);
       <% }); %>
-      addTag('script', {src: 'js/angular-bootstrap.min.js'}, sync);
-      addTag('script', {src: 'js/angular-bootstrap-prettify.min.js'}, sync);
+      addTag('script', {src: 'js/angular-bootstrap.js'}, sync);
+      addTag('script', {src: 'js/angular-bootstrap-prettify.js'}, sync);
       addTag('script', {src: 'js/docs-setup.js'}, sync);
       addTag('script', {src: 'js/docs.js'}, sync);
 
