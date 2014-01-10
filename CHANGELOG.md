@@ -1,3 +1,22 @@
+# 0.1.10 (2014-01-10)
+
+## Features
+### ngdocs
+
+* trim @name lines #51 ([9a27cb05](https://github.com/m7r/grunt-ngdocs/commit/9a27cb05))
+
+
+
+## Bug fixes
+### ngdocs
+
+* pass options to js file too fix #54 ([97f00b92](https://github.com/m7r/grunt-ngdocs/commit/97f00b92))
+
+* @requires prefix only $name with ng. fix #61 ([d407eb3c](https://github.com/m7r/grunt-ngdocs/commit/d407eb3c))
+
+
+
+
 # 0.1.9 (2014-01-09)
 
 ## Features
