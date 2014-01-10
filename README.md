@@ -2,6 +2,10 @@
 Grunt plugin to create a documentation like [AngularJS](http://docs.angularjs.org)
 NOTE: this plugin requires Grunt 0.4.x
 
+ATTENTION: grunt-ngdocs 0.2+ is for angularjs 1.2+
+If you use on older version stay with grunt-ngdocs 0.1+
+Please clear your old docs js and css folders after upgrade.
+
 ##Getting Started
 From the same directory as your project's Gruntfile and package.json, install this plugin with the following command:
 
@@ -115,10 +119,6 @@ Wraps the navbar image in an anchor tag with the provided URL.
 [default] false
 The best matching page for a search query is highlighted and get selected on return.
 If this option is set to true the best match is shown below the search field in an dropdown menu. Use this for long lists where the highlight is often not visible.
-
-####animation
-[default] 'false' or 'true' for the included angularjs, angularjs 1.1.5+ from CDN or a folder like /vendor/angular-1.1.5/angular.js.  
-Set to 'true' to enable animations in the sidebar.
 
 ####navTemplate
 [default] null  

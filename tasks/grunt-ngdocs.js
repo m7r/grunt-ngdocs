@@ -26,8 +26,7 @@ module.exports = function(grunt) {
           title: grunt.config('pkg') ?
             (grunt.config('pkg').title || grunt.config('pkg').name) :
             '',
-          html5Mode: true,
-          animation: false
+          html5Mode: true
         }),
         section = this.target === 'all' ? 'api' : this.target,
         setup;
@@ -36,14 +35,7 @@ module.exports = function(grunt) {
     var gruntScriptsFolder = 'grunt-scripts';
     options.scripts = _.map(options.scripts, function(file) {
       if (file === 'angular.js') {
-        options.animation = true;
         return 'js/angular.min.js';
-      }
-
-      if (!options.animation) {
-        //force animation in new angular versions from CDN or copied from a folder like angular-1.x.x/
-        var match = file.match(/1\.(\d\.\d+)\/angular\./);
-        if (match && parseInt(match[1], 10) > 1.4) { options.animation = true; }
       }
 
       if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
@@ -122,7 +114,6 @@ module.exports = function(grunt) {
       data = grunt.file.read(file),
       vm.runInNewContext(data, context, file);
       setup = context.NG_DOCS;
-      setup.apis = setup.apis || {}; // make backward compatible to 0.1.1, remove in 0.2.0
       // keep only pages from other build tasks
       setup.pages = _.filter(setup.pages, function(p) {return p.section !== section;});
     } else {
@@ -149,9 +140,6 @@ module.exports = function(grunt) {
           titleLink: options.titleLink,
           imageLink: options.imageLink,
           bestMatch: options.bestMatch,
-          trackBy: function(id, animation) {
-            return options.animation ? ' track by ' + id + (animation ? '" ng-animate="' + animation : '') : '';
-          }
         };
 
     // create index.html
