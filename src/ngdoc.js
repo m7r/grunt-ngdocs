@@ -492,8 +492,8 @@ Doc.prototype = {
       }
       dom.h('Dependencies', self.requires, function(require){
         dom.tag('code', function() {
-          var id = /[\.\/]/.test(require.name) ? require.name : 'ng.' + require.name,
-              name = require.name.split(/[\.:#\/]/).pop();
+          var id = require.name[0] == '$' ? 'ng.' + require.name : require.name,
+              name = require.name.split(/[\.:\/]/).pop();
           dom.tag('a', {href: self.convertUrlToAbsolute(id)}, name);
         });
         dom.html(require.text);
