@@ -1,3 +1,20 @@
+# 0.2.0 (2014-01-10)
+
+## Features
+### docs
+
+* updates for angularjs 1.2.7 ([0eb8fa2f](https://github.com/m7r/grunt-ngdocs/commit/0eb8fa2f))
+
+### BRACKING CHANGE
+
+Works only with angularjs 1.2+
+
+### ATTENTION
+
+Clear your old docs js and css folder on upgrade
+
+
+
 # 0.1.10 (2014-01-10)
 
 ## Features
