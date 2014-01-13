@@ -1,3 +1,18 @@
+# 0.2.1 (2014-01-13)
+
+## Bug fixes
+### docs
+
+* allow requirejs in options.scripts ([faaebd9f](https://github.com/m7r/grunt-ngdocs/commit/faaebd9f))
+
+* links in examples should show url of loaded files (like 0.1 version) ([2b505a15](https://github.com/m7r/grunt-ngdocs/commit/2b505a15))
+
+### ATTENTION
+
+Clear your old docs js folder on upgrade
+
+
+
 # 0.2.0 (2014-01-10)
 
 ## Features
