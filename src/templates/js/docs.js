@@ -5,6 +5,55 @@ var docsApp = {
 };
 
 
+docsApp.directive.ngHtmlWrapLoaded = function(reindentCode, templateMerge, loadedUrls) {
+  function escape(text) {
+    return text.
+      replace(/\&/g, '&amp;').
+      replace(/\</g, '&lt;').
+      replace(/\>/g, '&gt;').
+      replace(/"/g, '&quot;');
+  }
+
+  function setHtmlIe8SafeWay(element, html) {
+    var newElement = angular.element('<pre>' + html + '</pre>');
+
+    element.html('');
+    element.append(newElement.contents());
+    return element;
+  }
+
+  return {
+    compile: function(element, attr) {
+      var properties = {
+            head: '',
+            module: '',
+            body: element.text()
+          },
+        html = "<!doctype html>\n<html ng-app{{module}}>\n  <head>\n{{head:4}}  </head>\n  <body>\n{{body:4}}  </body>\n</html>";
+
+      angular.forEach(loadedUrls.base, function(dep) {
+        properties.head += '<script src="' + dep + '"></script>\n';
+      });
+
+      angular.forEach((attr.ngHtmlWrapLoaded || '').split(' '), function(dep) {
+        if (!dep) return;
+        var ext = dep.split(/\./).pop();
+
+        if (ext == 'css') {
+          properties.head += '<link rel="stylesheet" href="' + dep + '" type="text/css">\n';
+        } else if(ext == 'js' && dep !== 'angular.js') {
+          properties.head += '<script src="' + (loadedUrls[dep] || dep) + '"></script>\n';
+        } else if (dep !== 'angular.js') {
+          properties.module = '="' + dep + '"';
+        }
+      });
+
+      setHtmlIe8SafeWay(element, escape(templateMerge(html, properties)));
+    }
+  };
+};
+
+
 docsApp.directive.focused = function($timeout) {
   return function(scope, element, attrs) {
     element[0].focus();
