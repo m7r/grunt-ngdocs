@@ -89,7 +89,7 @@ Copy additional css files to the documentation app
 Optional include Google Analytics in the documentation app.
 
 ####discussions
-Optional include [discussions](http://http://disqus.com) in the documentation app.
+Optional include [discussions](http://disqus.com) in the documentation app.
 
 ####title
 [default] "name" or "title" field in `pkg` 
