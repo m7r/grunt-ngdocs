@@ -1,8 +1,8 @@
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js ng-app: docsApp;" lang="en" ng-controller="DocsController"> <!--<![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 <% if(!deferLoad) { %>ng-app: docsApp; <% } %>" lang="en" ng-controller="DocsController"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 <% if(!deferLoad) { %>ng-app: docsApp; <% } %>" lang="en" ng-controller="DocsController"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 <% if(!deferLoad) { %>ng-app: docsApp; <% } %>" lang="en" ng-controller="DocsController"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js <% if(!deferLoad) { %>ng-app: docsApp; <% } %>" lang="en" ng-controller="DocsController"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -40,12 +40,12 @@
       <% _.forEach(scripts, function(url) { %>
         addTag('script', {src: '<%= url %>'}, sync);
       <% }); %>
-
+      <% if(!deferLoad) { %>
       addTag('script', {src: 'js/angular-bootstrap.js'}, sync);
       addTag('script', {src: 'js/angular-bootstrap-prettify.js'}, sync);
       addTag('script', {src: 'js/docs-setup.js'}, sync);
       addTag('script', {src: 'js/docs.js'}, sync);
-
+      <% } %>
       function addTag(name, attributes, sync) {
         var el = document.createElement(name),
             attrName;
