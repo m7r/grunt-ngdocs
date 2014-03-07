@@ -106,6 +106,13 @@ describe('ngdoc', function() {
         expect(doc.links).toContain('api/angular.link');
       });
 
+      it('should correctly parse capitalized service names', function(){
+        var doc = new Doc('@ngdoc service\n@name my.module.Service');
+        doc.parse();
+        expect(ngdoc.metadata([doc])[0].shortName).toEqual('my.module.Service');
+        expect(ngdoc.metadata([doc])[0].moduleName).toEqual('my.module');
+      });
+
       describe('convertUrlToAbsolute', function() {
         var doc;
 
