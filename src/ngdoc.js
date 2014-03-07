@@ -983,7 +983,7 @@ function title(doc) {
     return makeTitle('input [' + match[2] + ']', 'directive', 'module', match[1]);
   } else if (match = text.match(MODULE_CUSTOM)) {
     return makeTitle(match[3], match[2], 'module', match[1]);
-  } else if (match = text.match(MODULE_TYPE)) {
+  } else if (match = text.match(MODULE_TYPE) && doc.ngdoc === 'type') {
     return makeTitle(match[2], 'type', 'module', module || match[1]);
   } else if (match = text.match(MODULE_SERVICE)) {
     if (overview) {
