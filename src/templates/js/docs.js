@@ -462,7 +462,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         module(page.moduleName || match[1], section).directives.push(page);
       } else if (match = id.match(MODULE_CUSTOM)) {
         module(page.moduleName || match[1], section).others.push(page);
-      } else if (match = id.match(MODULE_TYPE)) {
+      } else if (match = id.match(MODULE_TYPE) && page.type === 'type') {
         module(page.moduleName || match[1], section).types.push(page);
       } else if (match = id.match(MODULE_SERVICE)) {
         if (page.type === 'overview') {
