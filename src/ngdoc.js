@@ -672,10 +672,8 @@ Doc.prototype = {
       */
 
       if (self.usage) {
-        dom.tag('pre', function() {
-          dom.tag('code', function() {
-            dom.text(self.usage);
-          });
+        dom.code(function() {
+          dom.text(self.usage);
         });
       } else {
         if (restrict.match(/E/)) {
