@@ -470,7 +470,14 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         if (page.type === 'service') {
           module(page.moduleName || match[1], section).service(match[3])[page.id.match(/^.+Provider$/) ? 'provider' : 'instance'] = page;
         } else {
-          module(page.moduleName || match[1], section).others.push(page);
+          var m = module(page.moduleName || match[1], section),
+            listName = page.type + 's';
+
+          if (m[listName]) {
+            m[listName].push(page);
+          } else {
+            m.others.push(page);
+          }
         }
       } else if (match = id.match(MODULE_TYPE) && page.type === 'type') {
         module(page.moduleName || match[1], section).types.push(page);
