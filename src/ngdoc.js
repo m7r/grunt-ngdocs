@@ -672,10 +672,8 @@ Doc.prototype = {
       */
 
       if (self.usage) {
-        dom.tag('pre', function() {
-          dom.tag('code', function() {
-            dom.text(self.usage);
-          });
+        dom.code(function() {
+          dom.text(self.usage);
         });
       } else {
         if (restrict.match(/E/)) {
@@ -847,6 +845,10 @@ Doc.prototype = {
     this.html_usage_interface(dom)
   },
 
+  html_usage_controller: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
   method_properties_events: function(dom) {
     var self = this;
     if (self.methods.length) {
@@ -929,8 +931,9 @@ Doc.prototype = {
 var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE = /^([^\.]+)$/,
     MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
-    MODULE_DIRECTIVE = /^(.+)\.directive:([^\.]+)$/,
-    MODULE_DIRECTIVE_INPUT = /^(.+)\.directive:input\.([^\.]+)$/,
+    MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
+    MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
+    MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
     MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
     MODULE_SERVICE = /^(.+)\.([^\.]+?)(Provider)?$/,
     MODULE_TYPE = /^([^\.]+)\..+\.([A-Z][^\.]+)$/;
@@ -977,13 +980,15 @@ function title(doc) {
     return makeTitle(overview ? '' : match[1], '', 'module', match[1]);
   } else if (match = text.match(MODULE_MOCK)) {
     return makeTitle('angular.mock.' + match[1], 'API', 'module', 'ng');
+  } else if (match = text.match(MODULE_CONTROLLER) && doc.type === 'controller') {
+    return makeTitle(match[2], 'controller', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE)) {
     return makeTitle(match[2], 'directive', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE_INPUT)) {
     return makeTitle('input [' + match[2] + ']', 'directive', 'module', match[1]);
   } else if (match = text.match(MODULE_CUSTOM)) {
-    return makeTitle(match[3], match[2], 'module', match[1]);
-  } else if (match = text.match(MODULE_TYPE)) {
+    return makeTitle(match[3], doc.ngdoc || match[2], 'module', match[1]);
+  } else if (match = text.match(MODULE_TYPE) && doc.ngdoc === 'type') {
     return makeTitle(match[2], 'type', 'module', module || match[1]);
   } else if (match = text.match(MODULE_SERVICE)) {
     if (overview) {
