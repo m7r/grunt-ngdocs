@@ -68,7 +68,7 @@ ngdocs: {
 
 ####dest
 [default] 'docs'  
-Folder relative to your Gruntfile where the documentation should be build.
+Folder relative to your Gruntfile where the documentation should be built.
 
 ####scripts
 [default] ['angular.js']  
