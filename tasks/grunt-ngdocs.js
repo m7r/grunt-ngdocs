@@ -140,6 +140,7 @@ module.exports = function(grunt) {
           titleLink: options.titleLink,
           imageLink: options.imageLink,
           bestMatch: options.bestMatch,
+          deferLoad: !!options.deferLoad
         };
 
     // create index.html
