@@ -67,11 +67,11 @@ ngdocs: {
 ###Options
 
 ####dest
-[default] 'docs'  
+[default] 'docs'
 Folder relative to your Gruntfile where the documentation should be built.
 
 ####scripts
-[default] ['angular.js']  
+[default] ['angular.js']
 Set which angular.js file or addional custom js files are loaded to the app. This allows the live examples to use custom directives, services, etc. The documentation app works with angular.js 1.0.+ and 1.1.+.
 
 Possible values:
@@ -87,7 +87,7 @@ If you want to use requirejs as loader set this to `true`.
 Include 'js/angular-bootstrap.js', 'js/angular-bootstrap-prettify.js', 'js/docs-setup.js', 'js/docs.js' with requirejs and finally bootstrap the app `angular.bootstrap(document, ['docsApp']);`.
 
 ####styles
-[default] []  
+[default] []
 Copy additional css files to the documentation app
 
 ####analytics
@@ -97,17 +97,17 @@ Optional include Google Analytics in the documentation app.
 Optional include [discussions](http://disqus.com) in the documentation app.
 
 ####title
-[default] "name" or "title" field in `pkg` 
+[default] "name" or "title" field in `pkg`
 Title to put on the navbar and the page's `title` attribute.  By default, tries to
 find the title in the `pkg`. If it can't find it, it will go to an empty string.
 
 ####startPage
 [default] '/api'
-Set first page to open. 
+Set first page to open.
 
 ####html5Mode
-[default] 'true'  
-Whether or not to enable `html5Mode` in the docs application.  If true, then links will be absolute.  If false, they will be prefixed by `#/`.  
+[default] 'true'
+Whether or not to enable `html5Mode` in the docs application.  If true, then links will be absolute.  If false, they will be prefixed by `#/`.
 
 ####image
 A URL or relative path to an image file to use in the top navbar.
@@ -126,8 +126,8 @@ The best matching page for a search query is highlighted and get selected on ret
 If this option is set to true the best match is shown below the search field in an dropdown menu. Use this for long lists where the highlight is often not visible.
 
 ####navTemplate
-[default] null  
-Path to a template of a nav HTML template to include.  The css for it 
+[default] null
+Path to a template of a nav HTML template to include.  The css for it
 should be that of listitems inside a bootstrap navbar:
 ```html
 <header class="header">
@@ -150,11 +150,11 @@ Each grunt target creates a section in the documentation app.
 [required] List of files to parse for documentation comments.
 
 ####title
-[default] 'API Documentation'  
+[default] 'API Documentation'
 Set the name for the section in the documentation app.
 
 ####api
-[default] true for target api  
+[default] true for target api
 Set the sidebar to advanced mode, with sections for modules, services, etc.
 
 
@@ -184,7 +184,7 @@ A doc comment looks like this:
  * @example
    <example module="rfx">
      <file name="index.html">
-         <textarea ng-model="text" r-autogrow class="input-block-level"></textarea>
+         <textarea ng-model="text"rx-autogrow class="input-block-level"></textarea>
          <pre>{{text}}</pre>
      </file>
    </example>
