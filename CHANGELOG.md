@@ -1,3 +1,20 @@
+# 0.2.2 (2014-04-29)
+
+## Features
+### docs
+
+* make the app load deferrable ([8b714eb9](https://github.com/m7r/grunt-ngdocs/commit/8b714eb9))
+
+### ngdocs
+
+* Support for documenting controllers and capitalized services, prettyprint custom usage examples ([24a26807](https://github.com/m7r/grunt-ngdocs/commit/24a26807))
+
+## Bug fixes
+##docs
+
+* proper header img styling in ie8 ([9c8ca7b3](https://github.com/m7r/grunt-ngdocs/commit/9c8ca7b3))
+
+
 # 0.2.1 (2014-01-13)
 
 ## Bug fixes
