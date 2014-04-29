@@ -81,6 +81,11 @@ Possible values:
   - ['http://example.com/file.js', 'https://example.com/file.js', '//example.com/file.js'] reference remote files (eg from a CDN)
   - ['../app.js'] reference file relative to the dest folder
 
+####deferLoad
+[default] 'false'
+If you want to use requirejs as loader set this to `true`.
+Include 'js/angular-bootstrap.js', 'js/angular-bootstrap-prettify.js', 'js/docs-setup.js', 'js/docs.js' with requirejs and finally bootstrap the app `angular.bootstrap(document, ['docsApp']);`.
+
 ####styles
 [default] []  
 Copy additional css files to the documentation app
