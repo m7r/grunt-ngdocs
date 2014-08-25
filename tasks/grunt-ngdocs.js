@@ -26,7 +26,8 @@ module.exports = function(grunt) {
           title: grunt.config('pkg') ?
             (grunt.config('pkg').title || grunt.config('pkg').name) :
             '',
-          html5Mode: true
+          html5Mode: true,
+          editExample: true
         }),
         section = this.target === 'all' ? 'api' : this.target,
         setup;
@@ -150,6 +151,7 @@ module.exports = function(grunt) {
 
     // create setup file
     setup.html5Mode = options.html5Mode;
+    setup.editExample = options.editExample;
     setup.startPage = options.startPage;
     setup.discussions = options.discussions;
     setup.scripts = _.map(options.scripts, function(url) { return path.basename(url); });

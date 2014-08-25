@@ -29,7 +29,7 @@ ngdocs: {
 }
 ```
 
-And with all options:
+And with many options:
 
 ```js
 ngdocs: {
@@ -95,6 +95,10 @@ Optional include Google Analytics in the documentation app.
 
 ####discussions
 Optional include [discussions](http://disqus.com) in the documentation app.
+
+####editExample
+[default] true
+Show Edit Button for examples.
 
 ####title
 [default] "name" or "title" field in `pkg`

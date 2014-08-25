@@ -78,7 +78,7 @@ docsApp.directive.code = function() {
 
 
 docsApp.directive.sourceEdit = function(getEmbeddedTemplate) {
-  return {
+  return NG_DOCS.editExample ? {
     template: '<div class="btn-group pull-right">' +
         '<a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href>' +
         '  <i class="icon-pencil icon-white"></i> Edit <span class="caret"></span>' +
@@ -108,7 +108,7 @@ docsApp.directive.sourceEdit = function(getEmbeddedTemplate) {
         openPlunkr(sources);
       };
     }
-  };
+  } : {};
 
   function read(text) {
     var files = [];
