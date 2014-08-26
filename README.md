@@ -34,7 +34,7 @@ And with many options:
 ```js
 ngdocs: {
   options: {
-    dest: 'docs'
+    dest: 'docs',
     scripts: ['../app.min.js'],
     html5Mode: true,
     startPage: '/api',
