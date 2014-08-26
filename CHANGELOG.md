@@ -1,3 +1,18 @@
+# 0.2.3 (2014-08-26)
+
+## Features
+### docs
+
+* make example edit optional. ([e0b7b058](https://github.com/m7r/grunt-ngdocs/commit/e0b7b058))
+
+* allow section names to be part of the base url, for example: http://api.myapp.org/ #89 ([60e5a48a](https://github.com/m7r/grunt-ngdocs/commit/60e5a48a))
+
+## Bug fixes
+### docs
+
+* remove jsfiddle from edit example options #101 ([22870f19](https://github.com/m7r/grunt-ngdocs/commit/22870f19))
+
+
 # 0.2.2 (2014-04-29)
 
 ## Features
