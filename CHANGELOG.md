@@ -1,3 +1,15 @@
+# 0.2.4 (2014-09-09)
+
+
+
+## Bug fixes
+### docs
+
+* correct base url in ie #106 ([fb8af0fb](https://github.com/m7r/grunt-ngdocs/commit/fb8af0fb))
+
+
+
+
 # 0.2.3 (2014-08-26)
 
 ## Features
