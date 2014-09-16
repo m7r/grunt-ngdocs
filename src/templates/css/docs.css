@@ -48,6 +48,7 @@ img.AngularJS-small {
 
 .form-search {
   margin-right: 10px;
+  position: fixed;
 }
 
 .form-search .search-query {

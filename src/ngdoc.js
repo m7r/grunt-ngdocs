@@ -521,6 +521,12 @@ Doc.prototype = {
     }
 
   },
+  
+  html_usage_controller: function(dom){
+    var self = this;
+    self.html_usage_parameters(dom);
+    self.html_usage_this(dom);
+  },
 
   prepare_type_hint_class_name : function(type) {
     var typeClass = type.toLowerCase().match(/^[-\w]+/) || [];
