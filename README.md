@@ -3,8 +3,8 @@ Grunt plugin to create a documentation like [AngularJS](http://docs.angularjs.or
 NOTE: this plugin requires Grunt 0.4.x
 
 ATTENTION: grunt-ngdocs 0.2+ is for angularjs 1.2+
-If you use on older version stay with grunt-ngdocs 0.1+
-Please clear your old docs js and css folders after upgrade.
+grunt-ngdocs 0.2.5 supports angularjs 1.3+ too
+Please include angular.js and angular-animate.js with the scripts option
 
 ##Getting Started
 From the same directory as your project's Gruntfile and package.json, install this plugin with the following command:
@@ -72,11 +72,11 @@ Folder relative to your Gruntfile where the documentation should be built.
 
 ####scripts
 [default] ['angular.js']
-Set which angular.js file or addional custom js files are loaded to the app. This allows the live examples to use custom directives, services, etc. The documentation app works with angular.js 1.0.+ and 1.1.+.
+Set which angular.js file or addional custom js files are loaded to the app. This allows the live examples to use custom directives, services, etc. The documentation app works with angular.js 1.2+ and 1.3+. If you include your own angular.js include angular-animate.js too.
 
 Possible values:
 
-  - ['angular.js'] use angularjs 1.1.5 delivered with ngdocs
+  - ['angular.js'] use angular and angular-animate 1.2.16 delivered with grunt-ngdocs
   - ['path/to/file.js'] file will be copied into the docs, into a `grunt-scripts` folder
   - ['http://example.com/file.js', 'https://example.com/file.js', '//example.com/file.js'] reference remote files (eg from a CDN)
   - ['../app.js'] reference file relative to the dest folder
