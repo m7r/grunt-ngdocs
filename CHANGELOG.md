@@ -1,3 +1,25 @@
+# 0.2.5 (2014-09-17)
+
+## Features
+### docs
+
+* allow to include angular.js 1.3+ ([7744e914](https://github.com/m7r/grunt-ngdocs/commit/7744e914))
+
+
+## Bug fixes
+### ngdocs
+
+* parse dom before checking for broken links ([53520ce4](https://github.com/m7r/grunt-ngdocs/commit/53520ce4))
+
+### docs
+
+* use ngApp as an attribute #99 ([94297107](https://github.com/m7r/grunt-ngdocs/commit/94297107))
+
+* hide sections headers if angular.js 1.3+ is used ([08e3b199](https://github.com/m7r/grunt-ngdocs/commit/08e3b199))
+
+
+
+
 # 0.2.4 (2014-09-09)
 
 
