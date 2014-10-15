@@ -1136,7 +1136,7 @@ var GUIDE_PRIORITY = [
 
   'i18n',
   'ie',
-  'migration',
+  'migration'
 ];
 
 function sidebarSort(a, b){
