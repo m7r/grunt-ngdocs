@@ -8,8 +8,24 @@ exports.process = process;
 var ngdoc = require('./ngdoc.js'),
     NEW_LINE = /\n\r?/;
 
+function extRegex(value){
+    if(value instanceof RegExp){
+        return value;
+    } else if (typeof value === 'string') {
+        return new RegExp(value);
+    } else if (Array.isArray(value)) {
+        value = value.map(function(ext) {
+           return '(\\.' + ext + ')';
+        }).reduce(function(prev, next){
+            return prev + '|' + next;
+        }) + '$';
+        return new RegExp(value);
+    }
+}
+
 function process(content, file, section, options) {
-  if (/\.js$/.test(file)) {
+  var regex = extRegex(options.ext);
+  if (regex.test(file)) {
     processJsFile(content, file, section, options).forEach(function(doc) {
       exports.docs.push(doc);
     });
