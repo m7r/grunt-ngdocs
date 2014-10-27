@@ -1,3 +1,22 @@
+# 0.2.6 (2014-10-27)
+
+## Features
+### ngdocs
+
+* parse all given files #58 #71 ([793d797d](https://github.com/m7r/grunt-ngdocs/commit/793d797d))
+
+
+
+## Bug fixes
+### ngdocs
+
+* update marked #112 ([1e64893f](https://github.com/m7r/grunt-ngdocs/commit/1e64893f))
+
+* remove douple ids from headings ([485408a3](https://github.com/m7r/grunt-ngdocs/commit/485408a3))
+
+
+
+
 # 0.2.5 (2014-09-17)
 
 ## Features
