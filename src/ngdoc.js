@@ -10,7 +10,18 @@ var fs = require('fs');
 var fspath = require('path');
 var errorsJson;
 var marked = require('marked');
+var renderer = new marked.Renderer();
+renderer.heading = function (text, level) {
+  return '<h' +
+    level +
+    '>' +
+    text +
+    '</h' +
+    level +
+    '>\n';
+};
 marked.setOptions({
+  renderer: renderer,
   gfm: true,
   tables: true
 });
