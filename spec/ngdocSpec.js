@@ -223,11 +223,11 @@ describe('ngdoc', function() {
                                 '       third line\n' +
                                 '        fourth line\n\n' +
                                 '   fifth line')).
-        toMatch('<p>first line\n' +
+        toMatch('<div class="docs-page"><p>first line\n' +
                 'second line</p>\n' +
                 '<pre><code>third line\n' +
-                ' fourth line</code></pre>\n' +
-                '<p>fifth line</p>\n');
+                ' fourth line\n' +
+                '</code></pre><p>fifth line</p>\n');
     });
 
     it('should unindent text before processing based on the first line', function() {
@@ -239,8 +239,8 @@ describe('ngdoc', function() {
         toMatch('<div class="docs-page"><p>first line</p>\n' +
                 '<pre><code>second line\n' +
                 'third line\n' +
-                ' fourth line</code></pre>\n' +
-                '<p>fifth line</p>\n</div>');
+                ' fourth line\n' +
+                '</code></pre><p>fifth line</p>\n</div>');
     });
 
 
