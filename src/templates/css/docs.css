@@ -2,25 +2,55 @@ body {
 	padding-top: 70px;
 }
 
+/* Image in the navigation bar. */
+.navbar-header > img {
+	max-height: 40px;
+	margin: 5px 5px 5px 0;
+}
+
 /* Sets the search icon inside input */
-.has-feedback .glyphicon-search { top: 0; }
+.form-group.illustration {
+	position: relative;
+}
+
+	.form-group.illustration > span {
+		position: absolute;
+		right: 9px;
+		top: 9px;
+	}
 
 /* Titles for bundling modules. */
-.panel > .panel-heading > a {
-	display: block;
-	color: #000;
-}
+.panel > .panel-heading { padding: 4px 15px; }
+
+	.panel > .panel-heading > a {
+		display: block;
+		color: #000;
+	}
+
 	.panel > .panel-heading > a > small {
 		padding: 4px 0;
 		color: #777;
 	}
 
 /* Items list in navigation. */
-.panel .nav > li > strong {
-	display: block;
-	margin-top: 8px;
-	padding: 4px 15px;
+.panel .nav > li.active {
+	background: #f7f7f9;
 }
 
-.panel .nav > li > a { padding: 4px 15px 4px 24px; }
+	.panel .nav > li > strong {
+		display: block;
+		padding: 2px 15px;
+		margin-top: 6px;
+	}
 
+		.panel .nav > li > strong:first-child { margin-top: 0; }
+
+	.panel .nav > li > a { padding: 2px 15px 2px 28px; }
+
+	.option-cog {
+		position: absolute !important;
+		top: 0;
+		right: 6px;
+		padding: 2px 5px !important;
+		z-index: 1;
+	}

@@ -1,129 +1,137 @@
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ng-app: docsApp;" lang="en" ng-controller="DocsController"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js ng-app: docsApp;" lang="en" ng-controller="DocsController"> <!--<![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" <% if(!deferLoad) { %>ng-app="docsApp" <% } %> lang="en" ng-controller="DocsController"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" <% if(!deferLoad) { %>ng-app="docsApp" <% } %> lang="en" ng-controller="DocsController"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" <% if(!deferLoad) { %>ng-app="docsApp" <% } %> lang="en" ng-controller="DocsController"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" <% if(!deferLoad) { %>ng-app="docsApp" <% } %> lang="en" ng-controller="DocsController"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="Description"
-		content="AngularJS is what HTML would have been, had it been designed for building web-apps.
-				 Declarative templates with data-binding, MVC, dependency injection and great
-				 testability story all implemented with pure client-side JavaScript!">
+        content="AngularJS is what HTML would have been, had it been designed for building web-apps.
+                 Declarative templates with data-binding, MVC, dependency injection and great
+                 testability story all implemented with pure client-side JavaScript!">
   <meta name="fragment" content="!">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title ng-bind-template="<%= title || 'Doc' %>: {{partialTitle}}">Docs</title>
   <script type="text/javascript">
-	// dynamically add base tag as well as css and javascript files.
-	// we can't add css/js the usual way, because some browsers (FF) eagerly prefetch resources
-	// before the base attribute is added, causing 404 and terribly slow loading of the docs app.
-	(function() {
-	  var indexFile = (location.pathname.match(/\/(index[^\.]*\.html)/) || ['', ''])[1],
-		  rUrl = /(#!\/|<%= sections %>|index[^\.]*\.html).*$/,
-		  baseUrl = location.href.replace(rUrl, indexFile),
-		  headEl = document.getElementsByTagName('head')[0],
-		  sync = true;
+    // dynamically add base tag as well as css and javascript files.
+    // we can't add css/js the usual way, because some browsers (FF) eagerly prefetch resources
+    // before the base attribute is added, causing 404 and terribly slow loading of the docs app.
+    (function() {
+      var indexFile = (location.pathname.match(/\/(index[^\.]*\.html)/) || ['', ''])[1],
+          rUrl = /(#!\/|<%= sections %>|index[^\.]*\.html).*$/,
+          origin = location.origin || (window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '')),
+          baseUrl = origin + location.href.substr(origin.length).replace(rUrl, indexFile),
+          headEl = document.getElementsByTagName('head')[0],
+          sync = true;
 
-	  addTag('base', {href: baseUrl});
-	  addTag('link', {rel: 'stylesheet', href: 'css/bootstrap.min.css', type: 'text/css'});
-	  addTag('link', {rel: 'stylesheet', href: 'css/docs.css', type: 'text/css'});
-	  addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});
-	  <% _.forEach(styles, function(url) { %>
-		 addTag('link', {rel: 'stylesheet', href: '<%= url %>', type: 'text/css'}, sync);
-	  <% }); %>
-	  <% _.forEach(scripts, function(url) { %>
-		addTag('script', {src: '<%= url %>'}, sync);
-	  <% }); %>
-	  addTag('script', {src: 'js/angular-bootstrap.min.js'}, sync);
-	  addTag('script', {src: 'js/angular-bootstrap-prettify.min.js'}, sync);
-	  addTag('script', {src: 'js/docs-setup.js'}, sync);
-	  addTag('script', {src: 'js/docs.js'}, sync);
+      addTag('base', {href: baseUrl});
+      addTag('link', {rel: 'stylesheet', href: 'css/bootstrap.min.css', type: 'text/css'});
+      addTag('link', {rel: 'stylesheet', href: 'css/prettify.css', type: 'text/css'});
+      addTag('link', {rel: 'stylesheet', href: 'css/docs.css', type: 'text/css'});
+      addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});
 
-	  function addTag(name, attributes, sync) {
-		var el = document.createElement(name),
-			attrName;
+      <% _.forEach(styles, function(url) { %>
+         addTag('link', {rel: 'stylesheet', href: '<%= url %>', type: 'text/css'}, sync);
+      <% }); %>
 
-		for (attrName in attributes) {
-		  el.setAttribute(attrName, attributes[attrName]);
-		}
+      addTag('script', {src: 'js/google-code-prettify.js'}, sync);
+      addTag('script', {src: 'js/marked.js'}, sync);
 
-		sync ? document.write(outerHTML(el)) : headEl.appendChild(el);
-	  }
+      <% _.forEach(scripts, function(url) { %>
+        addTag('script', {src: '<%= url %>'}, sync);
+      <% }); %>
+      <% if(!deferLoad) { %>
+      addTag('script', {src: 'js/angular-bootstrap.js'}, sync);
+      addTag('script', {src: 'js/angular-bootstrap-prettify.js'}, sync);
+      addTag('script', {src: 'js/docs-setup.js'}, sync);
+      addTag('script', {src: 'js/docs.js'}, sync);
+      <% } %>
+      function addTag(name, attributes, sync) {
+        var el = document.createElement(name),
+            attrName;
 
-	  function outerHTML(node){
-		// if IE, Chrome take the internal method otherwise build one
-		return node.outerHTML || (
-			function(n){
-				var div = document.createElement('div'), h;
-				div.appendChild(n);
-				h = div.innerHTML;
-				div = null;
-				return h;
-			})(node);
-	  }
-	})();
+        for (attrName in attributes) {
+          el.setAttribute(attrName, attributes[attrName]);
+        }
+
+        sync ? document.write(outerHTML(el)) : headEl.appendChild(el);
+      }
+
+      function outerHTML(node){
+        // if IE, Chrome take the internal method otherwise build one
+        return node.outerHTML || (
+            function(n){
+                var div = document.createElement('div'), h;
+                div.appendChild(n);
+                h = div.innerHTML;
+                div = null;
+                return h;
+            })(node);
+      }
+    })();
 <% if (analytics) { %>
-	// GA asynchronous tracker
-	var _gaq = _gaq || [];
-	_gaq.push(['_setAccount', '<%= analytics.account %>']);
-	_gaq.push(['_setDomainName', '<%= analytics.domainName %>']);
+    // GA asynchronous tracker
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', '<%= analytics.account %>']);
+    _gaq.push(['_setDomainName', '<%= analytics.domainName %>']);
 
-	(function() {
-	  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	})();
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
 <% } %>
   </script>
 </head>
 
 <body>
-	<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<% if (image) { %>
-					<% if (imageLink) { %>
-						<a href="<%= imageLink %>">
+	<header class="header">
+		<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<% if (image) { %>
+						<% if (imageLink) { %>
+							<a href="<%= imageLink %>">
+						<% } %>
+							<img class="pull-left" src="<%= image %>">
+						<% if (imageLink) { %>
+							</a>
+						<% } %>
 					<% } %>
-						<img class="pull-left" src="<%= image %>">
-					<% if (imageLink) { %>
-						</a>
+					<% if (title) {%>
+						<a <% if (titleLink) { %> href="<%= titleLink %>" <% } %> class="navbar-brand"><%= title %></a>
 					<% } %>
-				<% } %>
-				<% if (title) {%>
-					<a <% if (titleLink) { %> href="<%= titleLink %>" <% } %> class="navbar-brand"><%= title %></a>
-				<% } %>
-			</div>
-			<div class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li ng-repeat="(url, name) in sections" ng-class="{active: isActivePath(url)}">
-						<a ng-href="{{url}}">
-							<span class="glyphicon glyphicon-book"></span> {{name}}
-						</a>
-					</li>
-				</ul>
-				<%= navContent %>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li ng-repeat="(url, name) in sections" ng-class="{active: isActivePath(url)}">
+							<a ng-href="{{url}}">
+								<span class="glyphicon glyphicon-book"></span> {{name}}
+							</a>
+						</li>
+					</ul>
+					<%= navContent %>
+				</div>
 			</div>
 		</div>
-	</div>
+	</header>
 
-	<div class="container">
-		<div class="row">
+	<div role="main" class="container">
+    	<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-12">
 				<!--[if lt IE 7]>
-				<p class="alert alert-error">Your browser is <em>ancient!</em>
-				<a href="http://browsehappy.com/">Upgrade to a different browser</a> or
-				<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to
-				experience this site.
-				</p>
+					<p class="alert alert-error">Your browser is <em>ancient!</em>
+						<a href="http://browsehappy.com/">Upgrade to a different browser</a> or
+						<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.
+					</p>
 				<![endif]-->
 
 				<!--[if lt IE 9]>
-				<div class="alert">
-				You are using an old version of Internet Explorer.
-				For better and safer browsing experience please <a href="http://www.microsoft.com/IE9">upgrade IE</a>
-				or install <a href="http://google.com/chrome">Google Chrome browser</a>.
-				</div>
+					<div class="alert">
+						You are using an old version of Internet Explorer.
+						For better and safer browsing experience please <a href="http://www.microsoft.com/IE9">upgrade IE</a>
+						or install <a href="http://google.com/chrome">Google Chrome browser</a>.
+					</div>
 				<![endif]-->
 			</div>
 		</div>
@@ -131,34 +139,32 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-4 col-md-3">
 				<form class="form-search" ng-submit="submitForm()">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12 col-md-12">
-							<div class="form-group has-feedback">
-								<% if (bestMatch) { %>
-									<div class="dropdown search" ng-class="{open: focused && bestMatch.rank > 0 && bestMatch.page != currentPage}">
-										<input type="text" ng-model="search" placeholder="search the docs" tabindex="1" accesskey="s" class="form-control search-query" focused="focused" />
-										<span class="glyphicon glyphicon-search form-control-feedback"></span>
-										<ul class="dropdown-menu">
-											<li>
-												<a href="{{bestMatch.page.url}}">{{bestMatch.page.shortName}}</a>
-											</li>
-										</ul>
-									</div>
-								<% } else { %>
-									<input type="text" ng-model="search" placeholder="search the docs" tabindex="1" accesskey="s" class="form-control search-query" />
-									<span class="glyphicon glyphicon-search form-control-feedback"></span>
-								<% } %>
+					<% if (bestMatch) { %>
+						<div class="dropdown" ng-class="{open: focused && bestMatch.rank > 0 && bestMatch.page != currentPage}">
+							<div class="form-group illustration">
+								<input type="text" ng-model="search" placeholder="search the docs" tabindex="1" accesskey="s" class="form-control" autofocus />
+								<span class="glyphicon glyphicon-search"></span>
 							</div>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+								<li role="presentation">
+									<a role="menuitem" tabindex="-1" href="{{bestMatch.page.url}}">{{bestMatch.page.shortName}}</a>
+								</li>
+							</ul>
 						</div>
-					</div>
+					<% } else { %>
+						<div class="form-group illustration">
+							<input type="text" ng-model="search" placeholder="search the docs" tabindex="1" accesskey="s" class="form-control" autofocus />
+							<span class="glyphicon glyphicon-search"></span>
+						</div>
+					<% } %>
 
-					<ul class="nav nav-list pills" ng-show="pages">
-						<li ng-repeat="page in pages<%= trackBy('page.url', "'expand'") %>" ng-class="navClass(page)" class="api-list-item">
+					<ul class="nav nav-list pills" ng-show="pages.length">
+						<li ng-repeat="page in pages track by page.url" ng-class="navClass(page)" class="api-list-item expand">
 							<a href="{{page.url}}" tabindex="2">{{page.shortName}}</a>
 						</li>
 					</ul>
 
-					<div ng-repeat="module in modules<%= trackBy('module.url') %>" class="panel panel-default">
+					<div ng-repeat="module in modules track by module.url" class="panel panel-default api-list-item">
 						<div class="panel-heading">
 							<a href="{{module.url}}">
 								<strong>{{module.name}}</strong> 
@@ -166,59 +172,69 @@
 							</a>
 						</div>
 						<ul class="nav nav-list pills">
-							<li ng-repeat="page in module.others<%= trackBy('page.url', "'expand'") %>" ng-class="navClass(page)">
+							<li>
 								<a href="{{page.url}}" tabindex="2">{{page.shortName}}</a>
 							</li>
 
-							<li class="nav-header section" ng-show="module.directives">
+							<li class="nav-header section" ng-show="module.directives.length">
 								<strong>directive</strong>
 							</li>
-							<li ng-repeat="page in module.directives<%= trackBy('page.url', "'expand'") %>" ng-class="navClass(page)">
+							<li ng-repeat="page in module.directives track by page.url" ng-class="navClass(page)">
 								<a href="{{page.url}}" tabindex="2">{{page.shortName}}</a>
 							</li>
 
-							<li class="nav-header section" ng-show="module.filters">
+							<li class="nav-header section" ng-show="module.controllers.length">
+								<strong>controller</strong>
+							</li>
+							<li ng-repeat="page in module.controllers track by page.url" ng-class="navClass(page)">
+								<a href="{{page.url}}" tabindex="2">{{page.shortName}}</a>
+							</li>
+
+							<li class="nav-header section" ng-show="module.filters.length">
 								<strong>filter</strong>
 							</li>
-							<li ng-repeat="page in module.filters<%= trackBy('page.url', "'expand'") %>" ng-class="navClass(page)">
+							<li ng-repeat="page in module.filters track by page.url" ng-class="navClass(page)">
 								<a href="{{page.url}}" tabindex="2">{{page.shortName}}</a>
 							</li>
 
-							<li class="nav-header section" ng-show="module.services">
+							<li class="nav-header section" ng-show="module.services.length">
 								<strong>service</strong>
 							</li>
-							<li ng-repeat="service in module.services<%= trackBy('service.instance.url', "'expand'") %>" ng-class="navClass(service.instance, service.provider)">
-								<a ng-show="service.provider" class="pull-right" href="{{service.provider.url}}" tabindex="2"><i class="icon-cog"></i></a>
+							<li ng-repeat="service in module.services track by service.instance.url" ng-class="navClass(service.instance, service.provider)">
 								<a href="{{service.instance.url}}" tabindex="2">{{service.name}}</a>
+								<a ng-show="service.provider" class="option-cog" href="{{service.provider.url}}" tabindex="2">
+									<span class="glyphicon glyphicon-cog"></span>
+								</a>
 							</li>
 
-							<li class="nav-header section" ng-show="module.types">
+							<li class="nav-header section" ng-show="module.types.length">
 								<strong>Types</strong>
 							</li>
-							<li ng-repeat="page in module.types<%= trackBy('page.url', "'expand'") %>" ng-class="navClass(page)">
+							<li ng-repeat="page in module.types track by page.url" ng-class="navClass(page)">
 								<a href="{{page.url}}" tabindex="2">{{page.shortName}}</a>
 							</li>
 
-							<li class="nav-header section" ng-show="module.globals">
+							<li class="nav-header section" ng-show="module.globals.length">
 								<strong>global APIs</strong>
 							</li>
-							<li ng-repeat="page in module.globals<%= trackBy('page.url', "'expand'") %>" ng-class="navClass(page)">
+							<li ng-repeat="page in module.globals track by page.url" ng-class="navClass(page)">
 								<a href="{{page.url}}" tabindex="2">{{page.id}}</a>
 							</li>
 						</ul>
 					</div>
 				</form>
-			</div>
+	      	</div>
 
-			<div class="col-xs-12 col-sm-8 col-md-9">
-				<ol class="breadcrumb">
+	      	<div class="col-xs-12 col-sm-8 col-md-9">
+				<ul class="breadcrumb">
 					<li ng-repeat="crumb in breadcrumb">
 						<span ng-hide="crumb.url">{{crumb.name}}</span>
 						<a ng-show="crumb.url" href="{{crumb.url}}">{{crumb.name}}</a>
 					</li>
-				</ol>
+				</ul>
+
 				<div id="loading" ng-show="loading">Loading...</div>
-				<div ng-hide="loading" ng-include src="currentPage.partialUrl" onload="afterPartialLoaded()" autoscroll class="content" ng-animate="{enter: 'slide-reveal'}" ></div>
+				<div ng-hide="loading" ng-include src="currentPage.partialUrl" onload="afterPartialLoaded()" autoscroll class="content slide-reveal"></div>
 				<% if (discussions) { %>
 					<div id="disqus" class="disqus">
 						<h2>Discussion</h2>
@@ -226,7 +242,7 @@
 					</div>
 				<% } %>
 			</div>
-		</div>
-	</div>
+	    </div>
+    </div>
 </body>
 </html>
