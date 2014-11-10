@@ -412,11 +412,21 @@ Doc.prototype = {
             default: match[5]
           };
           // if param name is a part of an object passed to a method
-          // mark it, so it's not included in the rendering later
-          if(param.name.indexOf(".") > 0){
+          // move it to a nested property of the parameter.
+          var dotIdx = param.name.indexOf(".");
+          if(dotIdx > 0){
             param.isProperty = true;
+            var paramName = param.name.substr(0, dotIdx);
+            var propertyName = param.name.substr(dotIdx + 1);
+            param.name = propertyName;
+            var p = self.param.filter(function(p) { return p.name === paramName; })[0];
+            if (p) {
+              p.properties = p.properties || [];
+              p.properties.push(param);
+            }
+          } else {
+            self.param.push(param);
           }
-          self.param.push(param);
         } else if (atName == 'returns' || atName == 'return') {
           match = text.match(/^\{([^}]+)\}\s+(.*)/);
           if (!match) {
@@ -566,42 +576,59 @@ Doc.prototype = {
       dom.html('</tr>');
       dom.html('</thead>');
       dom.html('<tbody>');
-      for(var i=0;i<params.length;i++) {
-        param = params[i];
-        var name = param.name;
-        var types = param.type;
-        if(types[0]=='(') {
-          types = types.substr(1);
-        }
+      processParams(params);
+      function processParams(params) {
+        for(var i=0;i<params.length;i++) {
+          param = params[i];
+          var name = param.name;
+          var types = param.type;
+          if(types[0]=='(') {
+            types = types.substr(1);
+          }
 
-        var limit = types.length - 1;
-        if(types.charAt(limit) == ')' && types.charAt(limit-1) != '(') {
-          types = types.substr(0,limit);
-        }
-        types = types.split(/\|(?![\(\)\w\|\s]+>)/);
-        if (param.optional) {
-          name += ' <div><em>(optional)</em></div>';
-        }
-        dom.html('<tr>');
-        dom.html('<td>' + name + '</td>');
-        dom.html('<td>');
-        for(var j=0;j<types.length;j++) {
-          var type = types[j];
-          dom.html('<a href="" class="' + self.prepare_type_hint_class_name(type) + '">');
-          dom.text(type);
-          dom.html('</a>');
-        }
+          var limit = types.length - 1;
+          if(types.charAt(limit) == ')' && types.charAt(limit-1) != '(') {
+            types = types.substr(0,limit);
+          }
+          types = types.split(/\|(?![\(\)\w\|\s]+>)/);
+          if (param.optional) {
+            name += ' <div><em>(optional)</em></div>';
+          }
+          dom.html('<tr>');
+          dom.html('<td>' + name + '</td>');
+          dom.html('<td>');
+          for(var j=0;j<types.length;j++) {
+            var type = types[j];
+            dom.html('<a href="" class="' + self.prepare_type_hint_class_name(type) + '">');
+            dom.text(type);
+            dom.html('</a>');
+          }
 
-        dom.html('</td>');
-        var description = '<td>';
-        description += param.description;
-        if (param.default) {
-          description += ' <p><em>(default: ' + param.default + ')</em></p>';
-        }
-        description += '</td>';
-        dom.html(description);
-        dom.html('</tr>');
-      };
+          dom.html('</td>');
+          dom.html('<td>');
+          dom.html(param.description);
+          if (param.default) {
+            dom.html(' <p><em>(default: ' + param.default + ')</em></p>');
+          }
+          if (param.properties) {
+//            dom.html('<table class="variables-matrix table table-bordered table-striped">');
+            dom.html('<table>');
+            dom.html('<thead>');
+            dom.html('<tr>');
+            dom.html('<th>Property</th>');
+            dom.html('<th>Type</th>');
+            dom.html('<th>Details</th>');
+            dom.html('</tr>');
+            dom.html('</thead>');
+            dom.html('<tbody>');
+            processParams(param.properties);
+            dom.html('</tbody>');
+            dom.html('</table>');
+          }
+          dom.html('</td>');
+          dom.html('</tr>');
+        };
+      }
       dom.html('</tbody>');
       dom.html('</table>');
     }
