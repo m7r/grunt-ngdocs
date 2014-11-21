@@ -64,6 +64,8 @@ img.AngularJS-small {
   font-weight: bold;
   font-size: 13px;
   color: black;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .form-search > ul.nav > li > a {
