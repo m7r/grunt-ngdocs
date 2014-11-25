@@ -214,6 +214,9 @@ directive.ngEmbedApp = ['$templateCache', '$browser', '$rootScope', '$location',
             return $location;
           }];
           this.html5Mode = angular.noop;
+          this.hashPrefix = function () {
+              return '';
+          };
         });
 
         $provide.decorator('$rootScope', ['$delegate', function($delegate) {
