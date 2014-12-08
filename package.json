@@ -17,6 +17,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
+    "lodash": "^2.4.1",
     "marked": "~0.3.2"
   },
   "peerDependencies": {

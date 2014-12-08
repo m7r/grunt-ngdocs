@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var seqCount = 0;
 var usedIds = {};
 var makeUnique = {
@@ -16,7 +18,9 @@ function ids(list) {
 
 exports.Example = function(scenarios) {
   this.module = '';
-  this.deps = ['angular.js'];
+  this.filename = '';
+  this.commonDeps = [];
+  this.deps = [];
   this.html = [];
   this.css = [];
   this.js = [];
@@ -26,13 +30,33 @@ exports.Example = function(scenarios) {
   this.scenarios = scenarios;
 }
 
+exports.Example.prototype.setFilename = function(filename) {
+  this.filename = filename;
+};
+
 exports.Example.prototype.setModule = function(module) {
   if (module) {
     this.module = module;
   }
 };
 
+exports.Example.prototype.setHeight = function(height) {
+  if(height) {
+    this.height = height;
+  }
+}
+
+exports.Example.prototype.addCommonDeps = function(deps) {
+
+  deps && deps.split(/[\s\,]/).forEach(function(dep) {
+    if (dep) {
+      this.commonDeps.push(dep);
+    }
+  }, this);
+};
+
 exports.Example.prototype.addDeps = function(deps) {
+
   deps && deps.split(/[\s\,]/).forEach(function(dep) {
     if (dep) {
       this.deps.push(dep);
@@ -48,11 +72,8 @@ exports.Example.prototype.addSource = function(name, content) {
     id = name + '-' + (seqCount++);
   }
   usedIds[id] = true;
-  
+
   this[ext].push({name: name, content: content, id: id});
-  if (name.match(/\.js$/) && name !== 'spec.js' && name !== 'unit.js' && name != 'scenario.js') {
-    this.deps.push(name);
-  }
   if (ext == 'scenario') {
     this.scenarios.push(content);
   }
@@ -67,7 +88,7 @@ exports.Example.prototype.disableAnimations = function() {
 };
 
 exports.Example.prototype.toHtml = function() {
-  var html = "<h2>Source</h2>\n";
+  var html = '';
   html += this.toHtmlEdit();
   html += this.toHtmlTabs();
   if(this.animations) {
@@ -77,15 +98,24 @@ exports.Example.prototype.toHtml = function() {
     html += '</div>';
   }
   html += "<h2>Demo</h2>\n";
-  html += this.toHtmlEmbed();
+
+  var embedConfig = this.toEmbedConfig();
+  if(embedConfig) {
+    html += '<div class="example-frame well"><iframe ';
+    if(this.height) {
+      html += 'style="height:' + this.height + 'px" ';
+    }
+    html += 'src="' + this.filename + '"></iframe></div>';
+  }
   return html;
 };
 
 
 exports.Example.prototype.toHtmlEdit = function() {
   var out = [];
+  var deps = _.uniq(this.commonDeps.concat(this.deps));
   out.push('<div source-edit="' + this.module + '"');
-  out.push(' source-edit-deps="' + this.deps.join(' ') + '"');
+  out.push(' source-edit-deps="' + deps.join(' ') + '"');
   out.push(' source-edit-html="' + ids(this.html) + '"');
   out.push(' source-edit-css="' + ids(this.css) + '"');
   out.push(' source-edit-js="' + ids(this.js) + '"');
@@ -114,19 +144,19 @@ exports.Example.prototype.toHtmlTabs = function() {
     sources.forEach(function(source) {
       var wrap = '',
           isCss = source.name.match(/\.css$/),
-          name = source.name;
+          name = source.name,
+          js;
 
       if (name === 'index.html') {
-        wrap = ' ng-html-wrap-loaded="' + self.module + ' ' + self.deps.join(' ') + '"';
+        js = self.commonDeps.concat(self.deps, _.pluck(self.js, 'name'));
+        wrap = ' ng-html-wrap-loaded="' + self.module + ' ' + js.join(' ') + '"';
       }
       if (name == 'scenario.js') name = 'End to end test';
 
       out.push(
         '<div class="tab-pane" title="' + name + '">\n' +
           '<pre class="prettyprint linenums" ng-set-text="' + source.id + '"' + wrap + '></pre>\n' +
-          (isCss
-             ? ('<style type="text/css" id="' + source.id + '">' + source.content + '</style>\n')
-             : ('<script type="text/ng-template" id="' + source.id + '">' + source.content + '</script>\n') ) +
+          '<script type="text/ng-template" id="' + source.id + '">' + source.content + '</script>\n' +
         '</div>\n');
     });
   }
@@ -145,3 +175,33 @@ exports.Example.prototype.toHtmlEmbed = function() {
   return out.join('');
 };
 
+exports.Example.prototype.toEmbedConfig = function() {
+
+  if (this.module || this.html || this.js) {
+
+    var scripts = _.filter(this.deps, function (dep) {
+      if (dep.match(/\.js$/)) {
+        return true;
+      }
+    });
+    var styles = _.filter(this.deps, function (dep) {
+      if (dep.match(/\.css$/)) {
+        return true;
+      }
+    });
+
+    var data = {
+      module: this.module,
+      scripts: scripts,
+      styles: styles,
+      html: this.html,
+      js: this.js,
+      css: this.css
+    };
+
+    return data;
+  }
+  else {
+    return null;
+  }
+};

@@ -148,7 +148,7 @@ docsApp.serviceFactory.formPostData = function($document) {
 
 docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, loadedUrls) {
   return function(content) {
-    var allFiles = [].concat(content.js, content.css, content.html);
+    var allFiles = [].concat(content.deps, content.js, content.css, content.html);
     var indexHtmlContent = '<!doctype html>\n' +
         '<html ng-app="{{module}}">\n' +
         '  <head>\n' +
@@ -159,16 +159,16 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, loaded
         '  </body>\n' +
         '</html>\n';
     var scriptDeps = '';
-    angular.forEach(loadedUrls.base, function(url) {
-        scriptDeps += '    <script src="' + url + '"></script>\n';
-    });
+    // angular.forEach(loadedUrls.base, function(url) {
+    //     scriptDeps += '    <script src="' + url + '"></script>\n';
+    // });
     angular.forEach(allFiles, function(file) {
       var ext = file.name.split(/\./).pop();
         if (ext == 'css') {
           scriptDeps += '    <link rel="stylesheet" href="' + file.name + '" type="text/css">\n';
         } else if (ext == 'js' && file.name !== 'angular.js') {
-        scriptDeps += '    <script src="' + file.name + '"></script>\n';
-      }
+          scriptDeps += '    <script src="' + file.name + '"></script>\n';
+        }
     });
     indexProp = {
       module: content.module,
@@ -263,7 +263,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
   };
 
   $scope.submitForm = function() {
-    if ($scope.bestMatch) {
+    if ($scope.bestMatch && $scope.bestMatch.page) {
       var url =  $scope.bestMatch.page.url;
       $location.path(NG_DOCS.html5Mode ? url : url.substring(1));
     }
@@ -518,7 +518,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
   }
 };
 
-angular.module('docsApp', ['ngAnimate', 'bootstrap', 'bootstrapPrettify']).
+angular.module('docsApp', ['bootstrap', 'bootstrapPrettify']).
   config(function($locationProvider) {
     if (NG_DOCS.html5Mode) {
       $locationProvider.html5Mode(true).hashPrefix('!');

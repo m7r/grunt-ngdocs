@@ -73,6 +73,7 @@ function Doc(text, file, line, options) {
   this.events = this.events || [];
   this.links = this.links || [];
   this.anchors = this.anchors || [];
+  this.examples = [];
 }
 Doc.METADATA_IGNORE = (function() {
   var words = fs.readFileSync(__dirname + '/ignore.words', 'utf8');
@@ -169,6 +170,11 @@ Doc.prototype = {
     return prefix + this.section + '/' + url;
   },
 
+  getExampleFilename: function(index) {
+    var exampleFilename = 'example/' + (this.file + '-' + this.id + '-' + index).replace(/[:\/\\]/g,'-') + '.html';
+    return exampleFilename;
+  },
+
   markdown: function(text) {
     if (!text) return text;
 
@@ -201,17 +207,31 @@ Doc.prototype = {
 
     parts.forEach(function(text, i) {
       parts[i] = (text || '').
-        replace(/<example(?:\s+module="([^"]*)")?(?:\s+deps="([^"]*)")?(\s+animations="true")?>([\s\S]*?)<\/example>/gmi,
-          function(_, module, deps, animations, content) {
+        replace(/<example(?:\s+module="([^"]*)")?(?:\s+height="([0-9]*)")?(?:\s+deps="([^"]*)")?(\s+animations="true")?\s*>([\s\S]*?)<\/example>/gmi,
+          function(_, module, height, deps, animations, content) {
 
           var example = new Example(self.scenarios);
+          example.setFilename(self.getExampleFilename(self.examples.length));
+          self.examples.push(example);
+
           if(animations) {
             example.enableAnimations();
             example.addDeps('angular-animate.js');
           }
 
           example.setModule(module);
+          example.setHeight(height);
+
+          self.options.example.scripts.forEach(function(script) {
+            example.addCommonDeps(script);
+          });
+
+          self.options.example.styles.forEach(function(style) {
+            example.addCommonDeps(style);
+          });
+
           example.addDeps(deps);
+
           content.replace(/<file\s+name="([^"]*)"\s*>([\s\S]*?)<\/file>/gmi, function(_, name, content) {
             example.addSource(name, content);
           });
@@ -228,6 +248,7 @@ Doc.prototype = {
             }
             return '';
           })
+
           return placeholder(example.toHtml());
         }).
         replace(/(?:\*\s+)?<file.+?src="([^"]+)"(?:\s+tag="([^"]+)")?\s*\/?>/i, function(_, file, tag) {
@@ -239,11 +260,33 @@ Doc.prototype = {
             return content;
           }
         }).
-        replace(/^<doc:example(\s+[^>]*)?>([\s\S]*)<\/doc:example>/mi, function(_, attrs, content) {
-          var html, script, scenario,
-            example = new Example(self.scenarios);
+        replace(/^<doc:example(?:\s+module="([^"]*)")?(?:\s+height="([0-9]*)")?(?:\s+deps="([^"]*)")?(\s+animations="true")?\s*>([\s\S]*)<\/doc:example>/mi,
+          function(_, module, height, deps, animations, content) {
 
-          example.setModule((attrs||'module=""').match(/^\s*module=["'](.*)["']\s*$/)[1]);
+          var html, script, scenario;
+
+          var example = new Example(self.scenarios);
+          example.setFilename(self.getExampleFilename(self.examples.length));
+          self.examples.push(example);
+
+          if(animations) {
+            example.enableAnimations();
+            example.addDeps('angular-animate.js');
+          }
+
+          example.setModule(module);
+          example.setHeight(height);
+
+          self.options.example.scripts.forEach(function(script) {
+            example.addCommonDeps(script);
+          });
+
+          self.options.example.styles.forEach(function(style) {
+            example.addCommonDeps(style);
+          });
+
+          example.addDeps(deps);
+
           content.
             replace(/<doc:source(\s+[^>]*)?>([\s\S]*)<\/doc:source>/mi, function(_, attrs, content) {
               example.addSource('index.html', content.

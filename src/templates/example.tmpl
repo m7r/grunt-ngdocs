@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <% _.forEach(config.styles, function(url) { %>
+    <link rel="stylesheet" type="text/css" href="<%= url %>" />
+  <% }); %>
+  <% _.forEach(styles, function(url) { %>
+    <link rel="stylesheet" type="text/css" href="<%= url %>" />
+  <% }); %>
+  <style type="text/css">
+  body { background: transparent; }
+  </style>
+  <% _.forEach(css, function(style) { %>
+    <style type="text/css"><%= style.content %></style>
+  <% }); %>
+</head>
+<body ng-app="<%= module %>">
+  <% _.forEach(html, function(html) { %>
+    <%= html.content %>
+  <% }); %>
+
+  <% _.forEach(config.scripts, function(url) { %>
+    <script type="text/javascript" src="<%= url %>"></script>
+  <% }); %>
+  <% _.forEach(scripts, function(url) { %>
+    <script type="text/javascript" src="<%= url %>"></script>
+  <% }); %>
+  <% _.forEach(js, function(script) { %>
+    <script type="text/javascript"><%= script.content %></script>
+  <% }); %>
+</body>
+</html>

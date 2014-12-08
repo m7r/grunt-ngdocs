@@ -9,11 +9,11 @@
 var reader = require('../src/reader.js'),
     ngdoc = require('../src/ngdoc.js'),
     path = require('path'),
-    vm = require('vm');
+    vm = require('vm'),
+    _ = require('lodash');
 
 module.exports = function(grunt) {
-  var _ = grunt.util._,
-      templates = path.resolve(__dirname, '../src/templates');
+  var templates = path.resolve(__dirname, '../src/templates');
 
   grunt.registerMultiTask('ngdocs', 'build documentation', function() {
     var start = now(),
@@ -21,8 +21,9 @@ module.exports = function(grunt) {
         options = this.options({
           dest: 'docs/',
           startPage: '/api',
-          scripts: ['angular.js'],
+          scripts: [],
           styles: [],
+          example: {},
           title: grunt.config('pkg') ?
             (grunt.config('pkg').title || grunt.config('pkg').name) :
             '',
@@ -32,40 +33,35 @@ module.exports = function(grunt) {
         section = this.target === 'all' ? 'api' : this.target,
         setup;
 
+    var httpPattern = /^((https?:)?\/\/|\.\.\/)/;
+
     //Copy the scripts into their own folder in docs, unless they are remote or default angular.js
     var gruntScriptsFolder = 'grunt-scripts';
+
     options.scripts = _.map(options.scripts, function(file) {
       if (file === 'angular.js') {
-        return 'js/angular.min.js';
+        return 'js/angular.js';
       }
 
-      if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
+      if (httpPattern.test(file)) {
         return file;
       } else {
-        var filename = file.split('/').pop();
-        //Use path.join here because we aren't sure if options.dest has / or not
-        grunt.file.copy(file, path.join(options.dest, gruntScriptsFolder, filename));
-
-        //Return the script path: doesn't have options.dest in it, it's relative
-        //to the docs folder itself
-        return gruntScriptsFolder + '/' + filename;
+        return copyWithPath(file, gruntScriptsFolder, options.dest);
       }
     });
 
     if (options.image) {
-      if (!/^((https?:)?\/\/|\.\.\/)/.test(options.image)) {
+      if (!httpPattern.test(options.image)) {
         grunt.file.copy(options.image, path.join(options.dest, 'img', options.image));
         options.image = "img/" + options.image;
       }
     }
 
     options.styles = _.map(options.styles, function(file) {
-      if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
+      if (httpPattern.test(file)) {
         return file;
       } else {
-        var filename = file.split('/').pop();
-        grunt.file.copy(file, path.join(options.dest, 'css', filename));
-        return 'css/' + filename;
+        return copyWithPath(file, 'css', options.dest);
       }
     });
 
@@ -86,10 +82,19 @@ module.exports = function(grunt) {
     ngdoc.merge(reader.docs);
 
     reader.docs.forEach(function(doc){
+
       // this hack is here because on OSX angular.module and angular.Module map to the same file.
       var id = doc.id.replace('angular.Module', 'angular.IModule').replace(':', '.'),
           file = path.resolve(options.dest, 'partials', doc.section, id + '.html');
+
       grunt.file.write(file, doc.html());
+
+      doc.examples.forEach(function (example) {
+        var data = _.extend({ config: options.example }, example.toEmbedConfig());
+        var content = grunt.file.read(path.resolve(templates, 'example.tmpl'));
+        content = grunt.template.process(content, { data: data });
+        grunt.file.write(path.resolve(options.dest, example.filename), content);
+      });
     });
 
     ngdoc.checkBrokenLinks(reader.docs, setup.apis, options);
@@ -107,6 +112,11 @@ module.exports = function(grunt) {
     grunt.log.writeln('DONE. Generated ' + reader.docs.length + ' pages in ' + (now()-start) + 'ms.');
     done();
   });
+
+  function copyWithPath(src, dest, outputPath) {
+    grunt.file.copy(src, path.join(outputPath, dest, src));
+    return path.join(dest, src);
+  }
 
   function prepareSetup(section, options) {
     var setup, data, context = {},
@@ -133,6 +143,7 @@ module.exports = function(grunt) {
         content, data = {
           scripts: options.scripts,
           styles: options.styles,
+          example: options.example,
           sections: _.keys(setup.sections).join('|'),
           discussions: options.discussions,
           analytics: options.analytics,
@@ -156,6 +167,7 @@ module.exports = function(grunt) {
     setup.startPage = options.startPage;
     setup.discussions = options.discussions;
     setup.scripts = _.map(options.scripts, function(url) { return path.basename(url); });
+    setup.example = setup.example,
     grunt.file.write(setup.__file, 'NG_DOCS=' + JSON.stringify(setup, replacer, 2) + ';');
   }
 
