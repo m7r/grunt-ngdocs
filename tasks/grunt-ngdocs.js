@@ -65,46 +65,6 @@ module.exports = function(grunt) {
       }
     });
 
-    if(options.example) {
-      options.example.scripts = _.map(options.example.scripts, function(file) {
-        if(httpPattern.test(file)) {
-          return file;
-        } else {
-          var examplePath = copyWithPath(file, path.join('example', 'scripts'), options.dest);
-          return examplePath.substr(8);
-        }
-      });
-
-      // Copy styles folder and get path to styles files that should be linked
-      var __styles = [];
-      _.each(options.example.styles, function(styles) {
-        if ('string' === typeof styles) {
-          if (!httpPattern.test(styles)) {
-            copyWithPath(styles, path.join('example', 'styles'), options.dest);
-            __styles.push(path.join('styles', styles));
-          }
-          else {
-            __styles.push(styles);
-          }
-        }
-        else {
-          _.each(styles, function(styles, styleFolder) {
-            _.each(grunt.file.expand(styleFolder + '/**/*'), function(file) {
-              if(!grunt.file.isDir(file)) {
-                copyWithPath(file, path.join('example', 'styles'), options.dest);
-              }
-            });
-
-            _.each(styles, function(style) {
-              __styles.push(path.join('styles', styleFolder, style));
-            });
-          });
-        }
-      });
-
-      options.example.styles = __styles;
-    }
-
     setup = prepareSetup(section, options);
 
     grunt.log.writeln('Generating Documentation...');
