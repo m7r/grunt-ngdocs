@@ -37,6 +37,7 @@
 
       addTag('script', {src: 'js/google-code-prettify.js'}, sync);
       addTag('script', {src: 'js/marked.js'}, sync);
+      addTag('script', {src: 'js/angular.js'}, sync);
 
       <% _.forEach(scripts, function(url) { %>
         addTag('script', {src: '<%= url %>'}, sync);

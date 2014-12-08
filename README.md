@@ -43,6 +43,18 @@ ngdocs: {
     imageLink: "http://my-domain.com",
     titleLink: "/api",
     bestMatch: true,
+    // dependencies to load on all example iframes
+    example: {
+      scripts: [
+        'bower_components/angular/index.js',
+        'bower_components/underscore/index.js',
+        'bower_components/jquery-1.11.1/index.js',
+        'bower_components/some-library.js'
+      ],
+      styles: [
+        'css/bootstrap.css'
+      ]
+    },
     analytics: {
           account: 'UA-08150815-0',
           domainName: 'my-domain.com'

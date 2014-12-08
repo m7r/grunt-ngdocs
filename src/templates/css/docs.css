@@ -301,3 +301,8 @@ ul.events > li > h3 {
 .type-hint-number {
   background:rgb(189, 63, 66);
 }
+
+.example-frame > iframe {
+  border: 0;
+  width: 100%;
+}
