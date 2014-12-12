@@ -467,8 +467,8 @@ Doc.prototype = {
     }
   },
 
-  html: function() {
-    var dom = new DOM(),
+  html: function(sourcePath) {
+    var dom = new DOM(sourcePath),
       self = this,
       minerrMsg;
 

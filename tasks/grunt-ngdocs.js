@@ -89,7 +89,7 @@ module.exports = function(grunt) {
       // this hack is here because on OSX angular.module and angular.Module map to the same file.
       var id = doc.id.replace('angular.Module', 'angular.IModule').replace(':', '.'),
           file = path.resolve(options.dest, 'partials', doc.section, id + '.html');
-      grunt.file.write(file, doc.html());
+      grunt.file.write(file, doc.html(options.sourcePath));
     });
 
     ngdoc.checkBrokenLinks(reader.docs, setup.apis, options);
