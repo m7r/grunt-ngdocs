@@ -363,7 +363,9 @@ Doc.prototype = {
     var atText;
     var match;
     var self = this;
-    self.text.split(NEW_LINE).forEach(function(line){
+    var lines = self.text.split(NEW_LINE);
+    self.codeLine = self.line + lines.length + 1;
+    lines.forEach(function(line){
       if ((match = line.match(/^\s*@(\w+)(\s+(.*))?/))) {
         // we found @name ...
         // if we have existing name
