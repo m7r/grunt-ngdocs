@@ -124,7 +124,7 @@ DOM.prototype = {
 
   sourceLink: function(file, line, showText, noMargin) {
     if (this.sourcePath) {
-      var iconText;
+      var iconText = ' ';
       var href = this.sourcePath + '/' + file + '#L' + line;
       var text = 'View Source';
       var attrs = {
@@ -133,8 +133,9 @@ DOM.prototype = {
       };
       if (noMargin) attrs.style = "margin: 0";
       if (showText) {
-        iconText = ' ' + text;
+        iconText += text;
       } else {
+
         attrs.title = text;
       }
 
