@@ -912,6 +912,13 @@ Doc.prototype = {
     if (self.properties.length) {
       dom.div({class:'member property'}, function(){
         dom.h('Properties', self.properties, function(property){
+          // We can only link to the source code, when we are looking
+          // at a property, that was defined with @ngdoc (as opposed to
+          // a definition through @property). Only then we know the location
+          // of this specific property.
+          if (property.file) {
+            dom.sourceLink(property.file, property.codeLine);
+          }
           dom.h(property.shortName, function() {
             dom.html(property.description);
             if (!property.html_usage_returns) {
