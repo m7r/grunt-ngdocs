@@ -501,6 +501,7 @@ Doc.prototype = {
       dom.text(' Improve this doc');
     });
     */
+    dom.sourceLink(this.file, this.codeLine, true, true);
     dom.h(title(this), function() {
       notice('deprecated', 'Deprecated API', self.deprecated);
       if (self.ngdoc === 'error') {
@@ -896,6 +897,7 @@ Doc.prototype = {
         dom.h('Methods', self.methods, function(method){
           //filters out .IsProperty parameters from the method signature
           var signature = (method.param || []).filter(function(e) { return e.isProperty !== true; }).map(property('name'));
+          dom.sourceLink(method.file, method.codeLine);
           dom.h(method.shortName + '(' + signature.join(', ') + ')', method, function() {
             dom.html(method.description);
             method.html_usage_parameters(dom);
