@@ -42,6 +42,7 @@ ngdocs: {
     image: "path/to/my/image.png",
     imageLink: "http://my-domain.com",
     titleLink: "/api",
+    sourcePath: "http://github.com/user/my_repo/tree/master",
     bestMatch: true,
     analytics: {
           account: 'UA-08150815-0',
@@ -123,6 +124,13 @@ Wraps the title text in an anchor tag with the provided URL.
 ####imageLink
 [default] no anchor tag is used
 Wraps the navbar image in an anchor tag with the provided URL.
+
+####sourcePath
+[default] undefined
+Path to a file tree of your source code. If set, the generated docs will
+contain links to your code. GitHub-style anchors to hop to specific
+lines in files are supported, e.g. to jump directly to a function
+definition.
 
 ####bestMatch
 [default] false
