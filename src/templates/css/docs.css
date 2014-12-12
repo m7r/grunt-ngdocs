@@ -224,7 +224,7 @@ ul.events > li > h3 {
 }
 
 .source-link {
-  margin: -.7rem;
+  margin: -.7rem 0;
   float: right;
 }
 
