@@ -54,7 +54,7 @@ var BOOLEAN_ATTR = {};
 });
 
 //////////////////////////////////////////////////////////
-function Doc(text, file, line, options) {
+function Doc(text, file, startLine, endLine, options) {
   if (typeof text == 'object') {
     for ( var key in text) {
       this[key] = text[key];
@@ -62,7 +62,8 @@ function Doc(text, file, line, options) {
   } else {
     this.text = text;
     this.file = file;
-    this.line = line;
+    this.line = startLine;
+    this.codeLine = endLine + 1;
   }
   this.options = options || {};
   this.scenarios = this.scenarios || [];
@@ -364,7 +365,6 @@ Doc.prototype = {
     var match;
     var self = this;
     var lines = self.text.split(NEW_LINE);
-    self.codeLine = self.line + lines.length + 1;
     lines.forEach(function(line){
       if ((match = line.match(/^\s*@(\w+)(\s+(.*))?/))) {
         // we found @name ...
