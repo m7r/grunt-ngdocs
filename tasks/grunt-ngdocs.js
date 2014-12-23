@@ -80,7 +80,7 @@ module.exports = function(grunt) {
     grunt.log.writeln('Generating Documentation...');
 
     if (srcCode) {
-      grunt.log.writeln( 'Generating source code links to ' + srcCode.path);
+      grunt.log.writeln( '... with source code links to ' + srcCode.path);
     }
 
     reader.docs = [];
@@ -130,45 +130,49 @@ module.exports = function(grunt) {
 
       var repo = pkg.repository;
       var path, treeRef;
-      var warning = 'No path to source repo found. Building without source links.'
+      var warning = 'No path to source repo found. Building without source links.';
 
       if (!(repo && repo.type == 'git')) {
         log(warning);
         return;
       }
 
-      var url = repo.url;
-      if (url) {
-        var match =  url.match(/git@github.com:(.*)\.git/);
-        if (match) {
-          path = 'http://github.com/' + match[1];
-        } else {
-          if (url.match(/https?:\/\/github.com/)) {
-            path = url;
-          }
-        }
-      }
+      path = parseSourceCodePath(repo.url);
 
       if (!path) {
         log(warning);
         return;
       }
 
-      if (opt.version) {
-        if (opt.version === 'sha') {
-          var shell = require('shelljs');
-          var sha = shell.exec('git rev-parse HEAD', { silent: true });
-          treeRef = sha.output;
-        } else {
-          treeRef = 'v' + pkg.version;
-        }
-      }
-      treeRef = treeRef || 'master';
+      treeRef = parseSourceCodeVersion(opt.version, pkg);
 
       opt.path = path + '/tree/' + treeRef;
       opt.anchorPrefix = opt.anchorPrefix || 'L';
 
       return opt;
+    }
+  }
+
+  function parseSourceCodeVersion(version, pkg) {
+    if (!version) return 'master';
+    if (version === 'sha') {
+      var shell = require('shelljs');
+      var sha = shell.exec('git rev-parse HEAD', { silent: true });
+      return sha.output;
+    } else {
+      return 'v' + pkg.version;
+    }
+  }
+
+  function parseSourceCodePath(url) {
+    if (!url) return;
+    var match =  url.match(/git@github.com:(.*)\.git/);
+    if (match) {
+      return 'http://github.com/' + match[1];
+    } else {
+      if (url.match(/https?:\/\/github.com/)) {
+        return url;
+      }
     }
   }
 
