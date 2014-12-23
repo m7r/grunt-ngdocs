@@ -42,7 +42,9 @@ ngdocs: {
     image: "path/to/my/image.png",
     imageLink: "http://my-domain.com",
     titleLink: "/api",
-    sourcePath: "http://github.com/user/my_repo/tree/master",
+    sourceCode: {
+      version: true
+    },
     bestMatch: true,
     analytics: {
           account: 'UA-08150815-0',
@@ -125,12 +127,50 @@ Wraps the title text in an anchor tag with the provided URL.
 [default] no anchor tag is used
 Wraps the navbar image in an anchor tag with the provided URL.
 
-####sourcePath
-[default] undefined
-Path to a file tree of your source code. If set, the generated docs will
-contain links to your code. GitHub-style anchors to hop to specific
-lines in files are supported, e.g. to jump directly to a function
-definition.
+####sourceCode
+[default] Link to a Github repo's `master` branch defined in `package.json`
+
+Adds links to view the source code from within your documentation. By default it
+is assumed that your code is accessible through GitHub and its location
+is defined in your `package.json` file (`repository.url`).
+
+Anchors to link to function, property and event definitions are set
+accordingly.
+
+This standard GitHub routine can be further customized by providing
+either
+
+``` javascript
+// Will try to read the version property of your package.json file
+// and link to code available at the time of this release
+sourceCode: {
+  version: true
+}
+```
+or
+``` javascript
+// Will link to the code at the exact point in time the documentation is
+// built, referencing the git tree by the current commit sha
+sourceCode: {
+  version: 'sha'
+}
+```
+
+If your source code is not available through GitHub a custom path to
+your file tree can be given - take note that in this case you need to
+handle versioning yourself.
+
+``` javascript
+sourceCode: {
+  path: 'http://www.my-code.com'
+  anchorPrefix: 'anchor' // optional prefix to the line number
+}
+```
+
+To disable this feature altogether, use:
+``` javascript
+sourceCode: false
+```
 
 ####bestMatch
 [default] false
