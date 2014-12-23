@@ -42,12 +42,12 @@ function normalizeHeaderToId(header) {
 }
 
 
-function DOM(sourcePath) {
+function DOM(sourceCode) {
   this.out = [];
   this.headingDepth = 0;
   this.currentHeaders = [];
   this.anchors = [];
-  this.sourcePath = sourcePath;
+  this.sourceCode = sourceCode;
 }
 
 var INLINE_TAGS = {
@@ -123,9 +123,10 @@ DOM.prototype = {
   },
 
   sourceLink: function(file, line, showText, noMargin) {
-    if (this.sourcePath) {
+    if (this.sourceCode) {
       var iconText = ' ';
-      var href = this.sourcePath + '/' + file + '#L' + line;
+      var href = this.sourceCode.path + '/' +
+        file + '#' + this.sourceCode.anchorPrefix + line;
       var text = 'View Source';
       var attrs = {
         'href': href,
