@@ -183,7 +183,7 @@ A doc comment looks like this:
  * @description
  * Resize textarea automatically to the size of its text content.
  *
- * **Note:** ie<9 needs pollyfill for window.getComputedStyle
+ * **Note:** ie<9 needs polyfill for window.getComputedStyle
  *
  * @example
    <example module="rfx">
