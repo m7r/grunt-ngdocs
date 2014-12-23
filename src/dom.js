@@ -135,7 +135,7 @@ DOM.prototype = {
       this.anchors.push(id);
       anchor = {'id': id};
       var classNameValue = this.currentHeaders[this.headingDepth - 1]
-      if(classNameValue == 'hide') classNameValue = '';
+      if (/^(hide|close|collapse)$/.test(classNameValue)) classNameValue = '';
       className = {'class': classNameValue};
     }
     this.tag('h' + this.headingDepth, anchor, heading);
