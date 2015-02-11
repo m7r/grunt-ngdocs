@@ -17,15 +17,14 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask('ngdocs', 'build documentation', function() {
     var start = now(),
+        pkg = getPackage(),
         done = this.async(),
         options = this.options({
           dest: 'docs/',
           startPage: '/api',
           scripts: ['angular.js'],
           styles: [],
-          title: grunt.config('pkg') ?
-            (grunt.config('pkg').title || grunt.config('pkg').name) :
-            '',
+          title: pkg.title || pkg.name || '',
           html5Mode: true,
           editExample: true
         }),
@@ -107,6 +106,14 @@ module.exports = function(grunt) {
     grunt.log.writeln('DONE. Generated ' + reader.docs.length + ' pages in ' + (now()-start) + 'ms.');
     done();
   });
+
+  function getPackage() {
+    var pkg = grunt.config('pkg');
+    try {
+      pkg = grunt.file.readJSON('package.json');
+    } catch (e) {}
+    return pkg || {};
+  }
 
   function prepareSetup(section, options) {
     var setup, data, context = {},
