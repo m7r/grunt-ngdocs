@@ -42,11 +42,12 @@ function normalizeHeaderToId(header) {
 }
 
 
-function DOM() {
+function DOM(sourceCode) {
   this.out = [];
   this.headingDepth = 0;
   this.currentHeaders = [];
   this.anchors = [];
+  this.sourceCode = sourceCode;
 }
 
 var INLINE_TAGS = {
@@ -119,6 +120,30 @@ DOM.prototype = {
 
   div: function(attr, text) {
     this.tag('div', attr, text);
+  },
+
+  sourceLink: function(file, line, showText, noMargin) {
+    if (this.sourceCode) {
+      var iconText = ' ';
+      var href = this.sourceCode.path + '/' +
+        file + '#' + this.sourceCode.anchorPrefix + line;
+      var text = 'View Source';
+      var attrs = {
+        'href': href,
+        'class': 'source-link',
+      };
+      if (noMargin) attrs.style = "margin: 0";
+      if (showText) {
+        iconText += text;
+      } else {
+
+        attrs.title = text;
+      }
+
+      this.tag('a', attrs, function() {
+        this.tag('i', { 'class': 'icon-eye-open' }, iconText);
+      });
+    }
   },
 
   h: function(heading, content, fn){

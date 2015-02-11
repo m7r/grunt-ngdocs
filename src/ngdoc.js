@@ -54,7 +54,7 @@ var BOOLEAN_ATTR = {};
 });
 
 //////////////////////////////////////////////////////////
-function Doc(text, file, line, options) {
+function Doc(text, file, startLine, endLine, options) {
   if (typeof text == 'object') {
     for ( var key in text) {
       this[key] = text[key];
@@ -62,7 +62,8 @@ function Doc(text, file, line, options) {
   } else {
     this.text = text;
     this.file = file;
-    this.line = line;
+    this.line = startLine;
+    this.codeLine = endLine + 1;
   }
   this.options = options || {};
   this.scenarios = this.scenarios || [];
@@ -363,7 +364,8 @@ Doc.prototype = {
     var atText;
     var match;
     var self = this;
-    self.text.split(NEW_LINE).forEach(function(line){
+    var lines = self.text.split(NEW_LINE);
+    lines.forEach(function(line){
       if ((match = line.match(/^\s*@(\w+)(\s+(.*))?/))) {
         // we found @name ...
         // if we have existing name
@@ -465,8 +467,8 @@ Doc.prototype = {
     }
   },
 
-  html: function() {
-    var dom = new DOM(),
+  html: function(sourceCode) {
+    var dom = new DOM(sourceCode),
       self = this,
       minerrMsg;
 
@@ -499,6 +501,7 @@ Doc.prototype = {
       dom.text(' Improve this doc');
     });
     */
+    dom.sourceLink(this.file, this.codeLine, true, true);
     dom.h(title(this), function() {
       notice('deprecated', 'Deprecated API', self.deprecated);
       if (self.ngdoc === 'error') {
@@ -894,6 +897,7 @@ Doc.prototype = {
         dom.h('Methods', self.methods, function(method){
           //filters out .IsProperty parameters from the method signature
           var signature = (method.param || []).filter(function(e) { return e.isProperty !== true; }).map(property('name'));
+          dom.sourceLink(method.file, method.codeLine);
           dom.h(method.shortName + '(' + signature.join(', ') + ')', method, function() {
             dom.html(method.description);
             method.html_usage_parameters(dom);
@@ -908,6 +912,13 @@ Doc.prototype = {
     if (self.properties.length) {
       dom.div({class:'member property'}, function(){
         dom.h('Properties', self.properties, function(property){
+          // We can only link to the source code, when we are looking
+          // at a property, that was defined with @ngdoc (as opposed to
+          // a definition through @property). Only then we know the location
+          // of this specific property.
+          if (property.file) {
+            dom.sourceLink(property.file, property.codeLine);
+          }
           dom.h(property.shortName, function() {
             dom.html(property.description);
             if (!property.html_usage_returns) {

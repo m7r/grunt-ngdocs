@@ -30,7 +30,8 @@ module.exports = function(grunt) {
           editExample: true
         }),
         section = this.target === 'all' ? 'api' : this.target,
-        setup;
+        setup,
+        srcCode;
 
     //Copy the scripts into their own folder in docs, unless they are remote or default angular.js
     var linked = /^((https?:)?\/\/|\.\.\/)/;
@@ -70,8 +71,17 @@ module.exports = function(grunt) {
     });
 
     setup = prepareSetup(section, options);
+    srcCode = parseSourceCodeOptions(
+      options.sourceCode,
+      grunt.config('pkg'),
+      grunt.log.writeln
+    );
 
     grunt.log.writeln('Generating Documentation...');
+
+    if (srcCode) {
+      grunt.log.writeln( '... with source code links to ' + srcCode.path);
+    }
 
     reader.docs = [];
     this.files.forEach(function(f) {
@@ -89,7 +99,7 @@ module.exports = function(grunt) {
       // this hack is here because on OSX angular.module and angular.Module map to the same file.
       var id = doc.id.replace('angular.Module', 'angular.IModule').replace(':', '.'),
           file = path.resolve(options.dest, 'partials', doc.section, id + '.html');
-      grunt.file.write(file, doc.html());
+      grunt.file.write(file, doc.html(srcCode));
     });
 
     ngdoc.checkBrokenLinks(reader.docs, setup.apis, options);
@@ -107,6 +117,64 @@ module.exports = function(grunt) {
     grunt.log.writeln('DONE. Generated ' + reader.docs.length + ' pages in ' + (now()-start) + 'ms.');
     done();
   });
+
+  function parseSourceCodeOptions(opt, pkg, log) {
+    // Ask for false specifically - false disables the feature.
+    // When it's undefined, we use default values.
+    if (opt !== false) {
+      opt = opt || {};
+      if (opt.path) {
+        // Nothing to do, when a custom path is given
+        return opt;
+      }
+
+      var repo = pkg.repository;
+      var path, treeRef;
+      var warning = 'No path to source repo found. Building without source links.';
+
+      if (!(repo && repo.type == 'git')) {
+        log(warning);
+        return;
+      }
+
+      path = parseSourceCodePath(repo.url);
+
+      if (!path) {
+        log(warning);
+        return;
+      }
+
+      treeRef = parseSourceCodeVersion(opt.version, pkg);
+
+      opt.path = path + '/tree/' + treeRef;
+      opt.anchorPrefix = opt.anchorPrefix || 'L';
+
+      return opt;
+    }
+  }
+
+  function parseSourceCodeVersion(version, pkg) {
+    if (!version) return 'master';
+    if (version === 'sha') {
+      var shell = require('shelljs');
+      var sha = shell.exec('git rev-parse HEAD', { silent: true });
+      return sha.output;
+    } else {
+      return 'v' + pkg.version;
+    }
+  }
+
+  function parseSourceCodePath(url) {
+    if (!url) return;
+    var match =  url.match(/git@github.com:(.*)\.git/);
+    if (match) {
+      return 'http://github.com/' + match[1];
+    } else {
+      if (url.match(/https?:\/\/github.com/)) {
+        return url;
+      }
+    }
+  }
 
   function prepareSetup(section, options) {
     var setup, data, context = {},
