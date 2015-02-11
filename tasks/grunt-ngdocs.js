@@ -32,7 +32,7 @@ module.exports = function(grunt) {
           scripts: ['angular.js'],
           styles: [],
           title: pkg.title || pkg.name || '',
-          html5Mode: true,
+          html5Mode: false,
           editExample: true,
           sourceLink: true,
           editLink: true
