@@ -33,40 +33,40 @@ module.exports = function(grunt) {
         setup;
 
     //Copy the scripts into their own folder in docs, unless they are remote or default angular.js
+    var linked = /^((https?:)?\/\/|\.\.\/)/;
     var gruntScriptsFolder = 'grunt-scripts';
+    var gruntStylesFolder = 'grunt-css';
+
     options.scripts = _.map(options.scripts, function(file) {
       if (file === 'angular.js') {
         return 'js/angular.min.js';
       }
 
-      if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
+      if (linked.test(file)) {
         return file;
-      } else {
-        var filename = file.split('/').pop();
-        //Use path.join here because we aren't sure if options.dest has / or not
-        grunt.file.copy(file, path.join(options.dest, gruntScriptsFolder, filename));
-
-        //Return the script path: doesn't have options.dest in it, it's relative
-        //to the docs folder itself
-        return gruntScriptsFolder + '/' + filename;
       }
+
+      var filename = file.split('/').pop();
+      //Use path.join here because we aren't sure if options.dest has / or not
+      grunt.file.copy(file, path.join(options.dest, gruntScriptsFolder, filename));
+
+      //Return the script path: doesn't have options.dest in it, it's relative
+      //to the docs folder itself
+      return gruntScriptsFolder + '/' + filename;
     });
 
-    if (options.image) {
-      if (!/^((https?:)?\/\/|\.\.\/)/.test(options.image)) {
-        grunt.file.copy(options.image, path.join(options.dest, 'img', options.image));
-        options.image = "img/" + options.image;
-      }
+    if (options.image && !linked.test(options.image)) {
+      grunt.file.copy(options.image, path.join(options.dest, gruntStylesFolder, options.image));
+      options.image = gruntStylesFolder + '/' + options.image;
     }
 
     options.styles = _.map(options.styles, function(file) {
-      if (/^((https?:)?\/\/|\.\.\/)/.test(file)) {
+      if (linked.test(file)) {
         return file;
-      } else {
-        var filename = file.split('/').pop();
-        grunt.file.copy(file, path.join(options.dest, 'css', filename));
-        return 'css/' + filename;
       }
+      var filename = file.split('/').pop();
+      grunt.file.copy(file, path.join(options.dest, 'css', filename));
+      return 'css/' + filename;
     });
 
     setup = prepareSetup(section, options);
@@ -113,7 +113,7 @@ module.exports = function(grunt) {
         file = path.resolve(options.dest, 'js/docs-setup.js');
     if (exists(file)) {
       // read setup from file
-      data = grunt.file.read(file),
+      data = grunt.file.read(file);
       vm.runInNewContext(data, context, file);
       setup = context.NG_DOCS;
       // keep only pages from other build tasks
