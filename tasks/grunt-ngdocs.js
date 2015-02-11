@@ -43,7 +43,7 @@ module.exports = function(grunt) {
     //Copy the scripts into their own folder in docs, unless they are remote or default angular.js
     var linked = /^((https?:)?\/\/|\.\.\/)/;
     var gruntScriptsFolder = 'grunt-scripts';
-    var gruntStylesFolder = 'grunt-css';
+    var gruntStylesFolder = 'grunt-styles';
 
     options.scripts = _.map(options.scripts, function(file) {
       if (file === 'angular.js') {
