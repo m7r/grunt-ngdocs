@@ -1,3 +1,38 @@
+# 0.2.7 (2015-02-12)
+
+## Features
+### parameters
+
+* add parameter property support ([e5fc7f72](https://github.com/m7r/grunt-ngdocs/commit/e5fc7f72))
+
+### docs
+
+* ellipsis and title for long module names ([c0795df1](https://github.com/m7r/grunt-ngdocs/commit/c0795df1))
+
+* make use of ngAnimate optional #133 ([99b8a5b8](https://github.com/m7r/grunt-ngdocs/commit/99b8a5b8))
+
+* read package.json if pkg is not set in `grunt.initConfig()` ([4c3d3c3a](https://github.com/m7r/grunt-ngdocs/commit/4c3d3c3a))
+
+* optional view source and improve this doc links #25 ([a42e2f7b](https://github.com/m7r/grunt-ngdocs/commit/a42e2f7b))
+
+* show edit in plunker as link ([29b2b3bb](https://github.com/m7r/grunt-ngdocs/commit/29b2b3bb))
+
+* html5Mode is now disabled by default ([909c994b](https://github.com/m7r/grunt-ngdocs/commit/909c994b))
+
+
+
+## Bug fixes
+### ngdocs
+
+* add missing method to ngdoc location provider ([a28000d8](https://github.com/m7r/grunt-ngdocs/commit/a28000d8))
+
+* postDigestQueue not being processed ([9a9de1f9](https://github.com/m7r/grunt-ngdocs/commit/9a9de1f9))
+
+* don't break css for method close collapse #119 #126 ([6639f06c](https://github.com/m7r/grunt-ngdocs/commit/6639f06c))
+
+
+
+
 # 0.2.6 (2014-10-27)
 
 ## Features
