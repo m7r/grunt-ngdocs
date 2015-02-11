@@ -54,7 +54,7 @@ var BOOLEAN_ATTR = {};
 });
 
 //////////////////////////////////////////////////////////
-function Doc(text, file, line, options) {
+function Doc(text, file, startLine, endLine, options) {
   if (typeof text == 'object') {
     for ( var key in text) {
       this[key] = text[key];
@@ -62,7 +62,8 @@ function Doc(text, file, line, options) {
   } else {
     this.text = text;
     this.file = file;
-    this.line = line;
+    this.line = startLine;
+    this.codeline = endLine + 1;
   }
   this.options = options || {};
   this.scenarios = this.scenarios || [];
@@ -470,35 +471,24 @@ Doc.prototype = {
       self = this,
       minerrMsg;
 
-    var gitTagFromFullVersion = function(version) {
-      var match = version.match(/-(\w{7})/);
-
-      if (match) {
-        // git sha
-        return match[1];
-      }
-
-      // git tag
-      return 'v' + version;
-    };
-
-    /*
-    if (this.section === 'api') {
+    if (this.options.editLink) {
       dom.tag('a', {
-          href: 'http://github.com/angular/angular.js/tree/' +
-            gitTagFromFullVersion(gruntUtil.getVersion().full) + '/' + self.file + '#L' + self.line,
-          class: 'view-source btn btn-action' }, function(dom) {
-        dom.tag('i', {class:'icon-zoom-in'}, ' ');
-        dom.text(' View source');
+          href: self.options.editLink(self.file, self.line, self.codeline),
+          class: 'improve-docs' }, function(dom) {
+        dom.tag('i', {class:'icon-edit'}, ' ');
+        dom.text('Improve this doc');
       });
     }
-    dom.tag('a', {
-        href: 'http://github.com/angular/angular.js/edit/master/' + self.file,
-        class: 'improve-docs btn btn-primary' }, function(dom) {
-      dom.tag('i', {class:'icon-edit'}, ' ');
-      dom.text(' Improve this doc');
-    });
-    */
+
+    if (this.options.sourceLink && this.options.isAPI) {
+      dom.tag('a', {
+          href: self.options.sourceLink(self.file, self.line, self.codeline),
+          class: 'view-source' }, function(dom) {
+        dom.tag('i', {class:'icon-eye-open'}, ' ');
+        dom.text('View source');
+      });
+    }
+
     dom.h(title(this), function() {
       notice('deprecated', 'Deprecated API', self.deprecated);
       if (self.ngdoc === 'error') {
@@ -892,6 +882,12 @@ Doc.prototype = {
     if (self.methods.length) {
       dom.div({class:'member method'}, function(){
         dom.h('Methods', self.methods, function(method){
+          if (self.options.sourceLink) {
+            dom.tag('a', {
+              href: self.options.sourceLink(method.file, method.line, method.codeline),
+              class: 'view-source icon-eye-open'
+            }, ' ');
+          }
           //filters out .IsProperty parameters from the method signature
           var signature = (method.param || []).filter(function(e) { return e.isProperty !== true; }).map(property('name'));
           dom.h(method.shortName + '(' + signature.join(', ') + ')', method, function() {

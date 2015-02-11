@@ -96,6 +96,26 @@ Optional include Google Analytics in the documentation app.
 ####discussions
 Optional include [discussions](http://disqus.com) in the documentation app.
 
+####sourceLink
+[default] true
+Display "View source" link.
+Possible values are
+  - `true`: try to read repository from package.json (currently only github is supported)
+  - `false`: don't display link
+  - string: template string like `'https://internal.server/repo/blob/{{sha}}/{{file}}#L{{codeline}}'`
+    available placeholders:
+      - **file**: path and filename current file
+      - **filename**: only filename of current file
+      - **filepath**: directory of current file
+      - **line**: first line of comment
+      - **codeline**: first line *after* comment
+      - **version**: version read from package.json
+      - **sha**: first 7 characters of current git commit
+
+####editLink
+[default] true
+Display "Improve this doc" link. Same options as for sourceLink.
+
 ####editExample
 [default] true
 Show Edit Button for examples.

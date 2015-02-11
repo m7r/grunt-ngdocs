@@ -11,6 +11,13 @@ var reader = require('../src/reader.js'),
     path = require('path'),
     vm = require('vm');
 
+var repohosts = [
+  { re: /https?:\/\/github.com\/([^\/]+\/[^\/]+)|git@github.com:(.*)\.git/,
+    sourceLink: 'https://github.com/{{repo}}/blob/{{sha}}/{{file}}#L{{codeline}}',
+    editLink: 'https://github.com/{{repo}}/edit/master/{{file}}'
+  }
+];
+
 module.exports = function(grunt) {
   var _ = grunt.util._,
       templates = path.resolve(__dirname, '../src/templates');
@@ -26,7 +33,9 @@ module.exports = function(grunt) {
           styles: [],
           title: pkg.title || pkg.name || '',
           html5Mode: true,
-          editExample: true
+          editExample: true,
+          sourceLink: true,
+          editLink: true
         }),
         section = this.target === 'all' ? 'api' : this.target,
         setup;
@@ -72,10 +81,13 @@ module.exports = function(grunt) {
 
     grunt.log.writeln('Generating Documentation...');
 
+    prepareLinks(pkg, options);
+
     reader.docs = [];
     this.files.forEach(function(f) {
+      options.isAPI = f.api || section == 'api';
       setup.sections[section] = f.title || 'API Documentation';
-      setup.apis[section] = f.api || section == 'api';
+      setup.apis[section] = options.isAPI;
       f.src.filter(exists).forEach(function(filepath) {
         var content = grunt.file.read(filepath);
         reader.process(content, filepath, section, options);
@@ -113,6 +125,47 @@ module.exports = function(grunt) {
       pkg = grunt.file.readJSON('package.json');
     } catch (e) {}
     return pkg || {};
+  }
+
+  function makeLinkFn(tmpl, values) {
+      if (!tmpl || tmpl === true) { return false; }
+      if (/\{\{\s*sha\s*\}\}/.test(tmpl)) {
+        var shell = require('shelljs');
+        var sha = shell.exec('git rev-parse HEAD', { silent: true });
+        values.sha = ('' + sha.output).slice(0, 7);
+      }
+      tmpl = _.template(tmpl, undefined, {'interpolate': /\{\{(.+?)\}\}/g});
+      return function(file, line, codeline) {
+        values.file = file;
+        values.line = line;
+        values.codeline = codeline;
+        values.filepath = path.dirname(file);
+        values.filename = path.basename(file);
+        return tmpl(values);
+      };
+    }
+
+  function prepareLinks(pkg, options) {
+    var values = {version: pkg.version || 'master'};
+    var url = (pkg.repository || {}).url;
+
+    if (url && options.sourceLink === true || options.sourceEdit === true) {
+      repohosts.some(function(host) {
+        var match = url.match(host.re);
+        if (match) {
+          values.repo = match[1];
+          if (host.sourceLink && options.sourceLink === true) {
+            options.sourceLink = host.sourceLink;
+          }
+          if (host.editLink && options.editLink === true) {
+            options.editLink = host.editLink;
+          }
+        }
+        return match;
+      });
+    }
+    options.sourceLink = makeLinkFn(options.sourceLink, values);
+    options.editLink = makeLinkFn(options.editLink, values);
   }
 
   function prepareSetup(section, options) {

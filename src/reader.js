@@ -42,7 +42,7 @@ function processJsFile(content, file, section, options) {
       text = text.replace(/^\n/, '');
       if (text.match(/@ngdoc/)){
         //console.log(file, startingLine)
-        docs.push(new ngdoc.Doc('@section ' + section + '\n' + text, file, startingLine, options).parse());
+        docs.push(new ngdoc.Doc('@section ' + section + '\n' + text, file, startingLine, lineNumber, options).parse());
       }
       doc = null;
       inDoc = false;
