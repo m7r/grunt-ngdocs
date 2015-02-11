@@ -518,7 +518,19 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
   }
 };
 
-angular.module('docsApp', ['ngAnimate', 'bootstrap', 'bootstrapPrettify']).
+function module(name, modules, optional) {
+  if (optional) {
+    angular.forEach(optional, function(name) {
+      try {
+        angular.module(name);
+        modules.push(name);
+      } catch(e) {}
+    });
+  }
+  return angular.module(name, modules);
+}
+
+module('docsApp', ['bootstrap', 'bootstrapPrettify'], ['ngAnimate']).
   config(function($locationProvider) {
     if (NG_DOCS.html5Mode) {
       $locationProvider.html5Mode(true).hashPrefix('!');
