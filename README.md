@@ -1,4 +1,4 @@
-#grunt-ngdocs
+# grunt-ngdocs
 Grunt plugin to create a documentation like [AngularJS](http://docs.angularjs.org)
 NOTE: this plugin requires Grunt 0.4.x
 
@@ -6,7 +6,7 @@ ATTENTION: grunt-ngdocs 0.2+ is for angularjs 1.2+
 grunt-ngdocs 0.2.5 supports angularjs 1.3+ too
 Please include angular.js and angular-animate.js with the scripts option
 
-##Getting Started
+## Getting Started
 From the same directory as your project's Gruntfile and package.json, install this plugin with the following command:
 
 `npm install grunt-ngdocs --save-dev`
@@ -19,7 +19,7 @@ grunt.loadNpmTasks('grunt-ngdocs');
 
 A full working example can be found at [https://github.com/m7r/grunt-ngdocs-example](https://github.com/m7r/grunt-ngdocs-example)
 
-##Config
+## Config
 Inside your `Gruntfile.js` file, add a section named *ngdocs*.
 Here's a simple example:
 
@@ -64,14 +64,34 @@ ngdocs: {
 }
 ```
 
-###Options
 
-####dest
+### Targets
+Each grunt target creates a section in the documentation app.
+
+#### src
+[required] List of files to parse for documentation comments.
+
+#### title
+[default] 'API Documentation'
+
+Set the name for the section in the documentation app.
+
+#### api
+[default] true for target api
+
+Set the sidebar to advanced mode, with sections for modules, services, etc.
+
+
+### Options
+
+#### dest
 [default] 'docs'
+
 Folder relative to your Gruntfile where the documentation should be built.
 
-####scripts
+#### scripts
 [default] ['angular.js']
+
 Set which angular.js file or addional custom js files are loaded to the app. This allows the live examples to use custom directives, services, etc. The documentation app works with angular.js 1.2+ and 1.3+. If you include your own angular.js include angular-animate.js too.
 
 Possible values:
@@ -81,78 +101,61 @@ Possible values:
   - ['http://example.com/file.js', 'https://example.com/file.js', '//example.com/file.js'] reference remote files (eg from a CDN)
   - ['../app.js'] reference file relative to the dest folder
 
-####deferLoad
-[default] 'false'
+#### deferLoad
+[default] false
+
 If you want to use requirejs as loader set this to `true`.
+
 Include 'js/angular-bootstrap.js', 'js/angular-bootstrap-prettify.js', 'js/docs-setup.js', 'js/docs.js' with requirejs and finally bootstrap the app `angular.bootstrap(document, ['docsApp']);`.
 
-####styles
+#### styles
 [default] []
+
 Copy additional css files to the documentation app
 
-####analytics
-Optional include Google Analytics in the documentation app.
 
-####discussions
-Optional include [discussions](http://disqus.com) in the documentation app.
-
-####sourceLink
-[default] true
-Display "View source" link.
-Possible values are
-  - `true`: try to read repository from package.json (currently only github is supported)
-  - `false`: don't display link
-  - string: template string like `'https://internal.server/repo/blob/{{sha}}/{{file}}#L{{codeline}}'`
-    available placeholders:
-      - **file**: path and filename current file
-      - **filename**: only filename of current file
-      - **filepath**: directory of current file
-      - **line**: first line of comment
-      - **codeline**: first line *after* comment
-      - **version**: version read from package.json
-      - **sha**: first 7 characters of current git commit
-
-####editLink
-[default] true
-Display "Improve this doc" link. Same options as for sourceLink.
-
-####editExample
-[default] true
-Show Edit Button for examples.
-
-####title
-[default] "name" or "title" field in `pkg`
-Title to put on the navbar and the page's `title` attribute.  By default, tries to
-find the title in the `pkg`. If it can't find it, it will go to an empty string.
-
-####startPage
+#### startPage
 [default] '/api'
+
 Set first page to open.
 
-####html5Mode
-[default] 'true'
+#### html5Mode
+[default] false
+
 Whether or not to enable `html5Mode` in the docs application.  If true, then links will be absolute.  If false, they will be prefixed by `#/`.
 
-####image
-A URL or relative path to an image file to use in the top navbar.
-
-####titleLink
-[default] no anchor tag is used
-Wraps the title text in an anchor tag with the provided URL.
-
-####imageLink
-[default] no anchor tag is used
-Wraps the navbar image in an anchor tag with the provided URL.
-
-####bestMatch
+#### bestMatch
 [default] false
+
 The best matching page for a search query is highlighted and get selected on return.
 If this option is set to true the best match is shown below the search field in an dropdown menu. Use this for long lists where the highlight is often not visible.
 
-####navTemplate
+
+#### title
+[default] "name" or "title" field in `pkg`
+
+Title to put on the navbar and the page's `title` attribute.  By default, tries to
+find the title in the `pkg`. If it can't find it, it will go to an empty string.
+
+#### titleLink
+[default] no anchor tag is used
+
+Wraps the title text in an anchor tag with the provided URL.
+
+#### image
+A URL or relative path to an image file to use in the top navbar.
+
+#### imageLink
+[default] no anchor tag is used
+
+Wraps the navbar image in an anchor tag with the provided URL.
+
+#### navTemplate
 [default] null
+
 Path to a template of a nav HTML template to include.  The css for it
 should be that of listitems inside a bootstrap navbar:
+
 ```html
 <header class="header">
   <div class="navbar">
@@ -167,22 +170,61 @@ Example: 'templates/my-nav.html'
 
 The template, if specified, is pre-processed using [grunt.template](https://github.com/gruntjs/grunt/wiki/grunt.template#grunttemplateprocess).
 
-###Targets
-Each grunt target creates a section in the documentation app.
 
-####src
-[required] List of files to parse for documentation comments.
+#### sourceLink
+[default] true
 
-####title
-[default] 'API Documentation'
-Set the name for the section in the documentation app.
+Display "View source" link.
+Possible values are
 
-####api
-[default] true for target api
-Set the sidebar to advanced mode, with sections for modules, services, etc.
+  - `true`: try to read repository from package.json (currently only github is supported)
+  - `false`: don't display link
+  - string: template string like `'https://internal.server/repo/blob/{{sha}}/{{file}}#L{{codeline}}'`
+
+    available placeholders:
+
+      - **file**: path and filename current file
+      - **filename**: only filename of current file
+      - **filepath**: directory of current file
+      - **line**: first line of comment
+      - **codeline**: first line *after* comment
+      - **version**: version read from package.json
+      - **sha**: first 7 characters of current git commit
+
+#### editLink
+[default] true
+
+Display "Improve this doc" link. Same options as for sourceLink.
+
+#### editExample
+[default] true
+
+Show Edit Button for examples.
 
 
-##How it works
+#### discussions
+Optional include [discussions](http://disqus.com) in the documentation app.
+
+```js
+{
+  shortName: 'my',
+  url: 'http://my-domain.com',
+  dev: false
+}
+```
+
+#### analytics
+Optional include Google Analytics in the documentation app.
+
+```js
+{
+  account: 'UA-08150815-0',
+  domainName: 'my-domain.com'
+}
+```
+
+
+## How it works
 The task parses the specified files for doc comments and extracts them into partial html files for the documentation app.
 
 At first run, all necessary files will be copied to the destination folder.
@@ -193,6 +235,7 @@ Partials that are no longer needed will not be deleted. Use, for example, the gr
 After an update of grunt-ngdocs you should clean the docs folder too.
 
 A doc comment looks like this:
+
 ```js
 /**
  * @ngdoc directive
@@ -221,9 +264,9 @@ angular.module('rfx', []).directive('rAutogrow', function() {
 Check out the [Writing AngularJS documentation wiki article](https://github.com/angular/angular.js/wiki/Writing-AngularJS-Documentation) to see what's possible,
 or take a look at the [AngularJS source code](https://github.com/angular/angular.js/tree/master/src/ng) for more examples.
 
-##Batarang
+## Batarang
 If your examples are empty you maybe have batarang enabled for the docs site.
 This is the same issue as on http://docs.angular.js and the batarang team is informed about it #68.
 
-##License
+## License
 MIT License
