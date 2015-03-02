@@ -12,7 +12,7 @@ var reader = require('../src/reader.js'),
     vm = require('vm');
 
 var repohosts = [
-  { re: /https?:\/\/github.com\/([^\/]+\/[^\/]+)|git@github.com:(.*)\.git/,
+  { re: /https?:\/\/github.com\/([^\/]+\/[^\/]+)|git@github.com:(.*)\.git|git:\/\/github.com\/(.*).git/,
     sourceLink: 'https://github.com/{{repo}}/blob/{{sha}}/{{file}}#L{{codeline}}',
     editLink: 'https://github.com/{{repo}}/edit/master/{{file}}'
   }
@@ -153,7 +153,7 @@ module.exports = function(grunt) {
       repohosts.some(function(host) {
         var match = url.match(host.re);
         if (match) {
-          values.repo = match[1];
+          values.repo = match[1] || match[2] || match[3];
           if (host.sourceLink && options.sourceLink === true) {
             options.sourceLink = host.sourceLink;
           }
