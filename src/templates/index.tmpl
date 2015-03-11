@@ -19,8 +19,7 @@
     (function() {
       var indexFile = (location.pathname.match(/\/(index[^\.]*\.html)/) || ['', ''])[1],
           rUrl = /(#!\/|<%= sections %>|index[^\.]*\.html).*$/,
-          origin = location.origin || (window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '')),
-          baseUrl = origin + location.href.substr(origin.length).replace(rUrl, indexFile),
+          baseUrl = location.href.replace(rUrl, indexFile),
           headEl = document.getElementsByTagName('head')[0],
           sync = true;
 
