@@ -211,10 +211,11 @@ module.exports = function(grunt) {
           imageLink: options.imageLink,
           bestMatch: options.bestMatch,
           deferLoad: !!options.deferLoad
-        };
+        },
+        template = options.template ? options.template : path.resolve(templates, 'index.tmpl');
 
     // create index.html
-    content = grunt.file.read(path.resolve(templates, 'index.tmpl'));
+    content = grunt.file.read(template);
     content = grunt.template.process(content, {data:data});
     grunt.file.write(path.resolve(options.dest, 'index.html'), content);
 

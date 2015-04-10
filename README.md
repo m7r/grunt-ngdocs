@@ -113,6 +113,10 @@ Include 'js/angular-bootstrap.js', 'js/angular-bootstrap-prettify.js', 'js/docs-
 
 Copy additional css files to the documentation app
 
+#### template
+[default] null
+
+Allow to use your own template. Use the default template at src/templates/index.tmpl as reference.
 
 #### startPage
 [default] '/api'
