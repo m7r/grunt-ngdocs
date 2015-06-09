@@ -35,7 +35,8 @@ module.exports = function(grunt) {
           html5Mode: false,
           editExample: true,
           sourceLink: true,
-          editLink: true
+          editLink: true,
+          inlinePartials: false
         }),
         section = this.target === 'all' ? 'api' : this.target,
         setup;
@@ -114,6 +115,10 @@ module.exports = function(grunt) {
     }
 
     writeSetup(setup);
+
+    if (options.inlinePartials) {
+      inlinePartials(path.resolve(options.dest, 'index.html'), path.resolve(options.dest, 'partials'));
+    }
 
     grunt.log.writeln('DONE. Generated ' + reader.docs.length + ' pages in ' + (now()-start) + 'ms.');
     done();
@@ -229,6 +234,38 @@ module.exports = function(grunt) {
         } else {
           grunt.file.copy(src, dest);
         }
+    });
+  }
+
+  function inlinePartials(indexFile, partialsFolder) {
+    var indexFolder = path.dirname(indexFile);
+    var partials = grunt.file.expand(partialsFolder + '/**/*.html').map(function(partial){
+      return path.relative(indexFolder, partial);
+    });
+    var html = partials.map(function(partial){
+      // Get the partial content and replace the closing script tags with a placeholder
+      var partialContent = grunt.file.read(path.join(indexFolder, partial))
+        .replace(/<\/script>/g, '<___/script___>');
+      return '<script type="text/ng-template" id="' + partial + '">' + partialContent + '<' + '/script>';
+    }).join('');
+    // During page initialization replace the placeholder back to the closing script tag
+    // @see https://github.com/angular/angular.js/issues/2820
+    html += '<script>(' + (function() {
+      var scripts = document.getElementsByTagName("script");
+      for (var i=0;i<scripts.length;i++) {
+        if (scripts[i].type==='text/ng-template') {
+          scripts[i].innerHTML = scripts[i].innerHTML.replace(/<___\/script___>/g, '</' + 'script>');
+        }
+      }
+    }) + '())</script>';
+    // Inject the html into the ngdoc file
+    var patchedIndex = grunt.file.read(indexFile).replace(/<body[^>]*>/i, function(match) {
+      return match + html;
+    });
+    grunt.file.write(indexFile, patchedIndex);
+    // Remove the partials
+    partials.forEach(function(partial) {
+      grunt.file.delete(path.join(indexFolder, partial));
     });
   }
 
