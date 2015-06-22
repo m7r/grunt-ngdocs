@@ -46,6 +46,9 @@ module.exports = function(grunt) {
     var gruntScriptsFolder = 'grunt-scripts';
     var gruntStylesFolder = 'grunt-styles';
 
+  	// If the options.script is an array of arrays ( useful when working with variables, for example: ['<%= vendor_files %>','<%= app_files %>'] )
+  	// convert to a single array with _.flatten ( http://underscorejs.org/#flatten )
+  	options.scripts = _.flatten(options.scripts);
     options.scripts = _.map(options.scripts, function(file) {
       if (file === 'angular.js') {
         return 'js/angular.min.js';
