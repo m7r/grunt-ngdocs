@@ -45,8 +45,7 @@ ngdocs: {
     inlinePartials: true,
     bestMatch: true,
     analytics: {
-          account: 'UA-08150815-0',
-          domainName: 'my-domain.com'
+          account: 'UA-08150815-0'
     },
     discussions: {
           shortName: 'my',
@@ -224,8 +223,7 @@ Optional include Google Analytics in the documentation app.
 
 ```js
 {
-  account: 'UA-08150815-0',
-  domainName: 'my-domain.com'
+  account: 'UA-08150815-0'
 }
 ```
 
