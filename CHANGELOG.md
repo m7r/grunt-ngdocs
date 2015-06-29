@@ -1,3 +1,32 @@
+# 0.2.8 (2015-06-29)
+
+## Features
+### docs
+
+* allow to inline partials ([5980bb6d](https://github.com/m7r/grunt-ngdocs/commit/5980bb6d))
+
+* use current google analytics script ([7037751b](https://github.com/m7r/grunt-ngdocs/commit/7037751b))
+
+* allow grund variables in `options.scripts` ([4c17f086](https://github.com/m7r/grunt-ngdocs/commit/4c17f086))
+
+* allow custom template ([c8057c32](https://github.com/m7r/grunt-ngdocs/commit/c8057c32))
+
+
+
+## Bug fixes
+### docs
+
+* run from file:// url again ([c9f528a5](https://github.com/m7r/grunt-ngdocs/commit/c9f528a5))
+
+* use correct provider url  #151 ([c1ddab43](https://github.com/m7r/grunt-ngdocs/commit/c1ddab43))
+
+### ngdocs
+
+* use correct options for ngdoc files ([b5672949](https://github.com/m7r/grunt-ngdocs/commit/b5672949))
+
+
+
+
 # 0.2.7 (2015-02-12)
 
 ## Features
