@@ -11,7 +11,7 @@ var ngdoc = require('./ngdoc.js'),
 function process(content, file, section, options) {
   if (file.match(/\.ngdoc$/)) {
     var header = '@section ' + section + '\n';
-    exports.docs.push(new ngdoc.Doc(header + content.toString(),file, 1, options).parse());
+    exports.docs.push(new ngdoc.Doc(header + content.toString(),file, 1, 1, options).parse());
   } else {
     processJsFile(content, file, section, options).forEach(function(doc) {
       exports.docs.push(doc);
