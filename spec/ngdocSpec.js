@@ -137,7 +137,7 @@ describe('ngdoc', function() {
         var doc;
 
         beforeEach(function() {
-          doc = new Doc({section: 'section'}, 'a', 1, {html5Mode: true});
+          doc = new Doc({section: 'section'}, 'a', 1, 1, {html5Mode: true});
         });
 
         it('should not change absolute url', function() {
@@ -360,7 +360,7 @@ describe('ngdoc', function() {
     describe('@requires', function() {
       it('should parse more @requires tag into array', function() {
         var doc = new Doc('@section api\n@name a\n@requires $service for \n`A`\n@requires $another for `B`',
-                          'a', 1, {html5Mode:true});
+                          'a', 1, 1, {html5Mode:true});
         doc.ngdoc = 'service';
         doc.parse();
         expect(doc.requires).toEqual([
@@ -496,7 +496,7 @@ describe('ngdoc', function() {
             'dad{@link angular.foo}\n\n' +
             'external{@link http://angularjs.org}\n\n' +
             'external{@link ./static.html}\n\n' +
-            '{@link angular.directive.ng-foo ng:foo}', 'a', 1, {html5Mode:true});
+            '{@link angular.directive.ng-foo ng:foo}', 'a', 1, 1, {html5Mode:true});
 
         doc.section = 'api';
         doc.parse();
@@ -517,7 +517,7 @@ describe('ngdoc', function() {
 
       it('should support line breaks in @link', function() {
         var doc = new Doc("@name a\n@description " +
-            '{@link\napi/angular.foo\na\nb}', 'a', 1, {html5Mode:true});
+            '{@link\napi/angular.foo\na\nb}', 'a', 1, 1, {html5Mode:true});
         doc.parse();
         expect(doc.description).
           toContain('<a href="api/angular.foo"><code>a b</code></a>');
