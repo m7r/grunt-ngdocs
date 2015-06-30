@@ -7,7 +7,7 @@
 
 * use current google analytics script ([7037751b](https://github.com/m7r/grunt-ngdocs/commit/7037751b))
 
-* allow grund variables in `options.scripts` ([4c17f086](https://github.com/m7r/grunt-ngdocs/commit/4c17f086))
+* allow grunt variables in `options.scripts` ([4c17f086](https://github.com/m7r/grunt-ngdocs/commit/4c17f086))
 
 * allow custom template ([c8057c32](https://github.com/m7r/grunt-ngdocs/commit/c8057c32))
 
