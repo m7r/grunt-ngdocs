@@ -459,6 +459,8 @@ Doc.prototype = {
           match = text.match(/^([^\s]*)\s+on\s+([\S\s]*)/);
           self.type = match[1];
           self.target = match[2];
+        } else if(atName == 'constructor') {
+          self.constructor = true;
         } else {
           self[atName] = text;
         }
@@ -660,6 +662,9 @@ Doc.prototype = {
 
     dom.h('Usage', function() {
       dom.code(function() {
+        if (self.constructor) {
+          dom.text('new ');
+        }
         dom.text(name.split(':').pop());
         dom.text('(');
         self.parameters(dom, ', ');
