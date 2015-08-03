@@ -382,11 +382,11 @@ Doc.prototype = {
     var shortName = this.name.split("#");
     if (shortName.length > 1) {
       this.shortName = shortName.pop().trim();
-    }else {
+    } else {
       shortName = this.name.split(":");
       if (shortName.length > 1) {
         this.shortName = shortName.pop().trim();
-      }else {
+      } else {
         this.shortName = this.name.split(".").pop().trim();
       }
     }
