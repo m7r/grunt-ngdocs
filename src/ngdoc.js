@@ -379,7 +379,18 @@ Doc.prototype = {
       }
     });
     flush();
-    this.shortName = this.name.split(/[\.:#]/).pop().trim();
+    var shortName = this.name.split("#");
+    if (shortName.length > 1) {
+      this.shortName = shortName.pop().trim();
+    } else {
+      shortName = this.name.split(":");
+      if (shortName.length > 1) {
+        this.shortName = shortName.pop().trim();
+      } else {
+        this.shortName = this.name.split(".").pop().trim();
+      }
+    }
+    
     this.id = this.id || // if we have an id just use it
       (this.ngdoc === 'error' ? this.name : '') ||
       (((this.file||'').match(/.*(\/|\\)([^(\/|\\)]*)\.ngdoc/)||{})[2]) || // try to extract it from file name
