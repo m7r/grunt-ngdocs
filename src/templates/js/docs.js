@@ -232,6 +232,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       MODULE = /^([^\.]+)$/,
       MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
       MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
+      MODULE_RESOURCE = /^(.+)\.resources?:([^\.]+)$/,
       MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
       MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
       MODULE_FILTER = /^(.+)\.filters?:([^\.]+)$/,
@@ -323,6 +324,9 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       } else if (match = partialId.match(MODULE_CONTROLLER)) {
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
+      } else if (match = partialId.match(MODULE_RESOURCE)) {
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
+        breadcrumb.push({ name: match[2] });
       } else if (match = partialId.match(MODULE_DIRECTIVE)) {
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
@@ -411,6 +415,8 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         module(page.moduleName || match[1], section).filters.push(page);
       } else if (match = id.match(MODULE_CONTROLLER) && page.type === 'controller') {
         module(page.moduleName || match[1], section).controllers.push(page);
+      } else if (match = id.match(MODULE_RESOURCE) && page.type === 'resource') {
+        module(page.moduleName || match[1], section).resources.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE)) {
         module(page.moduleName || match[1], section).directives.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE_INPUT)) {
@@ -454,6 +460,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
           url: (NG_DOCS.html5Mode ? '' : '#/') + section + '/' + name,
           globals: [],
           controllers: [],
+          resources: [],
           directives: [],
           services: [],
           others: [],

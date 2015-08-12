@@ -454,6 +454,8 @@ Doc.prototype = {
             name: match[1],
             text: self.markdown(match[2])
           });
+        } else if (atName == 'restMethod') {
+          self.restMethod = text.toUpperCase();
         } else if(atName == 'property') {
           match = text.match(/^\{(\S+)\}\s+(\S+)(\s+(.*))?/);
           if (!match) {
@@ -653,6 +655,13 @@ Doc.prototype = {
       dom.html('</td>');
       dom.html('</tr>');
       dom.html('</table>');
+    }
+  },
+
+  html_usage_rest_method: function(dom) {
+    var self = this;
+    if (self.restMethod) {
+      dom.html('<span class="label rest-method rest-method-' + self.restMethod.toLowerCase() + '">' + self.restMethod + '</span>');
     }
   },
 
@@ -885,6 +894,10 @@ Doc.prototype = {
     this.html_usage_interface(dom)
   },
 
+  html_usage_resource: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
   html_usage_object: function(dom) {
     this.html_usage_interface(dom)
   },
@@ -904,6 +917,9 @@ Doc.prototype = {
               class: 'view-source icon-eye-open'
             }, ' ');
           }
+          if (method.restMethod) {
+            method.html_usage_rest_method(dom);
+          }
           //filters out .IsProperty parameters from the method signature
           var signature = (method.param || []).filter(function(e) { return e.isProperty !== true; }).map(property('name'));
           dom.h(method.shortName + '(' + signature.join(', ') + ')', method, function() {
@@ -914,6 +930,7 @@ Doc.prototype = {
 
             dom.h('Example', method.example, dom.html);
           });
+
         });
       });
     }
@@ -982,6 +999,7 @@ var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE = /^([^\.]+)$/,
     MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
     MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
+    MODULE_RESOURCE = /^(.+)\.resources?:([^\.]+)$/,
     MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
     MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
     MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
@@ -1032,6 +1050,8 @@ function title(doc) {
     return makeTitle('angular.mock.' + match[1], 'API', 'module', 'ng');
   } else if (match = text.match(MODULE_CONTROLLER) && doc.type === 'controller') {
     return makeTitle(match[2], 'controller', 'module', match[1]);
+  } else if (match = text.match(MODULE_RESOURCE) && doc.type === 'resource') {
+    return makeTitle(match[2], 'resource', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE)) {
     return makeTitle(match[2], 'directive', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE_INPUT)) {
@@ -1098,7 +1118,6 @@ function metadata(docs){
     if (path.pop() == 'input') {
       shortName = 'input [' + shortName + ']';
     }
-
     pages.push({
       section: doc.section,
       id: doc.id,
