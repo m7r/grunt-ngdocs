@@ -1,3 +1,24 @@
+# 0.2.9 (2015-08-12)
+
+## Features
+### ngdocs
+
+* add support for @constructor ([c985bc6d](https://github.com/m7r/grunt-ngdocs/commit/c985bc6d))
+
+* allow dots in names #87 ([cd0db4c0](https://github.com/m7r/grunt-ngdocs/commit/cd0db4c0))
+
+
+
+## Bug fixes
+### docs
+
+* base url detect /api/ and not api ([df1c16b4](https://github.com/m7r/grunt-ngdocs/commit/df1c16b4), [5a313393](https://github.com/m7r/grunt-ngdocs/commit/5a313393))
+
+* extract repo from github urls #164 ([886be9d2](https://github.com/m7r/grunt-ngdocs/commit/886be9d2))
+
+
+
+
 # 0.2.8 (2015-06-29)
 
 ## Features
