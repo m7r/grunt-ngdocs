@@ -12,7 +12,8 @@ var reader = require('../src/reader.js'),
     vm = require('vm');
 
 var repohosts = [
-  { re: /https?:\/\/github.com\/([^\/]+\/[^\/]+)|git@github.com:(.*)\.git/,
+  { re: /https?:\/\/github.com\/([^\/]+\/[^\/]+)|git@github.com:(.*)/,
+    reSuffix: /\.git.*$/,
     sourceLink: 'https://github.com/{{repo}}/blob/{{sha}}/{{file}}#L{{codeline}}',
     editLink: 'https://github.com/{{repo}}/edit/master/{{file}}'
   }
@@ -20,6 +21,7 @@ var repohosts = [
 
 module.exports = function(grunt) {
   var _ = grunt.util._,
+      unittest = {},
       templates = path.resolve(__dirname, '../src/templates');
 
   grunt.registerMultiTask('ngdocs', 'build documentation', function() {
@@ -161,7 +163,10 @@ module.exports = function(grunt) {
       repohosts.some(function(host) {
         var match = url.match(host.re);
         if (match) {
-          values.repo = match[1];
+          values.repo = match[1] || match[2];
+          if (host.reSuffix) {
+            values.repo = values.repo.replace(host.reSuffix, '');
+          }
           if (host.sourceLink && options.sourceLink === true) {
             options.sourceLink = host.sourceLink;
           }
@@ -175,6 +180,8 @@ module.exports = function(grunt) {
     options.sourceLink = makeLinkFn(options.sourceLink, values);
     options.editLink = makeLinkFn(options.editLink, values);
   }
+
+  unittest.prepareLinks = prepareLinks;
 
   function prepareSetup(section, options) {
     var setup, data, context = {},
@@ -286,4 +293,5 @@ module.exports = function(grunt) {
 
   function now() { return new Date().getTime(); }
 
- };
+  return unittest;
+};
