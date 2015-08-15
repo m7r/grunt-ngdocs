@@ -27,6 +27,19 @@ module.exports = function (grunt) {
       release: {
         src: 'CHANGELOG.md'
       }
+    },
+    conventionalGithubReleaser: {
+      release: {
+        options: {
+          auth: {
+            type: 'oauth',
+            token: process.env.GH_TOKEN
+          },
+          changelogOpts: {
+            preset: 'angular'
+          }
+        }
+      }
     }
   });
 
