@@ -156,6 +156,7 @@ Doc.prototype = {
    * @returns {string} Absolute url
    */
   convertUrlToAbsolute: function(url) {
+    if (url.match(/^(https?:\/\/|ftps?:\/\/|mailto:|\.|\/)/)) return url;
     var prefix = this.options.html5Mode ? '' : '#/';
     var hashIdx = url.indexOf('#');
 
@@ -390,7 +391,7 @@ Doc.prototype = {
         this.shortName = this.name.split(".").pop().trim();
       }
     }
-    
+
     this.id = this.id || // if we have an id just use it
       (this.ngdoc === 'error' ? this.name : '') ||
       (((this.file||'').match(/.*(\/|\\)([^(\/|\\)]*)\.ngdoc/)||{})[2]) || // try to extract it from file name
@@ -449,11 +450,18 @@ Doc.prototype = {
             description: self.markdown(text.replace(match[0], match[2]))
           };
         } else if(atName == 'requires') {
-          match = text.match(/^([^\s]*)\s*([\S\s]*)/);
-          self.requires.push({
-            name: match[1],
-            text: self.markdown(match[2])
-          });
+          if (/^((({@link).+})|(\[.+\]({@link).+}))$/.test(text)) {
+            self.requires.push({
+              name: text,
+              text: null
+            });
+          } else {
+            match = text.match(/^([^\s]*)\s*([\S\s]*)/);
+            self.requires.push({
+              name: match[1],
+              text: self.markdown(match[2])
+            });
+          }
         } else if(atName == 'property') {
           match = text.match(/^\{(\S+)\}\s+(\S+)(\s+(.*))?/);
           if (!match) {
@@ -516,8 +524,23 @@ Doc.prototype = {
       }
       dom.h('Dependencies', self.requires, function(require){
         dom.tag('code', function() {
-          var id = require.name[0] == '$' ? 'ng.' + require.name : require.name,
-              name = require.name.split(/[\.:\/]/).pop();
+          var id, name;
+          if ((match = require.name.match(/^\[.+\](?={@link.+}$)/))) {
+            id = require.name.substring(require.name.indexOf('{@link ') + 7, require.name.length-1);
+            name = match[0].replace(/[\[\]]/g,'');
+          } else if (require.name.match(/^{@link\s\w+\b.*}$/)) {
+            var splitName = require.name.replace('|',' ').slice(0, -1).split(' ');
+            splitName.shift();
+            id = splitName.shift();
+            if (splitName.length > 0) {
+              name = splitName.join(' ');
+            } else {
+              name = id.split(/[\.:\/]/).pop();
+            }
+          } else {
+            id = require.name[0] == '$' ? 'ng.' + require.name : require.name
+            name = require.name.split(/[\.:\/]/).pop();
+          }
           dom.tag('a', {href: self.convertUrlToAbsolute(id)}, name);
         });
         dom.html(require.text);
