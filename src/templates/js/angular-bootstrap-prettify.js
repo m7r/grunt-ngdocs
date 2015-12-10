@@ -205,7 +205,8 @@ directive.ngEmbedApp = ['$templateCache', '$browser', '$rootScope', '$location',
         $provide.value('$anchorScroll', angular.noop);
         $provide.value('$browser', $browser);
         $provide.value('$sniffer', $sniffer);
-        $provide.value('$animate', $animate);
+        // https://github.com/angular-ui/bootstrap/issues/4315
+        //$provide.value('$animate', $animate);
         $provide.provider('$location', function() {
           this.$get = ['$rootScope', function($rootScope) {
             docsRootScope.$on('$locationChangeSuccess', function(event, oldUrl, newUrl) {
