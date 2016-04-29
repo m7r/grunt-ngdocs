@@ -6,7 +6,7 @@
  * Licensed under the MIT license.
  */
 
-var reader = require('../src/reader.js'),
+var Reader = require('../src/reader.js'),
     ngdoc = require('../src/ngdoc.js'),
     path = require('path'),
     vm = require('vm');
@@ -20,6 +20,8 @@ var repohosts = [
 ];
 
 module.exports = function(grunt) {
+  var reader = new Reader(grunt);
+
   var _ = grunt.util._,
       unittest = {},
       templates = path.resolve(__dirname, '../src/templates');
