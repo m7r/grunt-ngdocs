@@ -1,3 +1,25 @@
+# 0.2.10 (2016-05-02)
+
+## Features
+
+### ngdocs
+
+* support Grunt 1.0 ([6164a8b1](https://github.com/m7r/grunt-ngdocs/commit/6164a8b1))
+
+* add external links and link parsing to `@requires` ([309edc40](https://github.com/m7r/grunt-ngdocs/commit/309edc40))
+
+
+
+## Bug fixes
+### docs
+
+* allow to load modules that use $animate #185 ([25f573b1](https://github.com/m7r/grunt-ngdocs/commit/25f573b1))
+
+* only $destroy existing embed rootScope #179 #183 ([47c83b50](https://github.com/m7r/grunt-ngdocs/commit/47c83b50))
+
+
+
+
 # 0.2.9 (2015-08-12)
 
 ## Features
