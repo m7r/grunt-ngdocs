@@ -19,6 +19,8 @@ var repohosts = [
   }
 ];
 
+var generatedIndexes = {};
+
 module.exports = function(grunt) {
   var _ = grunt.util._,
       unittest = {},
@@ -222,9 +224,13 @@ module.exports = function(grunt) {
         template = options.template ? options.template : path.resolve(templates, 'index.tmpl');
 
     // create index.html
-    content = grunt.file.read(template);
-    content = grunt.template.process(content, {data:data});
-    grunt.file.write(path.resolve(options.dest, 'index.html'), content);
+    var indexFile = path.resolve(options.dest, 'index.html');
+    if (!generatedIndexes[indexFile]) {
+        content = grunt.file.read(template);
+        content = grunt.template.process(content, {data:data});
+        grunt.file.write(indexFile, content);
+        generatedIndexes[indexFile] = true;
+    }
 
     // create setup file
     setup.html5Mode = options.html5Mode;
