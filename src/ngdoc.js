@@ -380,6 +380,9 @@ Doc.prototype = {
       }
     });
     flush();
+    if ( !this.name ){
+      throw new Error('name does not exist for text \n\n' + self.text);
+    }
     var shortName = this.name.split("#");
     if (shortName.length > 1) {
       this.shortName = shortName.pop().trim();
