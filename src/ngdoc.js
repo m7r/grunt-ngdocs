@@ -1109,7 +1109,7 @@ function scenarios(docs){
 
 
 //////////////////////////////////////////////////////////
-function metadata(docs){
+function metadata(docs) {
   var pages = [];
   docs.forEach(function(doc){
     var path = (doc.name || '').split(/(\:\s*)/);
@@ -1122,6 +1122,11 @@ function metadata(docs){
       shortName = 'input [' + shortName + ']';
     }
 
+    doc.isDeprecated = false;
+    if (doc.deprecated !== undefined) {
+      doc.isDeprecated = true;
+    }
+
     pages.push({
       section: doc.section,
       id: doc.id,
@@ -1130,7 +1135,8 @@ function metadata(docs){
       type: doc.ngdoc,
       moduleName: doc.moduleName,
       shortDescription: doc.shortDescription(),
-      keywords: doc.keywords()
+      keywords: doc.keywords(),
+      isDeprecated: doc.isDeprecated
     });
   });
   pages.sort(sidebarSort);
