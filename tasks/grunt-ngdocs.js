@@ -9,6 +9,7 @@
 var reader = require('../src/reader.js'),
     ngdoc = require('../src/ngdoc.js'),
     path = require('path'),
+    upath = require('upath'),
     vm = require('vm');
 
 var repohosts = [
@@ -257,7 +258,7 @@ module.exports = function(grunt) {
       // Get the partial content and replace the closing script tags with a placeholder
       var partialContent = grunt.file.read(path.join(indexFolder, partial))
         .replace(/<\/script>/g, '<___/script___>');
-      return '<script type="text/ng-template" id="' + partial + '">' + partialContent + '<' + '/script>';
+      return '<script type="text/ng-template" id="' + upath.normalize(partial) + '">' + partialContent + '<' + '/script>';
     }).join('');
     // During page initialization replace the placeholder back to the closing script tag
     // @see https://github.com/angular/angular.js/issues/2820
