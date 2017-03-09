@@ -41,7 +41,9 @@ function processJsFile(content, file, section, options) {
       text = text.join('\n');
       text = text.replace(/^\n/, '');
       if (text.match(/@ngdoc/)){
-        //console.log(file, startingLine)
+        //console.log("##########" + file, startingLine);
+        //console.log("-------" + section);
+        //console.log(text);
         docs.push(new ngdoc.Doc('@section ' + section + '\n' + text, file, startingLine, lineNumber, options).parse());
       }
       doc = null;

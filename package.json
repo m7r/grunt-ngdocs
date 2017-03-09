@@ -1,6 +1,6 @@
 {
   "name": "grunt-ngdocs",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "grunt plugin for angularjs documentation",
   "main": "tasks",
   "repository": {
@@ -21,7 +21,7 @@
     "shelljs": "~0.3.0"
   },
   "peerDependencies": {
-    "grunt": "0.4.x"
+    "grunt": ">=0.4.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

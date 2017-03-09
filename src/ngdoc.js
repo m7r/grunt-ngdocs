@@ -156,6 +156,7 @@ Doc.prototype = {
    * @returns {string} Absolute url
    */
   convertUrlToAbsolute: function(url) {
+    if (url.match(/^(https?:\/\/|ftps?:\/\/|mailto:|\.|\/)/)) return url;
     var prefix = this.options.html5Mode ? '' : '#/';
     var hashIdx = url.indexOf('#');
 
@@ -390,7 +391,7 @@ Doc.prototype = {
         this.shortName = this.name.split(".").pop().trim();
       }
     }
-    
+
     this.id = this.id || // if we have an id just use it
       (this.ngdoc === 'error' ? this.name : '') ||
       (((this.file||'').match(/.*(\/|\\)([^(\/|\\)]*)\.ngdoc/)||{})[2]) || // try to extract it from file name
@@ -449,13 +450,18 @@ Doc.prototype = {
             description: self.markdown(text.replace(match[0], match[2]))
           };
         } else if(atName == 'requires') {
-          match = text.match(/^([^\s]*)\s*([\S\s]*)/);
-          self.requires.push({
-            name: match[1],
-            text: self.markdown(match[2])
-          });
-        } else if (atName == 'restMethod') {
-          self.restMethod = text.toUpperCase();
+          if (/^((({@link).+})|(\[.+\]({@link).+}))$/.test(text)) {
+            self.requires.push({
+              name: text,
+              text: null
+            });
+          } else {
+            match = text.match(/^([^\s]*)\s*([\S\s]*)/);
+            self.requires.push({
+              name: match[1],
+              text: self.markdown(match[2])
+            });
+          }
         } else if(atName == 'property') {
           match = text.match(/^\{(\S+)\}\s+(\S+)(\s+(.*))?/);
           if (!match) {
@@ -505,6 +511,22 @@ Doc.prototype = {
     }
 
     dom.h(title(this), function() {
+
+      var nameMatcher = self.name.match(/^[^\.]*\.([^:]*):.*$/);
+      if (self.ngdoc === "object") {
+        switch (nameMatcher ? nameMatcher[1] : "") {
+          case "factory":
+          case "factories":
+            self.ngdoc = "factory";
+            break;
+          case "constant":
+          case "constants":
+            self.ngdoc = "constant";
+            break;
+          default:
+        }
+      }
+
       notice('deprecated', 'Deprecated API', self.deprecated);
       if (self.ngdoc === 'error') {
         minerrMsg = lookupMinerrMsg(self);
@@ -518,8 +540,23 @@ Doc.prototype = {
       }
       dom.h('Dependencies', self.requires, function(require){
         dom.tag('code', function() {
-          var id = require.name[0] == '$' ? 'ng.' + require.name : require.name,
-              name = require.name.split(/[\.:\/]/).pop();
+          var id, name;
+          if ((match = require.name.match(/^\[.+\](?={@link.+}$)/))) {
+            id = require.name.substring(require.name.indexOf('{@link ') + 7, require.name.length-1);
+            name = match[0].replace(/[\[\]]/g,'');
+          } else if (require.name.match(/^{@link\s\w+\b.*}$/)) {
+            var splitName = require.name.replace('|',' ').slice(0, -1).split(' ');
+            splitName.shift();
+            id = splitName.shift();
+            if (splitName.length > 0) {
+              name = splitName.join(' ');
+            } else {
+              name = id.split(/[\.:\/]/).pop();
+            }
+          } else {
+            id = require.name[0] == '$' ? 'ng.' + require.name : require.name
+            name = require.name.split(/[\.:\/]/).pop();
+          }
           dom.tag('a', {href: self.convertUrlToAbsolute(id)}, name);
         });
         dom.html(require.text);
@@ -898,6 +935,22 @@ Doc.prototype = {
     this.html_usage_interface(dom)
   },
 
+  html_usage_factory: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
+  html_usage_constant: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
+  html_usage_factories: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
+  html_usage_constants: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
   html_usage_object: function(dom) {
     this.html_usage_interface(dom)
   },
@@ -1000,6 +1053,8 @@ var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
     MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
     MODULE_RESOURCE = /^(.+)\.resources?:([^\.]+)$/,
+    MODULE_FACTORY = /^(.+)\.factories:([^\.]+)$|^(.+)\.factory:([^\.]+)/,
+    MODULE_CONSTANT = /^(.+)\.constants?:([^\.]+)$/,
     MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
     MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
     MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
@@ -1052,6 +1107,10 @@ function title(doc) {
     return makeTitle(match[2], 'controller', 'module', match[1]);
   } else if (match = text.match(MODULE_RESOURCE) && doc.type === 'resource') {
     return makeTitle(match[2], 'resource', 'module', match[1]);
+  } else if (match = text.match(MODULE_FACTORY)) {
+    return makeTitle(match[2], 'factory', 'module', match[1]);
+  } else if (match = text.match(MODULE_CONSTANT)) {
+    return makeTitle(match[2], 'constant', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE)) {
     return makeTitle(match[2], 'directive', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE_INPUT)) {
@@ -1332,7 +1391,7 @@ function checkBrokenLinks(docs, apis, options) {
   docs.forEach(function(doc) {
     byFullId[doc.section + '/' + doc.id] = doc;
     if (apis[doc.section]) {
-      doc.anchors.push('directive', 'service', 'filter', 'function');
+      doc.anchors.push('directive', 'service', 'filter', 'function', 'factory', 'constant');
     }
   });
 

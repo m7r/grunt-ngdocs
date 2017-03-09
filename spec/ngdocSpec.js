@@ -131,6 +131,10 @@ describe('ngdoc', function() {
         it('should change id to index if not specified', function() {
           expect(doc.convertUrlToAbsolute('guide/')).toEqual('#/guide/index');
         });
+
+        it('should not change external url', function() {
+          expect(doc.convertUrlToAbsolute('https://github.com/m7r/grunt-ngdocs')).toEqual('https://github.com/m7r/grunt-ngdocs');
+        });
       });
 
       describe('convertUrlToAbsolute HTML5 mode', function() {
@@ -150,6 +154,10 @@ describe('ngdoc', function() {
 
         it('should change id to index if not specified', function() {
           expect(doc.convertUrlToAbsolute('guide/')).toEqual('guide/index');
+        });
+
+        it('should not change external url', function() {
+          expect(doc.convertUrlToAbsolute('https://github.com/m7r/grunt-ngdocs')).toEqual('https://github.com/m7r/grunt-ngdocs');
         });
       });
 
@@ -371,6 +379,25 @@ describe('ngdoc', function() {
         expect(doc.html()).toContain('<p>for\n<code>A</code></p>');
         expect(doc.html()).toContain('<p>for <code>B</code></p>');
       });
+
+      it('should parse {@link} into external links', function() {
+        var doc = new Doc('@ngdoc overview\n' +
+                          '@name a\n' +
+                          '@requires {@link https://github.com/angular-ui/ui-router}\n' +
+                          '@requires {@link https://github.com/angular-ui/ui-router ui.router}\n' +
+                          '@requires {@link https://github.com/angular-ui/ui-router|ui.router}\n' +
+                          '@requires [ui.router]{@link https://github.com/angular-ui/ui-router}');
+        doc.parse();
+        expect(doc.requires).toEqual([
+          {name:'{@link https://github.com/angular-ui/ui-router}', text:null},
+          {name:'{@link https://github.com/angular-ui/ui-router ui.router}', text:null},
+          {name:'{@link https://github.com/angular-ui/ui-router|ui.router}', text:null},
+          {name:'[ui.router]{@link https://github.com/angular-ui/ui-router}', text:null}]);
+        expect(doc.html()).toContain('<a href="https://github.com/angular-ui/ui-router">ui-router</a>');
+        expect(doc.html()).toContain('<a href="https://github.com/angular-ui/ui-router">ui.router</a>');
+        expect(doc.html()).toContain('<a href="https://github.com/angular-ui/ui-router">ui.router</a>');
+        expect(doc.html()).toContain('<a href="https://github.com/angular-ui/ui-router">ui.router</a>');
+      });
     });
 
     describe('@scope', function() {
@@ -485,8 +512,8 @@ describe('ngdoc', function() {
         expect(doc.description).
           toBe('<div class="a-page"><p>foo\n' +
                '<pre class="prettyprint linenums">abc</pre>\n' +
-               '<h1>bah</h1>\n' +
-               '<p>foo \n' +
+               '<p>#bah\n' +
+               'foo \n' +
                '<pre class="prettyprint linenums">cba</pre>\n</div>');
       });
 
@@ -580,7 +607,6 @@ describe('ngdoc', function() {
         var doc = new Doc('@ngdoc overview\n@name angular\n@description\n#heading\ntext');
         doc.parse();
         expect(doc.html()).toContain('text');
-        expect(doc.html()).toContain('<h2 id="heading">heading</h2>');
         expect(doc.html()).not.toContain('Description');
       });
     });
