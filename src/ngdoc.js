@@ -805,6 +805,46 @@ Doc.prototype = {
 
   },
 
+  html_usage_component: function(dom){
+    //this.html_usage_interface(dom)
+    var self = this;
+    dom.h('Usage', function() {
+      dom.code(function() {
+        dom.text('<');
+        dom.text(dashCase(self.shortName));
+
+        renderParams('\n       ', '="', '"');
+        dom.text('>\n</');
+        dom.text(dashCase(self.shortName));
+        dom.text('>');
+      });
+      self.html_usage_componentInfo(dom);
+      self.html_usage_bindings(dom);
+    });
+
+    self.method_properties_events(dom);
+
+    function renderParams(prefix, infix, suffix, skipSelf) {
+      (self.param||[]).forEach(function(param) {
+        var skip = skipSelf && (param.name == self.shortName || param.name.indexOf(self.shortName + '|') == 0);
+        if (!skip) {
+          dom.text(prefix);
+          dom.text(param.optional ? '[' : '');
+          var parts = param.name.split('|');
+          dom.text(dashCase(parts[skipSelf ? 0 : 1] || parts[0]));
+        }
+        if (BOOLEAN_ATTR[param.name]) {
+          dom.text(param.optional ? ']' : '');
+        } else {
+          dom.text(BOOLEAN_ATTR[param.name] ? '' : infix );
+          dom.text(('{' + param.type + '}').replace(/^\{\'(.*)\'\}$/, '$1'));
+          dom.text(suffix);
+          dom.text(param.optional && !skip ? ']' : '');
+        }
+      });
+    }
+  },
+
   html_usage_filter: function(dom){
     var self = this;
     dom.h('Usage', function() {
@@ -871,6 +911,22 @@ Doc.prototype = {
 
     if (list.length) {
       dom.h('Directive info', function() {
+        dom.ul(list);
+      });
+    }
+  },
+
+  html_usage_componentInfo: function(dom) {
+    var self = this;
+    var list = [];
+
+
+    if (self.bindings !== undefined) {
+      list.push('This component uses:');
+    }
+
+    if (list.length) {
+      dom.h('Component info', function() {
         dom.ul(list);
       });
     }
@@ -1004,6 +1060,7 @@ Doc.prototype = {
 var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE = /^([^\.]+)$/,
     MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
+    MODULE_COMPONENT = /^(.+)\.components?:([^\.]+)$/,
     MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
     MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
     MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
@@ -1053,6 +1110,8 @@ function title(doc) {
     return makeTitle(overview ? '' : match[1], '', 'module', match[1]);
   } else if (match = text.match(MODULE_MOCK)) {
     return makeTitle('angular.mock.' + match[1], 'API', 'module', 'ng');
+  } else if (match = text.match(MODULE_COMPONENT)) {
+    return makeTitle(match[2], 'component', 'module', match[1]);
   } else if (match = text.match(MODULE_CONTROLLER) && doc.type === 'controller') {
     return makeTitle(match[2], 'controller', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE)) {

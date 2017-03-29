@@ -231,6 +231,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       GLOBALS = /^angular\.([^\.]+)$/,
       MODULE = /^([^\.]+)$/,
       MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
+      MODULE_COMPONENT = /^(.+)\.components?:([^\.]+)$/,
       MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
       MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
       MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
@@ -409,6 +410,8 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         module(page.moduleName || match[1], section);
       } else if (match = id.match(MODULE_FILTER)) {
         module(page.moduleName || match[1], section).filters.push(page);
+      } else if (match = id.match(MODULE_COMPONENT)) {
+        module(page.moduleName || match[1], section).components.push(page);
       } else if (match = id.match(MODULE_CONTROLLER) && page.type === 'controller') {
         module(page.moduleName || match[1], section).controllers.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE)) {
@@ -453,6 +456,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
           name: name,
           url: (NG_DOCS.html5Mode ? '' : '#/') + section + '/' + name,
           globals: [],
+          components: [],
           controllers: [],
           directives: [],
           services: [],
