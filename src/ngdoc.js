@@ -156,7 +156,7 @@ Doc.prototype = {
    * @returns {string} Absolute url
    */
   convertUrlToAbsolute: function(url) {
-    var prefix = this.options.html5Mode ? '' : '#/';
+    var prefix = this.options.html5Mode ? '' : '#!/';
     var hashIdx = url.indexOf('#');
 
     // Lowercase hash parts of the links,
