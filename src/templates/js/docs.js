@@ -250,8 +250,8 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       last: this.$last,
       active: page1 && this.currentPage == page1 || page2 && this.currentPage == page2,
       match: this.focused && this.currentPage != page1 &&
-             this.bestMatch.rank > 0 && this.bestMatch.page == page1
-
+             this.bestMatch.rank > 0 && this.bestMatch.page == page1,
+      deprecate: page1.isDeprecated
     };
   };
 
