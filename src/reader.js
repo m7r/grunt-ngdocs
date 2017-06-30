@@ -28,28 +28,32 @@ function processJsFile(content, file, section, options) {
   var inDoc = false;
 
   lines.forEach(function(line, lineNumber){
-    lineNumber++;
-    // is the comment starting?
-    if (!inDoc && (match = line.match(/^\s*\/\*\*\s*(.*)$/))) {
-      line = match[1];
-      inDoc = true;
-      text = [];
-      startingLine = lineNumber;
-    }
-    // are we done?
-    if (inDoc && line.match(/\*\//)) {
-      text = text.join('\n');
-      text = text.replace(/^\n/, '');
-      if (text.match(/@ngdoc/)){
-        //console.log(file, startingLine)
-        docs.push(new ngdoc.Doc('@section ' + section + '\n' + text, file, startingLine, lineNumber, options).parse());
+    try {
+      lineNumber++;
+      // is the comment starting?
+      if (!inDoc && (match = line.match(/^\s*\/\*\*\s*(.*)$/))) {
+        line = match[1];
+        inDoc = true;
+        text = [];
+        startingLine = lineNumber;
       }
-      doc = null;
-      inDoc = false;
-    }
-    // is the comment add text
-    if (inDoc){
-      text.push(line.replace(/^\s*\*\s?/, ''));
+      // are we done?
+      if (inDoc && line.match(/\*\//)) {
+        text = text.join('\n');
+        text = text.replace(/^\n/, '');
+        if (text.match(/@ngdoc/)) {
+          //console.log(file, startingLine)
+          docs.push(new ngdoc.Doc('@section ' + section + '\n' + text, file, startingLine, lineNumber, options).parse());
+        }
+        doc = null;
+        inDoc = false;
+      }
+      // is the comment add text
+      if (inDoc) {
+        text.push(line.replace(/^\s*\*\s?/, ''));
+      }
+    }catch(e){
+      throw new Error('error parsing [' + file + '] line ' + lineNumber + '\n' + e);
     }
   });
   return docs;
