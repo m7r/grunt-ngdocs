@@ -140,10 +140,11 @@ module.exports = function(grunt) {
 
   function makeLinkFn(tmpl, values) {
       if (!tmpl || tmpl === true) { return false; }
-      if (/\{\{\s*sha\s*\}\}/.test(tmpl)) {
+      if (/\{\{\s*(sha|rev)\s*\}\}/.test(tmpl)) {
         var shell = require('shelljs');
         var sha = shell.exec('git rev-parse HEAD', { silent: true });
-        values.sha = ('' + sha.output).slice(0, 7);
+        values.rev = '' + sha.output;
+        values.sha = values.rev.slice(0, 7);
       }
       tmpl = _.template(tmpl, undefined, {'interpolate': /\{\{(.+?)\}\}/g});
       return function(file, line, codeline) {
