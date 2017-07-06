@@ -146,7 +146,7 @@ module.exports = function(grunt) {
         values.rev = '' + sha.output;
         values.sha = values.rev.slice(0, 7);
       }
-      tmpl = _.template(tmpl, undefined, {'interpolate': /\{\{(.+?)\}\}/g});
+      tmpl = _.template(tmpl, {'interpolate': /\{\{(.+?)\}\}/g});
       return function(file, line, codeline) {
         values.file = file;
         values.line = line;
