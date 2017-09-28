@@ -10,7 +10,8 @@ var reader = require('../src/reader.js'),
     ngdoc = require('../src/ngdoc.js'),
     path = require('path'),
     upath = require('upath'),
-    vm = require('vm');
+    vm = require('vm'),
+    _ = require('lodash');
 
 var repohosts = [
   { re: /https?:\/\/github.com\/([^\/]+\/[^\/]+)|git@github.com:(.*)/,
@@ -21,8 +22,7 @@ var repohosts = [
 ];
 
 module.exports = function(grunt) {
-  var _ = grunt.util._,
-      unittest = {},
+  var unittest = {},
       templates = path.resolve(__dirname, '../src/templates');
 
   grunt.registerMultiTask('ngdocs', 'build documentation', function() {
@@ -146,7 +146,7 @@ module.exports = function(grunt) {
         values.rev = '' + sha.output;
         values.sha = values.rev.slice(0, 7);
       }
-      tmpl = _.template(tmpl, undefined, {'interpolate': /\{\{(.+?)\}\}/g});
+      tmpl = _.template(tmpl, {'interpolate': /\{\{(.+?)\}\}/g});
       return function(file, line, codeline) {
         values.file = file;
         values.line = line;
