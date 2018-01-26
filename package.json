@@ -1,6 +1,6 @@
 {
   "name": "grunt-ngdocs",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "grunt plugin for angularjs documentation",
   "main": "tasks",
   "repository": {
