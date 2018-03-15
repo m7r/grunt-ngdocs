@@ -91,8 +91,8 @@
 
 <body>
   <header class="header">
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
         <div class="container">
           <% if (image) { %>
             <% if (imageLink) { %>
@@ -104,9 +104,9 @@
             <% } %>
           <% } %>
           <% if (title) {%>
-            <a <% if (titleLink) { %> href="<%= titleLink %>" <% } %> class="brand"><%= title %></a>
+            <a <% if (titleLink) { %> href="<%= titleLink %>" <% } %> class="navbar-brand"><%= title %></a>
           <% } %>
-          <ul class="nav">
+          <ul class="nav navbar-nav">
             <li ng-repeat="(url, name) in sections" ng-class="{active: isActivePath(url)}">
               <a ng-href="{{url}}"><i class="icon-book icon-white"></i> {{name}}</a>
             </li>
@@ -121,7 +121,7 @@
     <div class="row clear-navbar"></div>
 
     <div class="row">
-      <div class="span12">
+      <div class="col-sm-12 col-md-12">
         <!--[if lt IE 7]>
         <p class="alert alert-error">Your browser is <em>ancient!</em>
           <a href="http://browsehappy.com/">Upgrade to a different browser</a> or
@@ -142,13 +142,13 @@
     </div>
 
     <div class="row">
-      <div class="span3">
+      <div class="col-sm-3 col-md-3">
         <form class="form-search" ng-submit="submitForm()">
           <% if (bestMatch) { %>
           <div class="dropdown search"
                ng-class="{open: focused && bestMatch.rank > 0 && bestMatch.page != currentPage}">
             <input type="text" ng-model="search" placeholder="search the docs"
-                   tabindex="1" accesskey="s" class="search-query" focused="focused">
+                   tabindex="1" accesskey="s" class="search-query form-control" focused="focused">
             <ul class="dropdown-menu">
               <li>
                 <a href="{{bestMatch.page.url}}">{{bestMatch.page.shortName}}</a>
@@ -157,7 +157,7 @@
           </div>
           <% } else { %>
           <input type="text" ng-model="search" placeholder="search the docs"
-                 tabindex="1" accesskey="s" class="search-query">
+                 tabindex="1" accesskey="s" class="search-query form-control">
           <% } %>
           <div class="spacer"></div>
 
@@ -232,7 +232,7 @@
 
         </form>
       </div>
-      <div class="span9">
+      <div class="col-sm-9 col-md-9">
 
         <ul class="breadcrumb">
           <li ng-repeat="crumb in breadcrumb">
