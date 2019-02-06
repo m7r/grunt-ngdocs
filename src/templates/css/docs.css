@@ -94,6 +94,10 @@ img.AngularJS-small {
   padding-bottom: 6px;
 }
 
+.form-search > ul.nav > li.deprecate {
+  text-decoration: line-through;
+}
+
 .form-search .well {
   border-color: #d3d3d3;
   padding: 0;

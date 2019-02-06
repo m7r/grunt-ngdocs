@@ -287,14 +287,39 @@ Doc.prototype = {
             (title || url).replace(/^#/g, '').replace(/\n/g, ' ') +
             (isAngular ? '</code>' : '') +
             '</a>';
-        }).
-        replace(/{@type\s+(\S+)(?:\s+(\S+))?}/g, function(_, type, url) {
-          url = url || '#';
-          return '<a href="' + url + '" class="' + self.prepare_type_hint_class_name(type) + '">' + type + '</a>';
-        }).
-        replace(/{@installModule\s+(\S+)?}/g, function(_, module) {
-          return explainModuleInstallation(module);
+      }).
+      replace(/{@type\s+(\S+)(?:\s+(\S+))?}/g, function(_, type, url) {
+        url = url || '#';
+        return '<a href="' + url + '" class="' + self.prepare_type_hint_class_name(type) + '">' + type + '</a>';
+      }).
+      replace(/{@installModule\s+(\S+)?}/g, function(_, module) {
+        return explainModuleInstallation(module);
+      });
+
+      if(self.options.highlightCodeFences) {
+        parts[i] = parts[i].replace(/^```([+-]?)([a-z]*)([\s\S]*?)```/i, function(_, alert, type, content){
+          var tClass = 'prettyprint linenums';
+
+          // check if alert type is set - if true, add the corresponding
+          // bootstrap classes
+          if(alert) {
+            tClass += ' alert alert-' + (alert === '+' ? 'success' : 'danger');
+          }
+
+          // if type is set, add lang-* information for google code
+          // prettify - normally this is not necessary, because the prettifier
+          // tries to guess the language.
+          if(type) {
+            tClass += ' lang-' + type;
+          }
+
+          return placeholder(
+              '<pre class="' + tClass + '">' +
+              content.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+              '</pre>');
         });
+
+      }
     });
     text = parts.join('');
 
@@ -380,6 +405,9 @@ Doc.prototype = {
       }
     });
     flush();
+    if ( !this.name ){
+      throw new Error('name does not exist for text \n\n' + self.text);
+    }
     var shortName = this.name.split("#");
     if (shortName.length > 1) {
       this.shortName = shortName.pop().trim();
@@ -410,8 +438,8 @@ Doc.prototype = {
             self.moduleName = match[1];
           }
         } else if (atName == 'param') {
-          match = text.match(/^\{([^}]+)\}\s+(([^\s=]+)|\[(\S+)=([^\]]+)\])\s+(.*)/);
-                             //  1      1    23       3   4   4 5      5  2   6  6
+          match = text.match(/^\{([^}]+)}\s+(([^\s=]+)|\[(\S+)=([^\]]+)])(?:\s+(.*)|$)/);
+                             //  1     1    23       3   4   4 5      5 2      6  6
           if (!match) {
             throw new Error("Not a valid 'param' format: " + text + ' (found in: ' + self.file + ':' + self.line + ')');
           }
@@ -419,7 +447,7 @@ Doc.prototype = {
           var optional = (match[1].slice(-1) === '=');
           var param = {
             name: match[4] || match[3],
-            description:self.markdown(text.replace(match[0], match[6])),
+            description: match[6] ? self.markdown(text.replace(match[0], match[6])) : '',
             type: optional ? match[1].substring(0, match[1].length-1) : match[1],
             optional: optional,
             default: match[5]
@@ -441,13 +469,13 @@ Doc.prototype = {
             self.param.push(param);
           }
         } else if (atName == 'returns' || atName == 'return') {
-          match = text.match(/^\{([^}]+)\}\s+(.*)/);
+          match = text.match(/^\{([^}]+)}(?:\s+(.*)|$)/);
           if (!match) {
             throw new Error("Not a valid 'returns' format: " + text + ' (found in: ' + self.file + ':' + self.line + ')');
           }
           self.returns = {
             type: match[1],
-            description: self.markdown(text.replace(match[0], match[2]))
+            description: match[2] ? self.markdown(text.replace(match[0], match[2])) : ''
           };
         } else if(atName == 'requires') {
           if (/^((({@link).+})|(\[.+\]({@link).+}))$/.test(text)) {
@@ -648,12 +676,98 @@ Doc.prototype = {
 
           dom.html('</td>');
           dom.html('<td>');
+
           dom.html(param.description);
           if (param.default) {
             dom.html(' <p><em>(default: ' + param.default + ')</em></p>');
           }
           if (param.properties) {
 //            dom.html('<table class="variables-matrix table table-bordered table-striped">');
+            dom.html('<table>');
+            dom.html('<thead>');
+            dom.html('<tr>');
+            dom.html('<th>Property</th>');
+            dom.html('<th>Type</th>');
+            dom.html('<th>Details</th>');
+            dom.html('</tr>');
+            dom.html('</thead>');
+            dom.html('<tbody>');
+            processParams(param.properties);
+            dom.html('</tbody>');
+            dom.html('</table>');
+          }
+          dom.html('</td>');
+          dom.html('</tr>');
+        };
+      }
+      dom.html('</tbody>');
+      dom.html('</table>');
+    }
+  },
+
+  html_usage_bindings: function(dom) {
+    var self = this;
+    var params = this.param ? this.param : [];
+    if(this.animations) {
+      dom.h('Animations', this.animations, function(animations){
+        dom.html('<ul>');
+        var animations = animations.split("\n");
+        animations.forEach(function(ani) {
+          dom.html('<li>');
+          dom.text(ani);
+          dom.html('</li>');
+        });
+        dom.html('</ul>');
+      });
+      // dom.html('<a href="api/ngAnimate.$animate">Click here</a> to learn more about the steps involved in the animation.');
+    }
+    if(params.length > 0) {
+      dom.html('<h2>Bindings</h2>');
+      dom.html('<table class="variables-matrix table table-bordered table-striped">');
+      dom.html('<thead>');
+      dom.html('<tr>');
+      dom.html('<th>Binding</th>');
+      dom.html('<th>Type</th>');
+      dom.html('<th>Details</th>');
+      dom.html('</tr>');
+      dom.html('</thead>');
+      dom.html('<tbody>');
+      processParams(params);
+      function processParams(params) {
+        for(var i=0;i<params.length;i++) {
+          param = params[i];
+          var name = param.name;
+          var types = param.type;
+          if(types[0]=='(') {
+            types = types.substr(1);
+          }
+
+          var limit = types.length - 1;
+          if(types.charAt(limit) == ')' && types.charAt(limit-1) != '(') {
+            types = types.substr(0,limit);
+          }
+          types = types.split(/\|(?![\(\)\w\|\s]+>)/);
+          if (param.optional) {
+            name += ' <div><em>(optional)</em></div>';
+          }
+          dom.html('<tr>');
+          dom.html('<td>' + name + '</td>');
+          dom.html('<td>');
+          for(var j=0;j<types.length;j++) {
+            var type = types[j];
+            dom.html('<a href="" class="' + self.prepare_type_hint_class_name(type) + '">');
+            dom.text(type);
+            dom.html('</a>');
+          }
+
+          dom.html('</td>');
+          dom.html('<td>');
+          dom.html(param.description);
+          if (param.default) {
+            dom.html(' <p><em>(default: ' + param.default + ')</em></p>');
+          }
+          if (param.properties) {
+            //            dom.html('<table class="variables-matrix table table-bordered table-striped">');
             dom.html('<table>');
             dom.html('<thead>');
             dom.html('<tr>');
@@ -828,6 +942,46 @@ Doc.prototype = {
 
   },
 
+  html_usage_component: function(dom){
+    //this.html_usage_interface(dom)
+    var self = this;
+    dom.h('Usage', function() {
+      dom.code(function() {
+        dom.text('<');
+        dom.text(dashCase(self.shortName));
+
+        renderParams('\n       ', '="', '"');
+        dom.text('>\n</');
+        dom.text(dashCase(self.shortName));
+        dom.text('>');
+      });
+      self.html_usage_componentInfo(dom);
+      self.html_usage_bindings(dom);
+    });
+
+    self.method_properties_events(dom);
+
+    function renderParams(prefix, infix, suffix, skipSelf) {
+      (self.param||[]).forEach(function(param) {
+        var skip = skipSelf && (param.name == self.shortName || param.name.indexOf(self.shortName + '|') == 0);
+        if (!skip) {
+          dom.text(prefix);
+          dom.text(param.optional ? '[' : '');
+          var parts = param.name.split('|');
+          dom.text(dashCase(parts[skipSelf ? 0 : 1] || parts[0]));
+        }
+        if (BOOLEAN_ATTR[param.name]) {
+          dom.text(param.optional ? ']' : '');
+        } else {
+          dom.text(BOOLEAN_ATTR[param.name] ? '' : infix );
+          dom.text(('{' + param.type + '}').replace(/^\{\'(.*)\'\}$/, '$1'));
+          dom.text(suffix);
+          dom.text(param.optional && !skip ? ']' : '');
+        }
+      });
+    }
+  },
+
   html_usage_filter: function(dom){
     var self = this;
     dom.h('Usage', function() {
@@ -899,6 +1053,22 @@ Doc.prototype = {
     }
   },
 
+  html_usage_componentInfo: function(dom) {
+    var self = this;
+    var list = [];
+
+
+    if (self.bindings !== undefined) {
+      list.push('This component uses:');
+    }
+
+    if (list.length) {
+      dom.h('Component info', function() {
+        dom.ul(list);
+      });
+    }
+  },
+
   html_usage_overview: function(dom){
     dom.html(this.description);
   },
@@ -958,6 +1128,7 @@ Doc.prototype = {
   html_usage_controller: function(dom) {
     this.html_usage_interface(dom)
   },
+
 
   method_properties_events: function(dom) {
     var self = this;
@@ -1055,6 +1226,7 @@ var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE_RESOURCE = /^(.+)\.resources?:([^\.]+)$/,
     MODULE_FACTORY = /^(.+)\.factories:([^\.]+)$|^(.+)\.factory:([^\.]+)/,
     MODULE_CONSTANT = /^(.+)\.constants?:([^\.]+)$/,
+    MODULE_COMPONENT = /^(.+)\.components?:([^\.]+)$/,
     MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
     MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
     MODULE_CUSTOM = /^(.+)\.([^\.]+):([^\.]+)$/,
@@ -1111,6 +1283,8 @@ function title(doc) {
     return makeTitle(match[2], 'factory', 'module', match[1]);
   } else if (match = text.match(MODULE_CONSTANT)) {
     return makeTitle(match[2], 'constant', 'module', match[1]);
+  } else if (match = text.match(MODULE_COMPONENT)) {
+    return makeTitle(match[2], 'component', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE)) {
     return makeTitle(match[2], 'directive', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE_INPUT)) {
@@ -1165,7 +1339,7 @@ function scenarios(docs){
 
 
 //////////////////////////////////////////////////////////
-function metadata(docs){
+function metadata(docs) {
   var pages = [];
   docs.forEach(function(doc){
     var path = (doc.name || '').split(/(\:\s*)/);
@@ -1177,6 +1351,12 @@ function metadata(docs){
     if (path.pop() == 'input') {
       shortName = 'input [' + shortName + ']';
     }
+
+    doc.isDeprecated = false;
+    if (doc.deprecated !== undefined) {
+      doc.isDeprecated = true;
+    }
+
     pages.push({
       section: doc.section,
       id: doc.id,
@@ -1185,7 +1365,8 @@ function metadata(docs){
       type: doc.ngdoc,
       moduleName: doc.moduleName,
       shortDescription: doc.shortDescription(),
-      keywords: doc.keywords()
+      keywords: doc.keywords(),
+      isDeprecated: doc.isDeprecated
     });
   });
   pages.sort(sidebarSort);

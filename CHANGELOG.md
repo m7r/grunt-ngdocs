@@ -1,3 +1,25 @@
+# 0.2.11 (2018-01-27)
+
+## Features
+### docs
+
+*  visualize @deprecated in sizebar ([847e1ce8](https://github.com/m7r/grunt-ngdocs/commit/847e1ce8))
+
+### ngdocs
+
+* improve error messages when name is missing from comment #147 ([6c03cde5](https://github.com/m7r/grunt-ngdocs/commit/6c03cde5))
+
+* normalize path for different platforms #199 ([580c525c](https://github.com/m7r/grunt-ngdocs/commit/580c525c))
+
+* make description of @param and @returns optional ([aa1d76ad](https://github.com/m7r/grunt-ngdocs/commit/aa1d76ad))
+
+* add commit `{{rev}}` in sourceLink ([e7dcf87c](https://github.com/m7r/grunt-ngdocs/commit/e7dcf87c))
+
+* add support for component type ([cd71c95e](https://github.com/m7r/grunt-ngdocs/commit/cd71c95e))
+
+* use lodash ([7963898f](https://github.com/m7r/grunt-ngdocs/commit/7963898f))
+
+
 # 0.2.10 (2016-05-02)
 
 ## Features
