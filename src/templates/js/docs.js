@@ -231,6 +231,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       GLOBALS = /^angular\.([^\.]+)$/,
       MODULE = /^([^\.]+)$/,
       MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
+      MODULE_COMPONENT = /^(.+)\.components?:([^\.]+)$/,
       MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
       MODULE_RESOURCE = /^(.+)\.resources?:([^\.]+)$/,
       MODULE_FACTORY = /^(.+)\.factories:([^\.]+)$|^(.+)\.factory?:([^\.]+)$/,
@@ -253,8 +254,8 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       last: this.$last,
       active: page1 && this.currentPage == page1 || page2 && this.currentPage == page2,
       match: this.focused && this.currentPage != page1 &&
-             this.bestMatch.rank > 0 && this.bestMatch.page == page1
-
+             this.bestMatch.rank > 0 && this.bestMatch.page == page1,
+      deprecate: page1.isDeprecated
     };
   };
 
@@ -421,6 +422,8 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         module(page.moduleName || match[1], section);
       } else if (match = id.match(MODULE_FILTER)) {
         module(page.moduleName || match[1], section).filters.push(page);
+      } else if (match = id.match(MODULE_COMPONENT)) {
+        module(page.moduleName || match[1], section).components.push(page);
       } else if (match = id.match(MODULE_CONTROLLER) && page.type === 'controller') {
         module(page.moduleName || match[1], section).controllers.push(page);
       } else if (match = id.match(MODULE_RESOURCE) && page.type === 'resource') {
@@ -471,6 +474,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
           name: name,
           url: (NG_DOCS.html5Mode ? '' : '#/') + section + '/' + name,
           globals: [],
+          components: [],
           controllers: [],
           resources: [],
           directives: [],
