@@ -539,6 +539,22 @@ Doc.prototype = {
     }
 
     dom.h(title(this), function() {
+
+      var nameMatcher = self.name.match(/^[^\.]*\.([^:]*):.*$/);
+      if (self.ngdoc === "object") {
+        switch (nameMatcher ? nameMatcher[1] : "") {
+          case "factory":
+          case "factories":
+            self.ngdoc = "factory";
+            break;
+          case "constant":
+          case "constants":
+            self.ngdoc = "constant";
+            break;
+          default:
+        }
+      }
+
       notice('deprecated', 'Deprecated API', self.deprecated);
       if (self.ngdoc === 'error') {
         minerrMsg = lookupMinerrMsg(self);
@@ -790,6 +806,13 @@ Doc.prototype = {
       dom.html('</td>');
       dom.html('</tr>');
       dom.html('</table>');
+    }
+  },
+
+  html_usage_rest_method: function(dom) {
+    var self = this;
+    if (self.restMethod) {
+      dom.html('<span class="label rest-method rest-method-' + self.restMethod.toLowerCase() + '">' + self.restMethod + '</span>');
     }
   },
 
@@ -1078,6 +1101,26 @@ Doc.prototype = {
     this.html_usage_interface(dom)
   },
 
+  html_usage_resource: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
+  html_usage_factory: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
+  html_usage_constant: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
+  html_usage_factories: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
+  html_usage_constants: function(dom) {
+    this.html_usage_interface(dom)
+  },
+
   html_usage_object: function(dom) {
     this.html_usage_interface(dom)
   },
@@ -1098,6 +1141,9 @@ Doc.prototype = {
               class: 'view-source icon-eye-open'
             }, ' ');
           }
+          if (method.restMethod) {
+            method.html_usage_rest_method(dom);
+          }
           //filters out .IsProperty parameters from the method signature
           var signature = (method.param || []).filter(function(e) { return e.isProperty !== true; }).map(property('name'));
           dom.h(method.shortName + '(' + signature.join(', ') + ')', method, function() {
@@ -1108,6 +1154,7 @@ Doc.prototype = {
 
             dom.h('Example', method.example, dom.html);
           });
+
         });
       });
     }
@@ -1176,6 +1223,9 @@ var GLOBALS = /^angular\.([^\.]+)$/,
     MODULE = /^([^\.]+)$/,
     MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
     MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
+    MODULE_RESOURCE = /^(.+)\.resources?:([^\.]+)$/,
+    MODULE_FACTORY = /^(.+)\.factories:([^\.]+)$|^(.+)\.factory:([^\.]+)/,
+    MODULE_CONSTANT = /^(.+)\.constants?:([^\.]+)$/,
     MODULE_COMPONENT = /^(.+)\.components?:([^\.]+)$/,
     MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
     MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
@@ -1227,6 +1277,12 @@ function title(doc) {
     return makeTitle('angular.mock.' + match[1], 'API', 'module', 'ng');
   } else if (match = text.match(MODULE_CONTROLLER) && doc.type === 'controller') {
     return makeTitle(match[2], 'controller', 'module', match[1]);
+  } else if (match = text.match(MODULE_RESOURCE) && doc.type === 'resource') {
+    return makeTitle(match[2], 'resource', 'module', match[1]);
+  } else if (match = text.match(MODULE_FACTORY)) {
+    return makeTitle(match[2], 'factory', 'module', match[1]);
+  } else if (match = text.match(MODULE_CONSTANT)) {
+    return makeTitle(match[2], 'constant', 'module', match[1]);
   } else if (match = text.match(MODULE_COMPONENT)) {
     return makeTitle(match[2], 'component', 'module', match[1]);
   } else if (match = text.match(MODULE_DIRECTIVE)) {
@@ -1516,7 +1572,7 @@ function checkBrokenLinks(docs, apis, options) {
   docs.forEach(function(doc) {
     byFullId[doc.section + '/' + doc.id] = doc;
     if (apis[doc.section]) {
-      doc.anchors.push('directive', 'service', 'filter', 'function');
+      doc.anchors.push('directive', 'service', 'filter', 'function', 'factory', 'constant');
     }
   });
 

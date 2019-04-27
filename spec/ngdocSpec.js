@@ -512,8 +512,8 @@ describe('ngdoc', function() {
         expect(doc.description).
           toBe('<div class="a-page"><p>foo\n' +
                '<pre class="prettyprint linenums">abc</pre>\n' +
-               '<h1>bah</h1>\n' +
-               '<p>foo \n' +
+               '<p>#bah\n' +
+               'foo \n' +
                '<pre class="prettyprint linenums">cba</pre>\n</div>');
       });
 
@@ -607,7 +607,6 @@ describe('ngdoc', function() {
         var doc = new Doc('@ngdoc overview\n@name angular\n@description\n#heading\ntext');
         doc.parse();
         expect(doc.html()).toContain('text');
-        expect(doc.html()).toContain('<h2 id="heading">heading</h2>');
         expect(doc.html()).not.toContain('Description');
       });
     });

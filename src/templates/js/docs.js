@@ -233,6 +233,9 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
       MODULE_MOCK = /^angular\.mock\.([^\.]+)$/,
       MODULE_COMPONENT = /^(.+)\.components?:([^\.]+)$/,
       MODULE_CONTROLLER = /^(.+)\.controllers?:([^\.]+)$/,
+      MODULE_RESOURCE = /^(.+)\.resources?:([^\.]+)$/,
+      MODULE_FACTORY = /^(.+)\.factories:([^\.]+)$|^(.+)\.factory?:([^\.]+)$/,
+      MODULE_CONSTANT = /^(.+)\.constants?:([^\.]+)$/,
       MODULE_DIRECTIVE = /^(.+)\.directives?:([^\.]+)$/,
       MODULE_DIRECTIVE_INPUT = /^(.+)\.directives?:input\.([^\.]+)$/,
       MODULE_FILTER = /^(.+)\.filters?:([^\.]+)$/,
@@ -322,6 +325,15 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
       } else if (match = partialId.match(MODULE_CONTROLLER)) {
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
+        breadcrumb.push({ name: match[2] });
+      } else if (match = partialId.match(MODULE_RESOURCE)) {
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
+        breadcrumb.push({ name: match[2] });
+      } else if (match = partialId.match(MODULE_FACTORY)) {
+        breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
+        breadcrumb.push({ name: match[2] });
+      } else if (match = partialId.match(MODULE_CONSTANT)) {
         breadcrumb.push({ name: match[1], url: sectionPath + '/' + match[1] });
         breadcrumb.push({ name: match[2] });
       } else if (match = partialId.match(MODULE_DIRECTIVE)) {
@@ -414,6 +426,12 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
         module(page.moduleName || match[1], section).components.push(page);
       } else if (match = id.match(MODULE_CONTROLLER) && page.type === 'controller') {
         module(page.moduleName || match[1], section).controllers.push(page);
+      } else if (match = id.match(MODULE_RESOURCE) && page.type === 'resource') {
+        module(page.moduleName || match[1], section).resources.push(page);
+      } else if (match = id.match(MODULE_FACTORY) && page.type === 'factory' && page.type === 'object') {
+        module(page.moduleName || match[1], section).factories.push(page);
+      } else if (match = id.match(MODULE_CONSTANT) && page.type === 'constant' && page.type === 'object') {
+        module(page.moduleName || match[1], section).constants.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE)) {
         module(page.moduleName || match[1], section).directives.push(page);
       } else if (match = id.match(MODULE_DIRECTIVE_INPUT)) {
@@ -458,7 +476,10 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
           globals: [],
           components: [],
           controllers: [],
+          resources: [],
           directives: [],
+          factories: [],
+          constants: [],
           services: [],
           others: [],
           service: function(name) {
